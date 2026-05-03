@@ -1761,7 +1761,7 @@ export function Results() {
                                                                             <li key={idx} className="flex items-start">
                                                                                 <span className="mr-2">•</span>
                                                                                 <span>
-                                                                                    <strong>"{getFriendlyFeatureName(feat.feature)}"</strong> had a negative impact on the predicted score.
+                                                                                    <strong>"{getFriendlyFeatureName(feat.feature)}"</strong> contributes a negative impact on the predicted score, make an investigation about this.
                                                                                     {isAcademicHistory && ' (Past grades cannot be changed, but indicate areas needing current support)'}
                                                                                 </span>
                                                                             </li>
@@ -1770,7 +1770,7 @@ export function Results() {
                                                                 {explanation.top_drivers.filter((f: { direction: string }) => f.direction === 'negative').length === 0 && (
                                                                     <li className="flex items-start">
                                                                         <span className="mr-2">•</span>
-                                                                        <span>Great news! All major factors are positively contributing to this student's predicted score. The student's historical performance shows strong academic foundations.</span>
+                                                                        <span>Major factors are positively contributing to this student's predicted score. The student's historical performance shows strong academic foundations.</span>
                                                                     </li>
                                                                 )}
                                                             </ul>

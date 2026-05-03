@@ -192,7 +192,7 @@ export function Signup() {
 
             <div className="bg-blue-50 p-3 rounded-lg">
               <p className="text-sm text-blue-700">
-                Want to elevate your account to School Administrator?
+                Want to elevate your account to School Administrator or Researcher?
                 Send your inquiries at <a href="mailto:dev@email.com"><u>dev@email.com</u></a>
               </p>
             </div>

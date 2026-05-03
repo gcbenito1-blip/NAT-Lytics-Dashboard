@@ -258,23 +258,18 @@ export function SchoolComparison() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="border-b">
+                                <tr className="border-b border-gray-400">
                                     <th className="text-left p-2">School</th>
                                     <th className="text-left p-2">Students</th>
                                     <th className="text-left p-2">Avg Actual MPS</th>
                                     <th className="text-left p-2">Avg Predicted MPS</th>
                                     <th className="text-left p-2">Bias</th>
                                     <th className="text-left p-2">MAE</th>
-                                    <th className="text-left p-2">Not Prof (%)</th>
-                                    <th className="text-left p-2">Low (%)</th>
-                                    <th className="text-left p-2">Nearly (%)</th>
-                                    <th className="text-left p-2">Prof (%)</th>
-                                    <th className="text-left p-2">High (%)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {schoolMetrics.map((school) => (
-                                    <tr key={school.School} className="border-b">
+                                    <tr key={school.School} className="border-b border-gray-300">
                                         <td className="p-2 font-medium max-w-xs truncate" title={school.School}>{school.School}</td>
                                         <td className="p-2">{school.Student_Count}</td>
                                         <td className="p-2">{school.Avg_Actual_MPS.toFixed(2)}</td>
@@ -283,11 +278,6 @@ export function SchoolComparison() {
                                             {school.Avg_Bias >= 0 ? '+' : ''}{school.Avg_Bias.toFixed(2)}
                                         </td>
                                         <td className="p-2">{school.MAE.toFixed(4)}</td>
-                                        <td className="p-2">{(school["Actual_Not Proficient"] || 0).toFixed(1)}%</td>
-                                        <td className="p-2">{(school["Actual_Low Proficient"] || 0).toFixed(1)}%</td>
-                                        <td className="p-2">{(school["Actual_Nearly Proficient"] || 0).toFixed(1)}%</td>
-                                        <td className="p-2">{(school["Actual_Proficient"] || 0).toFixed(1)}%</td>
-                                        <td className="p-2">{(school["Actual_Highly Proficient"] || 0).toFixed(1)}%</td>
                                     </tr>
                                 ))}
                             </tbody>

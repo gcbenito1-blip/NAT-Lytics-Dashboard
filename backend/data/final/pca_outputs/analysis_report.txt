@@ -2,17 +2,17 @@
   MPS PREDICTION PIPELINE - FULL ANALYSIS REPORT
 ===================================================================
 
-  Best Model : GradientBoosting
-  Metrics    : MAE=5.4979  RMSE=7.3063  R^2=0.031
+  Best Model : Lasso
+  Metrics    : MAE=5.9992  RMSE=7.4007  R^2=0.0058
 
   All models:
   Model                    MAE    RMSE      R2
   -------------------- ------- ------- -------
-  Linear                5.9877  7.4002  0.0059
-  Lasso                 5.9826  7.3883  0.0091
-  DecisionTree          7.7383 11.9099 -1.5749
-  RandomForest          5.3471  7.3466  0.0202
-  GradientBoosting      5.4979  7.3063   0.031 <- best
+  Linear                6.0124  7.4186  0.0009
+  Lasso                 5.9992  7.4007  0.0058 <- best
+  DecisionTree          7.0514 10.3316 -0.9377
+  RandomForest          5.6267  7.4572 -0.0095
+  GradientBoosting      5.6556  7.4227 -0.0002
 
 -------------------------------------------------------------------
   DISTRIBUTION SHIFT TEST (Welch t-test, alpha=0.05)
@@ -26,31 +26,23 @@
   Science_avg             84.68     84.819   0.139    0.6729 no
 
 -------------------------------------------------------------------
-  [NUMERIC] HIGH CORRELATION PAIRS  (|Pearson r| >= 0.80)  - 10 found
+  PCA - EXPLAINED VARIANCE (subject avg columns)
 -------------------------------------------------------------------
-  Feature A              Feature B                   r
-  ---------------------- ---------------------- ------
-  AralPan_avg            Math_avg               +0.976
-  AralPan_avg            Filipino_avg           +0.974
-  Math_avg               English_avg            +0.974
-  Math_avg               Filipino_avg           +0.973
-  English_avg            Filipino_avg           +0.972
-  AralPan_avg            English_avg            +0.968
-  Science_avg            Filipino_avg           +0.949
-  Science_avg            English_avg            +0.947
-  Science_avg            Math_avg               +0.946
-  Science_avg            AralPan_avg            +0.946
+  PC1:  96.8%   cumulative:  96.8%
+  PC2:   1.5%   cumulative:  98.3%
+
+-------------------------------------------------------------------
+  [NUMERIC] HIGH CORRELATION PAIRS  (|Pearson r| >= 0.80)  - 0 found
+-------------------------------------------------------------------
+  None - no feature pairs exceed |r|=0.80
 
 -------------------------------------------------------------------
   [NUMERIC] VARIANCE INFLATION FACTORS  (sorted descending)
 -------------------------------------------------------------------
   Feature                             VIF  Status
   ---------------------------- ----------  ------
-  Math_avg                          31.59  HIGH
-  Filipino_avg                      29.49  HIGH
-  AralPan_avg                       29.05  HIGH
-  English_avg                       26.30  HIGH
-  Science_avg                       11.88  HIGH
+  academic_PC2                       1.00  OK
+  academic_PC1                       1.00  OK
   Age                                1.00  OK
 
 -------------------------------------------------------------------

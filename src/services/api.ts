@@ -60,12 +60,14 @@ export interface ShapExplanation {
 // ── Prediction (every response now includes explanation) ─────────────────────
 export interface PredictionResult {
   School: string | null;
+  Section: string | null;
   learnerID: string | null;
   prediction: number;
   proficiency: ProficiencyBand;
   top_probable_band: ProficiencyMeta | null;
   probability_breakdown: ProficiencyMeta[] | null;
   explanation: ShapExplanation;          // always present — no more optional
+  pass_probability: number | null;
 }
 
 export interface BatchPredictionResponse {

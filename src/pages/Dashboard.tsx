@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { uploadFile, analyzeData, explainBatch, AnalysisResult, BatchPredictionResponse } from '../services/api';
 import { updateSessionSync } from '../lib/sessions';
@@ -25,10 +25,16 @@ interface AnomalyInfo {
   message: string;
 }
 
+interface OutletContextType {
+  sampleDataset: { href: string; filename: string; label: string } | null;
+  viewMode?: 'teacher' | 'admin';
+}
+
 export function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { sampleDataset, viewMode = 'teacher' } = useOutletContext<OutletContextType>();
   const [data, setData] = useState<Record<string, unknown>[]>([]);
   const [fileName, setFileName] = useState('');
   const [, setError] = useState('');
@@ -111,7 +117,7 @@ export function Dashboard() {
       setFullData(fullData);
       const result = await analyzeData(fullData);
       setAnalysisResult(result);
-      if (user?.role === 'admin') {
+      if (user?.role === 'admin' || (user?.role === 'researcher' && viewMode === 'admin')) {
         const hasSectionColumn = result.columns.some(col => col.name.toLowerCase() === 'section');
         if (!hasSectionColumn) {
           toast.warn('Admin datasets should include a "Section" column for section-based analysis.', { position: 'top-right', autoClose: 8000 });
@@ -180,11 +186,13 @@ export function Dashboard() {
           average_score: averageScore
         });
       }
-      let resultsPath = '/results';
+      let resultsPath = '/prediction-table';
       if (user) {
-        if (user.role === 'teacher') resultsPath = '/teacher/prediction-table';
-        else if (user.role === 'admin') resultsPath = '/admin/prediction-table';
-        else if (user.role === 'researcher') resultsPath = '/researcher/prediction/prediction-table';
+        if (user.role === 'teacher' || user.role === 'admin' || user.role === 'researcher') {
+          // All roles use the same prediction-table route in the unified structure
+          // The layout will handle showing the appropriate view based on role/mode
+          resultsPath = '/prediction-table';
+        }
       }
       navigate(resultsPath, { state: { predictions, fileName, sessionId, sessionName } });
     } catch (err) {
@@ -332,34 +340,41 @@ export function Dashboard() {
         .sample-download-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
       `}</style>
 
-<header className="page-header">
-          <div className="header-content">
-            <h1>Upload Dataset</h1>
-            <p>Upload your dataset here to start analysis</p>
+      <header className="page-header">
+        <div className="header-content">
+          <h1>Upload Dataset</h1>
+          <p>Upload your dataset here to start analysis</p>
+        </div>
+        {user && (
+          <div>
+            {sampleDataset && (
+              <div>
+                <a href={sampleDataset.href} download={sampleDataset.filename} className="sample-download-btn">
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  {sampleDataset.label}
+                </a>
+                <div className="mt-2 text-medium text-white text-left w-100">
+                  <p className="font-bold mb-1">Template includes required columns:</p>
+                  <p className="ml-2">• Learner ID (teacher-created)</p>
+                  <p className="ml-2">• Sex, Age, Mother Tongue, Nutritional Status(BMI)</p>
+                  <p className="ml-2">• All subject grades from Grade 1-5 (Filipino, English, Math, Science, Aral Pan)</p>
+                  <p className="mt-1"><span className="font-small">⚠ Learner ID (learnerID):</span> Create your own ID for each student (e.g., L001, L002). Do NOT use LRN or student names.</p>
+                  {user.role === 'admin' || (user.role === 'researcher' && viewMode === 'admin') && (
+                    <>
+                      <p className="mt-1 ml-2">• <span className="font-small">Section</span> (required for admin - e.g., A, B, C, D)</p>
+                      <p className="text-medium mt-1 text-white-100 ">
+                        📋 Admin Note: Combine all Grade 6 sections into ONE file with consistent section names (e.g., all "A", not "a" or "Section A")
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-           {user ? (
-             <div>
-               <p>Debug: User role is {user.role}</p>
-               {(user.role === 'admin' || (user.role === 'researcher' && typeof window !== 'undefined' && localStorage.getItem('researcherViewMode') === 'admin')) ? (
-                 <a href="/admin_sample_dataset.csv" download="admin_sample_dataset.csv" className="sample-download-btn">
-                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                   </svg>
-                   Download Sample Dataset (with Section)
-                 </a>
-               ) : (
-                 <a href="/sample_dataset.csv" download="sample_dataset.csv" className="sample-download-btn">
-                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                   </svg>
-                   Download Sample Dataset
-                 </a>
-               )}
-             </div>
-           ) : (
-            <p>Debug: No user loaded</p>
-          )}
-        </header>
+        )}
+      </header>
 
       {/* Upload Section */}
       <div className="bg-white rounded-2xl shadow-lg p-6">
@@ -546,21 +561,31 @@ export function Dashboard() {
 
           {/* Column Details - Collapsible */}
           <div className="bg-white rounded-2xl shadow-lg p-6">
+
             <button
               onClick={() => setColumnsExpanded(!columnsExpanded)}
               className="w-full flex items-center justify-between"
             >
               <h2 className="text-lg font-semibold text-gray-900">
                 Column Details
-                <span className="ml-2 text-sm font-normal text-gray-400">({analysisResult.columns.length} columns)</span>
+                <span className="ml-2 text-sm font-normal text-gray-400">
+                  ({analysisResult.columns.length} columns)
+                </span>
               </h2>
-              <span
-                className="text-gray-500 transition-transform duration-200 inline-block"
-                style={{ transform: columnsExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
-              >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+
+              <span className="flex items-center space-x-2 text-gray-500">
+                <span className="text-sm font-medium">
+                  {columnsExpanded ? 'Collapse' : 'Expand'}
+                </span>
+                <span
+                  className="transition-transform duration-200 inline-block"
+                  style={{ transform: columnsExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                  aria-hidden
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
               </span>
             </button>
 

@@ -11,15 +11,22 @@ Covers:
   4. Model training  (Linear, Lasso, DecisionTree, RandomForest,
                       GradientBoosting)
   5. Evaluation      (MAE, RMSE, R^2)
-  6. Collinearity analysis  (Pearson heatmap + VIF chart)
+  6. Collinearity analysis  (DUAL: numeric + categorical, fully separated)
+       Numeric  : Pearson correlation heatmap + VIF bar chart
+       Categorical: Cramér's V association heatmap +
+                    Cramér's V vs MPS bar chart (chi-square significance)
+     NOTE: Numeric and categorical analyses are kept completely separate.
+           No one-hot encoding is used for collinearity charts.
   7. Feature importance + SHAP explainer
   8. Pass-probability helper  P(MPS >= 75)
   9. Save artifact -> best_model.joblib
 
 Outputs (written to --out directory, default = ./outputs):
   best_model.joblib
-  correlation_heatmap.png
-  vif_chart.png
+  correlation_heatmap_numeric.png      <- Pearson r (numeric features only)
+  vif_chart_numeric.png                <- VIF (numeric features only)
+  cramers_v_heatmap_categorical.png    <- Cramér's V (categorical features only)
+  cramers_v_mps_chart_categorical.png  <- Cramér's V vs MPS per cat. feature
   analysis_report.txt
   model_results.csv
   school_report.csv
@@ -27,8 +34,10 @@ Outputs (written to --out directory, default = ./outputs):
 
 Usage:
   DEFAULT RUN: python pipeline.py
-  USE THIS FOR DEFENSE(zscore is applied, use --no-zscore to disable): python pipeline.py --csv1 23-24.csv --csv2 24-25.csv --out ./outputs --no-pca
-  USE THIS FOR DEFENSE(PCA applied and zscore applied): python pipeline.py --csv1 23-24.csv --csv2 24-25.csv --out ./pca_output 
+  USE THIS FOR DEFENSE (zscore applied, use --no-zscore to disable):
+    python pipeline.py --csv1 23-24.csv --csv2 24-25.csv --out ./outputs --no-pca
+  USE THIS FOR DEFENSE (PCA + zscore applied):
+    python pipeline.py --csv1 23-24.csv --csv2 24-25.csv --out ./pca_output
 
 Notes on school_year generalization
 -------------------------------------
@@ -61,7 +70,8 @@ import seaborn as sns
 import joblib
 import shap
 
-from scipy.stats import norm, ttest_ind
+from scipy.stats import norm, ttest_ind, chi2_contingency
+from scipy.stats.contingency import association
 
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
@@ -82,11 +92,9 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 TARGET      = "MPS"
 
 # Columns preserved for output display but NEVER used for training.
-# All are extracted before any ML step and rejoined to results at the end.
 DROP_COLS   = ["learnerID", "School", "Section", "Full Name", "Name"]
 
 # school_year is also excluded from model features (used only for z-scoring).
-# Listed separately so the intent is explicit.
 COHORT_COL  = "school_year"
 
 TEST_SIZE   = 0.30
@@ -156,11 +164,6 @@ plt.rcParams.update({
 # ============================================================================
 
 def extract_display_cols(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Extract all DROP_COLS that exist in df into a separate DataFrame.
-    Preserves original index for later join.
-    Always returns a DataFrame (empty cols if none found).
-    """
     present = [c for c in DROP_COLS if c in df.columns]
     return df[present].copy() if present else pd.DataFrame(index=df.index)
 
@@ -214,11 +217,6 @@ def check_distribution_shift(df1: pd.DataFrame, df2: pd.DataFrame,
 
 def zscore_within_cohort(df: pd.DataFrame, cols: list,
                           cohort_col: str = COHORT_COL) -> pd.DataFrame:
-    """
-    Z-score each subject avg column within its cohort group.
-    Works for any number of cohorts (not just 2).
-    Cohort col is auto-assigned integer rank; never seen by the model.
-    """
     df = df.copy()
     for col in cols:
         if col not in df.columns:
@@ -383,7 +381,7 @@ def build_shap_explainer(pipe, X_train: pd.DataFrame):
 
 
 # ============================================================================
-# SECTION 4 - COLLINEARITY ANALYSIS & PLOTS
+# SECTION 4 - NUMERIC COLLINEARITY: PEARSON + VIF
 # ============================================================================
 
 def compute_vif(df: pd.DataFrame) -> pd.DataFrame:
@@ -409,6 +407,7 @@ def vif_severity(vif: float):
 
 
 def plot_correlation_heatmap(df: pd.DataFrame, out_path: str):
+    """Pearson correlation heatmap — numeric features only."""
     num_df = df.select_dtypes(include=np.number)
     corr   = num_df.corr()
     n      = len(corr)
@@ -426,8 +425,8 @@ def plot_correlation_heatmap(df: pd.DataFrame, out_path: str):
                 linewidths=0.4, linecolor=BG, square=True,
                 cbar_kws={"shrink": 0.7, "label": "Pearson r"})
 
-    ax.set_title("Feature Correlation Matrix", color=TEXT, pad=16,
-                 fontsize=15, fontweight="bold")
+    ax.set_title("Numeric Feature Correlation Matrix (Pearson r)",
+                 color=TEXT, pad=16, fontsize=15, fontweight="bold")
     ax.tick_params(axis="x", rotation=45, labelsize=8)
     ax.tick_params(axis="y", rotation=0,  labelsize=8)
 
@@ -452,35 +451,35 @@ def plot_correlation_heatmap(df: pd.DataFrame, out_path: str):
     plt.tight_layout()
     fig.savefig(out_path, dpi=150, bbox_inches="tight", facecolor=BG)
     plt.close(fig)
-    print(f"  OK correlation_heatmap.png")
+    print(f"  OK {os.path.basename(out_path)}")
     return corr, high_pairs
 
 
 def plot_vif_chart(vif_df: pd.DataFrame, out_path: str):
+    """VIF bar chart — numeric features only."""
     if vif_df.empty:
         print("  ! VIF empty - skipping chart.")
         return
 
-    plot_df = vif_df.head(30).copy().reset_index(drop=True)  # reset index
+    plot_df = vif_df.head(30).copy().reset_index(drop=True)
     plot_df["VIF_plot"] = plot_df["VIF"].replace([np.inf], 999).clip(upper=60)
     colors = [vif_severity(v)[1] for v in plot_df["VIF"]]
 
-    fig, ax = plt.subplots(figsize=(10, max(5, len(plot_df) * 0.5)))  # slightly more breathing room
+    fig, ax = plt.subplots(figsize=(10, max(5, len(plot_df) * 0.5)))
     fig.patch.set_facecolor(BG)
 
     bars = ax.barh(plot_df["feature"][::-1], plot_df["VIF_plot"][::-1],
                    color=colors[::-1], height=0.65, edgecolor="none")
 
-    x_max = plot_df["VIF_plot"].max() * 1.4 + 2 
+    x_max = plot_df["VIF_plot"].max() * 1.4 + 2
     ax.set_xlim(0, x_max)
 
     for thresh, label, col in [(5, "Moderate (5)", "#f5a623"),
                             (10, "High (10)", ACCENT2)]:
-        if thresh <= x_max:  # only draw if visible
+        if thresh <= x_max:
             ax.axvline(thresh, color=col, linewidth=1.2, linestyle="--", alpha=0.7)
             ax.text(thresh + 0.3, -0.6, label, color=col, fontsize=8, va="top")
 
-    # FIX: iterate by index, not value lookup
     for bar, (_, row) in zip(bars[::-1], plot_df.iterrows()):
         label = f"{row['VIF']:.1f}" if np.isfinite(row["VIF"]) else "inf"
         ax.text(bar.get_width() + 0.3,
@@ -488,7 +487,7 @@ def plot_vif_chart(vif_df: pd.DataFrame, out_path: str):
                 label, va="center", ha="left", fontsize=8, color=TEXT)
 
     ax.set_xlabel("Variance Inflation Factor (VIF)", color=TEXT)
-    ax.set_title("Multicollinearity Diagnostic - VIF per Feature",
+    ax.set_title("Numeric Features — Multicollinearity Diagnostic (VIF)",
                  color=TEXT, fontsize=14, fontweight="bold", pad=12)
     ax.set_xlim(0, plot_df["VIF_plot"].max() * 1.18 + 2)
     ax.grid(axis="x", color=GRID, linewidth=0.6)
@@ -505,8 +504,223 @@ def plot_vif_chart(vif_df: pd.DataFrame, out_path: str):
     plt.tight_layout()
     fig.savefig(out_path, dpi=150, bbox_inches="tight", facecolor=BG)
     plt.close(fig)
-    print(f"  OK vif_chart.png")
+    print(f"  OK {os.path.basename(out_path)}")
 
+
+# ============================================================================
+# SECTION 4b - CATEGORICAL COLLINEARITY: CRAMÉR'S V
+# ============================================================================
+
+def cramers_v(x: pd.Series, y: pd.Series) -> float:
+    """
+    Compute Cramér's V association between two categorical series.
+    Returns a value in [0, 1] where 0 = no association, 1 = perfect association.
+    Uses bias-corrected formula (Bergsma & Wicher, 2013).
+    """
+    x = x.astype(str).fillna("__NA__")
+    y = y.astype(str).fillna("__NA__")
+    contingency = pd.crosstab(x, y)
+    n = contingency.values.sum()
+    if n == 0:
+        return 0.0
+    try:
+        chi2, p, dof, _ = chi2_contingency(contingency, correction=False)
+    except ValueError:
+        return 0.0
+    r, k = contingency.shape
+    # Bias-corrected Cramér's V
+    phi2 = max(0.0, chi2 / n - (k - 1) * (r - 1) / (n - 1))
+    r_tilde = r - (r - 1) ** 2 / (n - 1)
+    k_tilde = k - (k - 1) ** 2 / (n - 1)
+    denom = min(r_tilde - 1, k_tilde - 1)
+    if denom <= 0:
+        return 0.0
+    return round(float(np.sqrt(phi2 / denom)), 4)
+
+
+def compute_cramers_v_matrix(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Compute pairwise Cramér's V matrix for all categorical columns in df.
+    Diagonal is 1.0 (perfect self-association).
+    """
+    cat_cols = df.select_dtypes(exclude=np.number).columns.tolist()
+    if not cat_cols:
+        return pd.DataFrame()
+
+    matrix = pd.DataFrame(np.zeros((len(cat_cols), len(cat_cols))),
+                          index=cat_cols, columns=cat_cols)
+    for i, col_i in enumerate(cat_cols):
+        for j, col_j in enumerate(cat_cols):
+            if i == j:
+                matrix.loc[col_i, col_j] = 1.0
+            elif j > i:
+                v = cramers_v(df[col_i], df[col_j])
+                matrix.loc[col_i, col_j] = v
+                matrix.loc[col_j, col_i] = v
+    return matrix
+
+
+def plot_cramers_v_heatmap(df: pd.DataFrame, out_path: str):
+    """
+    Cramér's V association heatmap — categorical features only.
+    Analogous to the Pearson heatmap but for nominal data.
+    """
+    cat_cols = df.select_dtypes(exclude=np.number).columns.tolist()
+    if not cat_cols:
+        print("  ! No categorical features — skipping Cramér's V heatmap.")
+        return pd.DataFrame(), []
+
+    if len(cat_cols) < 2:
+        print("  ! Only one categorical feature — pairwise heatmap skipped.")
+        return pd.DataFrame(), []
+
+    cv_matrix = compute_cramers_v_matrix(df[cat_cols])
+    n = len(cv_matrix)
+
+    fig, ax = plt.subplots(figsize=(max(7, n * 1.1), max(5, n * 0.9)))
+    fig.patch.set_facecolor(BG)
+
+    # Cramér's V is in [0, 1]; use a sequential colormap (no negative values)
+    cmap = sns.light_palette(ACCENT, as_cmap=True)
+    mask = np.triu(np.ones_like(cv_matrix, dtype=bool), k=1)
+
+    sns.heatmap(cv_matrix, ax=ax, mask=mask, cmap=cmap,
+                vmin=0, vmax=1,
+                annot=True, fmt=".2f",
+                annot_kws={"size": 9, "color": TEXT},
+                linewidths=0.5, linecolor=BG, square=True,
+                cbar_kws={"shrink": 0.7, "label": "Cramér's V"})
+
+    ax.set_title("Categorical Feature Association Matrix (Cramér's V)",
+                 color=TEXT, pad=16, fontsize=15, fontweight="bold")
+    ax.tick_params(axis="x", rotation=45, labelsize=9)
+    ax.tick_params(axis="y", rotation=0,  labelsize=9)
+
+    cbar = ax.collections[0].colorbar
+    cbar.ax.yaxis.set_tick_params(color=SUBTEXT, labelcolor=SUBTEXT)
+    cbar.outline.set_edgecolor(GRID)
+
+    # Flag high-association pairs (V >= 0.5 is considered strong for nominal)
+    high_pairs = []
+    for i in range(n):
+        for j in range(i):
+            v = cv_matrix.iloc[i, j]
+            if v >= 0.5:
+                high_pairs.append((cv_matrix.index[i], cv_matrix.columns[j], v))
+
+    if high_pairs:
+        top = sorted(high_pairs, key=lambda x: -x[2])[:6]
+        lines = [f"V>=0.50 pairs ({len(high_pairs)}):"] + \
+                [f"  {a[:14]} <-> {b[:14]}  V={v:.2f}" for a, b, v in top]
+        fig.text(0.01, 0.01, "\n".join(lines), fontsize=7.5, color=SUBTEXT,
+                 va="bottom", family="monospace",
+                 bbox=dict(boxstyle="round,pad=0.4", facecolor=PANEL,
+                           edgecolor=GRID, alpha=0.9))
+
+    plt.tight_layout()
+    fig.savefig(out_path, dpi=150, bbox_inches="tight", facecolor=BG)
+    plt.close(fig)
+    print(f"  OK {os.path.basename(out_path)}")
+    return cv_matrix, high_pairs
+
+
+def cramers_v_severity(v: float):
+    """Interpret Cramér's V strength for categorical association."""
+    if v >= 0.7:  return "STRONG",   ACCENT2
+    if v >= 0.5:  return "MODERATE", "#f5a623"
+    if v >= 0.3:  return "WEAK",     "#f5d623"
+    return "NEGLIGIBLE", "#4cd964"
+
+
+def plot_cramers_v_mps_chart(df: pd.DataFrame, target_col: str,
+                              chi_results: dict, out_path: str):
+    """
+    Bar chart of Cramér's V between each categorical feature and the
+    binned target (MPS proficiency level).  Analogous to the VIF chart
+    but for categorical features.
+
+    Parameters
+    ----------
+    df          : DataFrame containing categorical features + target column
+    target_col  : name of the continuous target (MPS)
+    chi_results : dict of {col: {"chi2": ..., "p_value": ..., "significant": ...}}
+    out_path    : save path for the chart
+    """
+    cat_cols = df.select_dtypes(exclude=np.number).columns.tolist()
+    # Remove the target itself in case it's categorical (shouldn't be, but guard)
+    cat_cols = [c for c in cat_cols if c != target_col]
+
+    if not cat_cols:
+        print("  ! No categorical features — skipping Cramér's V vs MPS chart.")
+        return pd.DataFrame()
+
+    # Bin target into proficiency levels for association measurement
+    target_binned = encode_proficiency(df[target_col].values).astype(str)
+
+    rows = []
+    for col in cat_cols:
+        v    = cramers_v(df[col], target_binned)
+        chi  = chi_results.get(col)
+        sig  = chi["significant"] if chi else False
+        p    = chi["p_value"]     if chi else float("nan")
+        rows.append({"feature": col, "cramers_v": v, "significant": sig, "p_value": p})
+
+    result_df = pd.DataFrame(rows).sort_values("cramers_v", ascending=False).reset_index(drop=True)
+
+    colors = [cramers_v_severity(v)[1] for v in result_df["cramers_v"]]
+
+    fig, ax = plt.subplots(figsize=(10, max(4, len(result_df) * 0.65)))
+    fig.patch.set_facecolor(BG)
+
+    bars = ax.barh(result_df["feature"][::-1],
+                   result_df["cramers_v"][::-1],
+                   color=colors[::-1], height=0.6, edgecolor="none")
+
+    # Reference thresholds
+    for thresh, label, col in [(0.3, "Weak (0.3)", "#f5d623"),
+                                (0.5, "Moderate (0.5)", "#f5a623"),
+                                (0.7, "Strong (0.7)", ACCENT2)]:
+        ax.axvline(thresh, color=col, linewidth=1.2, linestyle="--", alpha=0.7)
+        ax.text(thresh + 0.01, -0.7, label, color=col, fontsize=8, va="top")
+
+    # Value labels + significance marker
+    for bar, (_, row) in zip(bars[::-1], result_df.iterrows()):
+        sig_marker = " *" if row["significant"] else ""
+        label_text = f"{row['cramers_v']:.3f}{sig_marker}  p={row['p_value']:.3f}"
+        ax.text(bar.get_width() + 0.01,
+                bar.get_y() + bar.get_height() / 2,
+                label_text, va="center", ha="left", fontsize=8, color=TEXT)
+
+    ax.set_xlim(0, 1.15)
+    ax.set_xlabel("Cramér's V  (association with MPS proficiency level)", color=TEXT)
+    ax.set_title("Categorical Features — Association with MPS (Cramér's V)",
+                 color=TEXT, fontsize=14, fontweight="bold", pad=12)
+    ax.grid(axis="x", color=GRID, linewidth=0.6)
+    ax.set_axisbelow(True)
+
+    legend_handles = [
+        Patch(facecolor="#4cd964", label="Negligible  (V < 0.3)"),
+        Patch(facecolor="#f5d623", label="Weak        (0.3 – 0.5)"),
+        Patch(facecolor="#f5a623", label="Moderate    (0.5 – 0.7)"),
+        Patch(facecolor=ACCENT2,   label="Strong      (V >= 0.7)"),
+    ]
+    ax.legend(handles=legend_handles, loc="lower right", framealpha=0.25,
+              edgecolor=GRID, labelcolor=TEXT, fontsize=9)
+
+    # Footnote: * = chi-square significant at p < 0.05
+    fig.text(0.01, 0.005, "* chi-square significant (p < 0.05)",
+             fontsize=8, color=SUBTEXT, va="bottom", family="monospace")
+
+    plt.tight_layout()
+    fig.savefig(out_path, dpi=150, bbox_inches="tight", facecolor=BG)
+    plt.close(fig)
+    print(f"  OK {os.path.basename(out_path)}")
+    return result_df
+
+
+# ============================================================================
+# SECTION 5 - REPORT WRITING
+# ============================================================================
 
 def write_analysis_report(corr, high_pairs, vif_df, shift_results,
                            pca_evr, out_path: str, best_name: str,
@@ -552,8 +766,9 @@ def write_analysis_report(corr, high_pairs, vif_df, shift_results,
             cumulative += evr
             lines.append(f"  PC{i+1}: {evr*100:5.1f}%   cumulative: {cumulative*100:5.1f}%")
 
+    # ---- Numeric collinearity section ----------------------------------------
     lines += [f"\n{'-'*W}",
-              f"  HIGH CORRELATION PAIRS  (|Pearson r| >= 0.80)  - "
+              f"  [NUMERIC] HIGH CORRELATION PAIRS  (|Pearson r| >= 0.80)  - "
               f"{len(high_pairs)} found",
               f"{'-'*W}"]
     if high_pairs:
@@ -565,7 +780,7 @@ def write_analysis_report(corr, high_pairs, vif_df, shift_results,
         lines.append("  None - no feature pairs exceed |r|=0.80")
 
     lines += [f"\n{'-'*W}",
-              "  VARIANCE INFLATION FACTORS  (sorted descending)",
+              "  [NUMERIC] VARIANCE INFLATION FACTORS  (sorted descending)",
               f"{'-'*W}",
               f"  {'Feature':<28} {'VIF':>10}  Status"]
     lines.append(f"  {'-'*28} {'----------':>10}  ------")
@@ -581,9 +796,13 @@ def write_analysis_report(corr, high_pairs, vif_df, shift_results,
               "  VIF < 5    OK       - no significant multicollinearity",
               "  VIF 5-10   MEDIUM   - moderate; consider review",
               "  VIF > 10   HIGH     - strong; consider PCA or feature removal",
-              "  |r| > 0.8  High pairwise correlation (verify with VIF)",
+              "  |r| > 0.8  High pairwise Pearson correlation (verify with VIF)",
               "  Shift?=YES - cohort means differ; within-cohort z-scoring used",
               "  school_year stripped from model features (z-score only)",
+              "  [Numeric charts]  correlation_heatmap_numeric.png",
+              "                    vif_chart_numeric.png",
+              "  [Categorical charts]  cramers_v_heatmap_categorical.png",
+              "                        cramers_v_mps_chart_categorical.png",
               "=" * W]
 
     text = "\n".join(lines)
@@ -594,7 +813,7 @@ def write_analysis_report(corr, high_pairs, vif_df, shift_results,
 
 
 # ============================================================================
-# SECTION 5 - MAIN PIPELINE
+# SECTION 6 - MAIN PIPELINE
 # ============================================================================
 
 def parse_args():
@@ -622,24 +841,19 @@ def main():
     # -- Step 1: Load CSVs ----------------------------------------------------
     print(f"\n{sep}\n  STEP 1 - LOADING DATA\n{sep}")
 
-    # Build ordered list of (label, path) pairs.
-    # Cohort rank = position in list (0, 1, 2, ...).
-    # Label is for display only; rank is what gets stored in school_year.
     csv_pairs = [("23-24", args.csv1), ("24-25", args.csv2)]
     for i, extra in enumerate(args.extra_csvs or []):
         label = os.path.splitext(os.path.basename(extra))[0]
         csv_pairs.append((label, extra))
 
-    datasets     = {}   # label -> raw df (with school_year set)
-    display_cols = {}   # label -> df of DROP_COLS only (raw, pre-drop)
+    datasets     = {}
+    display_cols = {}
 
     for rank, (label, path) in enumerate(csv_pairs):
         try:
             df = pd.read_csv(path)
-            # Store display cols BEFORE anything is dropped
             display_cols[label] = extract_display_cols(df)
-            display_cols[label].index = df.index          # keep original index
-            # Assign cohort rank (integer, not binary 0/1)
+            display_cols[label].index = df.index
             df[COHORT_COL] = rank
             datasets[label] = df
             print(f"  Cohort {rank} [{label}]: {len(df)} rows x {len(df.columns)} cols  ({path})")
@@ -653,7 +867,7 @@ def main():
     print(f"\n{sep}\n  STEP 2 - PREPROCESSING\n{sep}")
     cleaned = {}
     for label, df in datasets.items():
-        df = df.drop(columns=DROP_COLS, errors="ignore")   # drop display cols now
+        df = df.drop(columns=DROP_COLS, errors="ignore")
         df = normalize_dtypes(df)
         df = apply_mother_tongue_map(df)
         df = aggregate_subject_grades(df)
@@ -662,7 +876,7 @@ def main():
         print(f"  [{label}]: after aggregation -> {df.shape[1]} cols  "
               f"| subject avgs: {subj_present}")
 
-    # -- Step 3: Distribution shift check (first two cohorts only) -----------
+    # -- Step 3: Distribution shift check ------------------------------------
     print(f"\n{sep}\n  STEP 3 - DISTRIBUTION SHIFT TEST\n{sep}")
     shift_results = {}
     cohort_list   = list(cleaned.values())
@@ -687,9 +901,8 @@ def main():
     # -- Step 4: Combine datasets & build global display_df ------------------
     print(f"\n{sep}\n  STEP 4 - COMBINE & STRATIFIED SPLIT\n{sep}")
 
-    # Reset index per dataset before concat so indices are unique after merge
-    cleaned_reset   = {}
-    display_reset   = {}
+    cleaned_reset = {}
+    display_reset = {}
     offset = 0
     for label, df in cleaned.items():
         df_r = df.reset_index(drop=True)
@@ -702,13 +915,12 @@ def main():
 
         offset += len(df_r)
 
-    combined     = pd.concat(list(cleaned_reset.values()))
-    all_display  = pd.concat(list(display_reset.values()))   # aligned with combined
+    combined    = pd.concat(list(cleaned_reset.values()))
+    all_display = pd.concat(list(display_reset.values()))
 
     if TARGET not in combined.columns:
         sys.exit(f"ERROR: Target column '{TARGET}' not found in data.")
 
-    # Within-cohort z-score (z-score uses group means only, no global leakage)
     if not args.no_zscore and shift_results:
         combined = zscore_within_cohort(combined, SUBJECT_AVG_COLS)
         print("  Within-cohort z-scoring applied.")
@@ -716,9 +928,6 @@ def main():
     X_full = combined.drop(columns=[TARGET])
     y_full = combined[TARGET]
 
-    # Strip school_year from features BEFORE train/test split.
-    # It was used for z-score grouping above; model never sees it.
-    # This is the key change for generalization: model is year-agnostic.
     stratify_col = X_full[COHORT_COL].copy() if COHORT_COL in X_full.columns else None
     X_full = X_full.drop(columns=[COHORT_COL], errors="ignore")
 
@@ -726,10 +935,9 @@ def main():
         X_full, y_full,
         test_size=TEST_SIZE,
         random_state=RANDOM_SEED,
-        stratify=stratify_col,   # still stratify by cohort rank for balance
+        stratify=stratify_col,
     )
 
-    # Align display cols with train/test indices
     display_train = all_display.loc[X_train.index]
     display_test  = all_display.loc[X_test.index]
 
@@ -741,7 +949,7 @@ def main():
         print(f"  Train cohort split: " +
               "  ".join(f"rank{k}={v}" for k, v in vc.items()))
 
-    # -- Step 5: PCA on subject averages --------------------------------------
+    # -- Step 5: PCA on subject averages -------------------------------------
     pca_obj = None
     pca_evr = []
 
@@ -761,7 +969,7 @@ def main():
     else:
         print(f"\n  STEP 5 - PCA skipped (--no-pca flag set)")
 
-    # -- Step 6: Build sklearn preprocessor -----------------------------------
+    # -- Step 6: Build sklearn preprocessor ----------------------------------
     print(f"\n{sep}\n  STEP 6 - SKLEARN PREPROCESSOR\n{sep}")
     num_cols = X_train.select_dtypes(include=np.number).columns.tolist()
     cat_cols = X_train.select_dtypes(exclude=np.number).columns.tolist()
@@ -769,7 +977,7 @@ def main():
     print(f"  Categorical ({len(cat_cols)}): {cat_cols}")
     preprocessor = build_preprocessor(num_cols, cat_cols)
 
-    # -- Step 7: Train all models ----------------------------------------------
+    # -- Step 7: Train all models --------------------------------------------
     print(f"\n{sep}\n  STEP 7 - MODEL TRAINING\n{sep}")
 
     results        = []
@@ -800,7 +1008,7 @@ def main():
 
     print(f"\n  Best model: {best_name}  (R^2 = {best_r2:.4f})")
 
-    # -- Step 8: School-level report -------------------------------------------
+    # -- Step 8: School-level report -----------------------------------------
     print(f"\n{sep}\n  STEP 8 - SCHOOL-LEVEL ANALYSIS\n{sep}")
 
     school_test = display_test["School"].values if "School" in display_test.columns else None
@@ -824,7 +1032,7 @@ def main():
         school_df = None
         print("  School labels not available - skipping school report.")
 
-    # -- Generate individual test results with ALL display cols ---------------
+    # -- Generate individual test results ------------------------------------
     y_pred_best = best_pipe.predict(X_test)
 
     test_results_df = display_test.copy().reset_index(drop=True)
@@ -832,10 +1040,9 @@ def main():
     test_results_df["Predicted_MPS"]   = y_pred_best
     test_results_df["Difference"]      = y_pred_best - y_test.values
     test_results_df["Error_Magnitude"] = np.abs(y_test.values - y_pred_best)
-    test_results_df["Actual_Proficiency"]     = encode_proficiency(y_test.values)
-    test_results_df["Predicted_Proficiency"]  = encode_proficiency(y_pred_best)
+    test_results_df["Actual_Proficiency"]    = encode_proficiency(y_test.values)
+    test_results_df["Predicted_Proficiency"] = encode_proficiency(y_pred_best)
 
-    # Reorder: display cols first, then result cols
     result_cols   = ["Actual_MPS", "Predicted_MPS", "Difference",
                      "Error_Magnitude", "Actual_Proficiency", "Predicted_Proficiency"]
     display_found = [c for c in DROP_COLS if c in test_results_df.columns]
@@ -845,12 +1052,11 @@ def main():
     test_results_df.to_csv(test_results_path, index=False)
     print(f"  OK test_results.csv  ({len(test_results_df)} students)")
 
-    # Save model results CSV
     results_df = pd.DataFrame(results)
     results_df.to_csv(os.path.join(args.out, "model_results.csv"), index=False)
     print(f"  OK model_results.csv")
 
-    # -- Step 9: Explainability -----------------------------------------------
+    # -- Step 9: Explainability ----------------------------------------------
     print(f"\n{sep}\n  STEP 9 - EXPLAINABILITY\n{sep}")
 
     residual_std = float(np.std(y_test - best_pipe.predict(X_test)))
@@ -872,24 +1078,198 @@ def main():
         print(f"  Row {i+1}  pred={pred:.2f}  "
               f"P(MPS>={args.threshold:.0f})={pass_prob*100:.1f}%")
 
-    # -- Step 10: Collinearity analysis ----------------------------------------
-    print(f"\n{sep}\n  STEP 10 - COLLINEARITY ANALYSIS\n{sep}")
+    # ============================================================================
+    # STEP 10 - COLLINEARITY ANALYSIS (NUMERIC + CATEGORICAL, FULLY SEPARATED)
+    # ============================================================================
+    print(f"\n{sep}\n  STEP 10 - COLLINEARITY ANALYSIS (NUMERIC + CATEGORICAL)\n{sep}")
 
     analysis_df = pd.concat([X_train, X_test], ignore_index=True)
+    # Attach target for categorical-vs-MPS association
+    analysis_df_with_target = analysis_df.copy()
+    analysis_df_with_target[TARGET] = pd.concat(
+        [y_train, y_test], ignore_index=True
+    ).values
+
+    # ---- A. NUMERIC: Pearson heatmap + VIF ----------------------------------
+    num_analysis_df = analysis_df.select_dtypes(include=np.number)
+
+    print(f"\n  [NUMERIC]  {len(num_analysis_df.columns)} features:")
+    print(f"  {num_analysis_df.columns.tolist()}")
 
     corr, high_pairs = plot_correlation_heatmap(
-        analysis_df, os.path.join(args.out, "correlation_heatmap.png"))
-
-    vif_df = compute_vif(analysis_df)
-    plot_vif_chart(vif_df, os.path.join(args.out, "vif_chart.png"))
-
-    write_analysis_report(
-        corr, high_pairs, vif_df, shift_results, pca_evr,
-        os.path.join(args.out, "analysis_report.txt"),
-        best_name, results,
+        num_analysis_df,
+        os.path.join(args.out, "correlation_heatmap_numeric.png")
     )
 
-    # -- Step 11: Save artifact ------------------------------------------------
+    vif_df = compute_vif(num_analysis_df)
+
+    plot_vif_chart(
+        vif_df,
+        os.path.join(args.out, "vif_chart_numeric.png")
+    )
+
+    # ---- B. CATEGORICAL: Cramér's V heatmap + association vs MPS bar chart --
+    cat_analysis_df = analysis_df.select_dtypes(exclude=np.number)
+    cat_feature_cols = cat_analysis_df.columns.tolist()
+
+    print(f"\n  [CATEGORICAL]  {len(cat_feature_cols)} features:")
+    print(f"  {cat_feature_cols}")
+
+    # Chi-square results (needed for significance markers)
+    chi_results = {}
+    cat_summary = {}
+
+    if cat_feature_cols:
+        for col in cat_feature_cols:
+            freq = (
+                analysis_df[col]
+                .value_counts(normalize=True)
+                .mul(100).round(2).to_dict()
+            )
+
+            if col in combined.columns:
+                target_mean = (
+                    combined.groupby(col)[TARGET]
+                    .mean().round(3).to_dict()
+                )
+            else:
+                target_mean = {}
+
+            try:
+                contingency = pd.crosstab(
+                    combined[col],
+                    encode_proficiency(combined[TARGET])
+                )
+                chi2, p, _, _ = chi2_contingency(contingency)
+                chi_results[col] = {
+                    "chi2": round(float(chi2), 4),
+                    "p_value": round(float(p), 4),
+                    "significant": bool(p < 0.05),
+                }
+            except Exception:
+                chi_results[col] = None
+
+            cat_summary[col] = {
+                "frequency_pct": freq,
+                "target_mean": target_mean,
+            }
+
+        # Chart 1: Cramér's V pairwise heatmap (inter-feature association)
+        cv_matrix, cv_high_pairs = plot_cramers_v_heatmap(
+            cat_analysis_df,
+            os.path.join(args.out, "cramers_v_heatmap_categorical.png")
+        )
+
+        # Chart 2: Cramér's V vs MPS bar chart (feature-target association)
+        cramers_mps_df = plot_cramers_v_mps_chart(
+            analysis_df_with_target,
+            TARGET,
+            chi_results,
+            os.path.join(args.out, "cramers_v_mps_chart_categorical.png")
+        )
+
+        print(f"\n  Categorical analysis summary:")
+        if not cramers_mps_df.empty:
+            print(f"  {'Feature':<22} {'Cramér V':>10}  {'Sig?':>6}  {'p-value':>9}")
+            print(f"  {'-'*22} {'----------':>10}  {'------':>6}  {'---------':>9}")
+            for _, row in cramers_mps_df.iterrows():
+                sig = "YES" if row["significant"] else "no"
+                print(f"  {row['feature']:<22} {row['cramers_v']:>10.4f}  {sig:>6}  "
+                      f"{row['p_value']:>9.4f}")
+    else:
+        cv_matrix       = pd.DataFrame()
+        cv_high_pairs   = []
+        cramers_mps_df  = pd.DataFrame()
+        print("  No categorical features found — categorical charts skipped.")
+
+    # ---- C. Write main analysis report (numeric section) --------------------
+    report_path = os.path.join(args.out, "analysis_report.txt")
+
+    write_analysis_report(
+        corr,
+        high_pairs,
+        vif_df,
+        shift_results,
+        pca_evr,
+        report_path,
+        best_name,
+        results,
+    )
+
+    # ---- D. Append categorical section to report ----------------------------
+    with open(report_path, "a", encoding="utf-8") as f:
+        W = 67
+
+        f.write("\n" + "-" * W + "\n")
+        f.write("  CATEGORICAL FEATURE ANALYSIS\n")
+        f.write("-" * W + "\n")
+
+        if cat_summary:
+            # Cramér's V inter-feature pairs
+            if cv_high_pairs:
+                f.write(f"\n  High inter-feature association (Cramér's V >= 0.50):\n")
+                f.write(f"  {'Feature A':<22} {'Feature B':<22} {'V':>6}\n")
+                f.write(f"  {'-'*22} {'-'*22} {'------':>6}\n")
+                for a, b, v in sorted(cv_high_pairs, key=lambda x: -x[2]):
+                    f.write(f"  {a:<22} {b:<22} {v:>6.3f}\n")
+            else:
+                f.write("\n  No categorical feature pairs exceed V=0.50\n")
+
+            # Per-feature detail
+            f.write(f"\n  {'Feature':<22} {'Cramér_V_MPS':>13} {'Chi2_sig':>10}\n")
+            f.write(f"  {'-'*22} {'-------------':>13} {'----------':>10}\n")
+            for col, info in cat_summary.items():
+                chi  = chi_results.get(col)
+                if chi:
+                    sig_str = "YES" if chi["significant"] else "no"
+                    # Recompute V against target for the report row
+                    target_binned = encode_proficiency(combined[TARGET].values).astype(str)
+                    v_vs_mps = cramers_v(combined[col], target_binned)
+                    f.write(f"  {col:<22} {v_vs_mps:>13.4f} {sig_str:>10}\n")
+                else:
+                    f.write(f"  {col:<22} {'N/A':>13} {'N/A':>10}\n")
+
+            # Full frequency + target mean detail
+            f.write("\n")
+            for col, info in cat_summary.items():
+                f.write(f"\n  [{col}]\n")
+                f.write("    Frequency (%):\n")
+                for k, v in info["frequency_pct"].items():
+                    f.write(f"      {k}: {v}%\n")
+                if info["target_mean"]:
+                    f.write("    Avg MPS per category:\n")
+                    for k, v in info["target_mean"].items():
+                        f.write(f"      {k}: {v}\n")
+                chi = chi_results.get(col)
+                if chi:
+                    sig = "YES" if chi["significant"] else "no"
+                    f.write(
+                        f"    Chi-square: chi2={chi['chi2']}  "
+                        f"p={chi['p_value']}  significant={sig}\n"
+                    )
+                else:
+                    f.write("    Chi-square: not available\n")
+        else:
+            f.write("  No categorical features available.\n")
+
+        f.write("\n" + "-" * W + "\n")
+        f.write("  CATEGORICAL INTERPRETATION GUIDE\n")
+        f.write("-" * W + "\n")
+        f.write("  Cramér's V (pairwise heatmap): inter-feature association\n")
+        f.write("    V < 0.30  Negligible\n")
+        f.write("    V 0.30-0.50  Weak\n")
+        f.write("    V 0.50-0.70  Moderate — consider reviewing redundancy\n")
+        f.write("    V >= 0.70   Strong — one feature may be redundant\n")
+        f.write("  Cramér's V (MPS chart): feature-vs-target association\n")
+        f.write("    Higher V = stronger predictive relationship with MPS\n")
+        f.write("  * in MPS chart = chi-square significant at p < 0.05\n")
+        f.write("  [Categorical charts]\n")
+        f.write("    cramers_v_heatmap_categorical.png\n")
+        f.write("    cramers_v_mps_chart_categorical.png\n")
+
+    print("  OK categorical analysis appended to analysis_report.txt")
+
+    # -- Step 11: Save artifact ----------------------------------------------
     print(f"\n{sep}\n  STEP 11 - SAVING ARTIFACT\n{sep}")
 
     artifact = {
@@ -908,20 +1288,21 @@ def main():
         "pass_threshold":           args.threshold,
         "school_report":            school_df,
         "test_results":             test_results_df,
-        # Metadata for inference: tells downstream tools what display cols exist
-        # and that school_year is NOT a model feature (z-score only).
         "display_cols":             display_found,
         "cohort_col_stripped":      COHORT_COL,
         "drop_cols":                DROP_COLS,
-        # Raw test-set display data (for dashboards / post-hoc analysis)
         "display_test":             display_test.reset_index(drop=True),
         "y_test":                   y_test.values,
-        # Kept for backwards compatibility with downstream consumers
-        # that expect flat arrays (e.g. per-model school/student reports)
         "school_test":              display_test["School"].values
                                     if "School" in display_test.columns else None,
         "learner_test":             display_test["learnerID"].values
                                     if "learnerID" in display_test.columns else None,
+        # Collinearity artifacts
+        "vif_df":                   vif_df,
+        "pearson_corr_matrix":      corr,
+        "cramers_v_matrix":         cv_matrix,
+        "cramers_v_mps":            cramers_mps_df,
+        "chi_results":              chi_results,
     }
 
     joblib_path = os.path.join(args.out, "best_model.joblib")
@@ -930,6 +1311,12 @@ def main():
 
     print(f"\n{sep}")
     print(f"  DONE - all outputs in: {os.path.abspath(args.out)}")
+    print(sep + "\n")
+    print(f"  Chart outputs:")
+    print(f"    Numeric   -> correlation_heatmap_numeric.png")
+    print(f"              -> vif_chart_numeric.png")
+    print(f"    Categorical -> cramers_v_heatmap_categorical.png")
+    print(f"                -> cramers_v_mps_chart_categorical.png")
     print(sep + "\n")
 
 

@@ -83,7 +83,12 @@ export function StudentTable() {
         if (filters.predicted_proficiency && student.predicted_proficiency !== filters.predicted_proficiency) return false;
         if (filters.difference && Math.abs(student.difference) > parseFloat(filters.difference)) return false;
         if (filters.errorMin && student.errorMagnitude < parseFloat(filters.errorMin)) return false;
-        if (filters.errorMax && student.errorMagnitude > parseFloat(filters.errorMax)) return false;
+        if (filters.errorMax) {
+            const absDiff = Math.abs(student.difference);
+            const studentErrorLevel = absDiff < 2 ? 'Low' : absDiff < 3 ? 'Medium' : 'High';
+            const levelOrder = { Low: 0, Medium: 1, High: 2 };
+            if (levelOrder[studentErrorLevel as keyof typeof levelOrder] > levelOrder[filters.errorMax as keyof typeof levelOrder]) return false;
+        }
         return true;
     });
 
@@ -321,7 +326,7 @@ export function StudentTable() {
 
                             {/* Difference Filter */}
                             <div>
-                                <label htmlFor="difference-filter" className="block text-sm font-medium text-gray-700 mb-1">Max Abs Difference (≤)</label>
+                                <label htmlFor="difference-filter" className="block text-sm font-medium text-gray-700 mb-1">Max Difference (≤)</label>
                                 <input
                                     id="difference-filter"
                                     type="number"
@@ -334,15 +339,18 @@ export function StudentTable() {
 
                             {/* Error Max Filter */}
                             <div>
-                                <label htmlFor="error-max" className="block text-sm font-medium text-gray-700 mb-1">Error Max (≤)</label>
-                                <input
+                                <label htmlFor="error-max" className="block text-sm font-medium text-gray-700 mb-1">Error Magnitude</label>
+                                <select
                                     id="error-max"
-                                    type="number"
-                                    placeholder="e.g., 5"
-                                    value={filters.errorMax}
-                                    onChange={(e) => setFilters({ ...filters, errorMax: e.target.value })}
+                                    value={filters.errorMax || '__all__'}
+                                    onChange={(e) => setFilters({ ...filters, errorMax: e.target.value === '__all__' ? '' : e.target.value })}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
+                                >
+                                    <option value="__all__">All Levels</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                </select>
                             </div>
                         </div>
 

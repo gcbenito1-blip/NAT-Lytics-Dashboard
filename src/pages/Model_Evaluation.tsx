@@ -671,7 +671,7 @@ export function ModelEvaluation() {
           <h1>Model Evaluation Dashboard</h1>
           <p>Comprehensive metrics and performance analysis for trained models</p>
         </div>
-        <Link to="/" className="back-link">
+        <Link to="/home" className="back-link">
           ← Back to Homepage
         </Link>
       </header>

@@ -11,34 +11,19 @@ import autoTable from 'jspdf-autotable';
 // ============================================================
 
 // CSV Export function
-const exportToCSV = (predictions: ApiPredictionResult[], fileName: string) => {
+const exportToCSV = (predictions: ApiPredictionResult[], fileName: string, hasSection: boolean) => {
     if (predictions.length === 0) return;
 
     // Only include prediction result fields - no probability breakdown or feature importance
-    const csvHeaders = ['learnerID', 'prediction', 'proficiency_label'];
+    const csvHeaders = ['Learner ID', ...(hasSection ? ['Section'] : []), 'prediction', 'proficiency_label', 'pass_probability'];
 
-    const csvRows = predictions.map(pred => {
-        const row: string[] = [];
-
-        // Add learnerID
-        row.push(String(pred.learnerID || ''));
-
-        // Add School
-        const schoolValue = pred.School || '';
-        row.push(schoolValue.includes(',') ? `"${schoolValue}"` : schoolValue);
-
-        // Add prediction
-        row.push(pred.prediction?.toString() || '');
-
-        // Add proficiency details
-        if (pred.proficiency) {
-            row.push(pred.proficiency.label || '');
-        } else {
-            row.push('', '', '');
-        }
-
-        return row.join(',');
-    });
+    const csvRows = predictions.map(pred => [
+        String(pred.learnerID || ''),
+        ...(hasSection ? [pred.Section || ''] : []),
+        pred.prediction?.toString() || '',
+        pred.proficiency?.label || '',
+        pred.pass_probability != null ? (pred.pass_probability * 100).toFixed(1) + '%' : '',
+    ].join(','));
 
     const csvContent = [csvHeaders.join(','), ...csvRows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -53,7 +38,7 @@ const exportToCSV = (predictions: ApiPredictionResult[], fileName: string) => {
 };
 
 // PDF Export function - generates downloadable PDF
-const exportToPDF = (predictions: ApiPredictionResult[], fileName: string, sessionName?: string) => {
+const exportToPDF = (predictions: ApiPredictionResult[], fileName: string, sessionName?: string, hasSection?: boolean) => {
     if (predictions.length === 0) return;
 
     // Create new PDF document
@@ -70,16 +55,18 @@ const exportToPDF = (predictions: ApiPredictionResult[], fileName: string, sessi
     doc.text(`Total Records: ${predictions.length}`, 14, 36);
 
     // Prepare table data
+
     const tableData = predictions.map(pred => [
         pred.learnerID || '-',
-        pred.School || '-',
+        ...(hasSection ? [pred.Section || '-'] : []),
         pred.prediction?.toString() || '-',
-        pred.proficiency?.label || '-'
+        pred.proficiency?.label || '-',
+        pred.pass_probability != null ? `${(pred.pass_probability * 100).toFixed(1)}%` : '-',
     ]);
 
     // Create table
     autoTable(doc, {
-        head: [['Student ID', 'School', 'Prediction Score', 'Proficiency Level']],
+        head: [['Learner ID', ...(hasSection ? ['Section'] : []), 'Predicted MPS', 'Proficiency Level', 'Pass Probability']],
         body: tableData,
         startY: 42,
         styles: {
@@ -101,7 +88,6 @@ const exportToPDF = (predictions: ApiPredictionResult[], fileName: string, sessi
     // Save the PDF
     doc.save(`${fileName.replace(/\.pdf$/i, '')}_predictions.pdf`);
 };
-
 
 // ============================================================
 // FEATURE IMPORTANCE EXPLANATIONS FOR NON-TECHNICAL USERS
@@ -581,33 +567,34 @@ interface ResultsState {
 }
 
 export function Results() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { user } = useAuth();
-  const [predictions, setPredictions] = useState<ApiPredictionResult[]>([]);
-  const [fileName, setFileName] = useState('');
-  const [sessionName, setSessionName] = useState('');
-  const [sortField, setSortField] = useState<keyof ApiPredictionResult>('prediction');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'passed' | 'failed'>('all');
-  const [filterProficiency, setFilterProficiency] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
-  const [pageInput, setPageInput] = useState('');
-  const [isFeatureDashboardOpen, setIsFeatureDashboardOpen] = useState(false);
-  const [, setRawData] = useState<Record<string, unknown>[]>([]);
-  const [hasAnySession, setHasAnySession] = useState(false);
-  const resultsContainerRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { user } = useAuth();
+    const [predictions, setPredictions] = useState<ApiPredictionResult[]>([]);
+    const [fileName, setFileName] = useState('');
+    const [sessionName, setSessionName] = useState('');
+    const [sortField, setSortField] = useState<keyof ApiPredictionResult>('prediction');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+    const [filterStatus, setFilterStatus] = useState<'all' | 'passed' | 'failed'>('all');
+    const [filterProficiency, setFilterProficiency] = useState<string>('all');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+    const [pageInput, setPageInput] = useState('');
+    const [isFeatureDashboardOpen, setIsFeatureDashboardOpen] = useState(false);
+    const [, setRawData] = useState<Record<string, unknown>[]>([]);
+    const [hasAnySession, setHasAnySession] = useState(false);
+    const resultsContainerRef = useRef<HTMLDivElement>(null);
+    const hasSection = predictions.some(p => p.Section != null && p.Section !== '');
 
-  // Check if user has any sessions (uploaded datasets)
-  useEffect(() => {
-    if (user) {
-      const userSessions = getSessionsByEmail(user.email);
-      setHasAnySession(userSessions.length > 0);
-    }
-  }, [user]);
+    // Check if user has any sessions (uploaded datasets)
+    useEffect(() => {
+        if (user) {
+            const userSessions = getSessionsByEmail(user.email);
+            setHasAnySession(userSessions.length > 0);
+        }
+    }, [user]);
 
     // ============================================================
     // AGGREGATED FEATURE IMPORTANCE CALCULATION
@@ -813,6 +800,7 @@ export function Results() {
             return (
                 (String(pred.learnerID)?.toLowerCase()?.includes(query)) ||
                 (pred.School?.toLowerCase().includes(query)) ||
+                (pred.Section?.toLowerCase().includes(query)) ||
                 (pred.proficiency?.label?.toLowerCase().includes(query))
             );
         })
@@ -912,7 +900,7 @@ export function Results() {
                 </div>
                 <div className="header-actions" style={{ display: 'flex', gap: '12px' }}>
                     <button
-                        onClick={() => exportToCSV(predictions, fileName)}
+                        onClick={() => exportToCSV(predictions, fileName, hasSection)}
                         style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: 'rgba(255,255,255,0.2)', border: '2px solid rgba(255,255,255,0.5)', borderRadius: '8px', color: '#fff', fontWeight: '500', cursor: 'pointer', transition: 'all 0.2s' }}
                         onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.3)'; }}
                         onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.2)'; }}
@@ -955,67 +943,74 @@ export function Results() {
                 <div className="bg-white rounded-2xl shadow-lg p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-500">Average Score</p>
+                            <p className="text-sm font-medium text-gray-500">Average MPS</p>
                             <p className="text-3xl font-bold text-gray-900 mt-1">{averageScore.toFixed(1)}</p>
                         </div>
                         <div className="h-12 w-12 rounded-xl bg-purple-100 flex items-center justify-center">
-                            <svg className="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
+                            <span className="material-icons-round text-sm ">score</span>
                         </div>
                     </div>
                 </div>
 
                 {predictions[0]?.probability_breakdown && predictions[0].probability_breakdown.length > 0 ? (
-                    predictions[0].probability_breakdown.map((band: { code: number; label: string; range: string; color: string; probability: number }, idx) => {
-                        const count = predictions.filter(p => p.top_probable_band?.code === band.code).length;
-                        const pct = totalPredictions > 0 ? (count / totalPredictions) * 100 : 0;
-                        return (
-                            <div key={idx} className="bg-white rounded-2xl shadow-lg p-6">
+                    predictions[0].probability_breakdown
+                        .map(band => {
+                            const count = predictions.filter(p => p.top_probable_band?.code === band.code).length;
+                            return { band, count };
+                        })
+                        .filter(item => item.count > 0)
+                        .map((item, idx) => {
+                            const { band, count } = item;
+                            const pct = totalPredictions > 0 ? (count / totalPredictions) * 100 : 0;
+                            return (
+                                <div key={idx} className="bg-white rounded-2xl shadow-lg p-6">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-sm font-medium text-gray-500">{band.label}</p>
+                                            <p className="text-3xl font-bold mt-1" style={{ color: band.color }}>{count}</p>
+                                            <p className="text-sm text-gray-500">{pct.toFixed(1)}%</p>
+                                        </div>
+                                        <div className="h-12 w-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: band.color + '20' }}>
+                                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: band.color }}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })
+                ) : (
+                    <>
+                        {passedCount !== 0 && (
+                            <div className="bg-white rounded-2xl shadow-lg p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-gray-500">{band.label}</p>
-                                        <p className="text-3xl font-bold mt-1" style={{ color: band.color }}>{count}</p>
-                                        <p className="text-sm text-gray-500">{pct.toFixed(1)}%</p>
+                                        <p className="text-sm font-medium text-gray-500">Passed</p>
+                                        <p className="text-3xl font-bold text-green-600 mt-1">{passedCount}</p>
                                     </div>
-                                    <div className="h-12 w-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: band.color + '20' }}>
-                                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: band.color }}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    <div className="h-12 w-12 rounded-xl bg-green-100 flex items-center justify-center">
+                                        <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </div>
                                 </div>
                             </div>
-                        );
-                    })
-                ) : (
-                    <>
-                        <div className="bg-white rounded-2xl shadow-lg p-6">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-500">Passed</p>
-                                    <p className="text-3xl font-bold text-green-600 mt-1">{passedCount}</p>
-                                </div>
-                                <div className="h-12 w-12 rounded-xl bg-green-100 flex items-center justify-center">
-                                    <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl shadow-lg p-6">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-500">Failed</p>
-                                    <p className="text-3xl font-bold text-red-600 mt-1">{failedCount}</p>
-                                </div>
-                                <div className="h-12 w-12 rounded-xl bg-red-100 flex items-center justify-center">
-                                    <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
+                        )}
+                        {failedCount !== 0 && (
+                            <div className="bg-white rounded-2xl shadow-lg p-6">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-500">Failed</p>
+                                        <p className="text-3xl font-bold text-red-600 mt-1">{failedCount}</p>
+                                    </div>
+                                    <div className="h-12 w-12 rounded-xl bg-red-100 flex items-center justify-center">
+                                        <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </>
                 )}
             </div>
@@ -1035,6 +1030,23 @@ export function Results() {
                     <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
                         <p className="text-sm font-medium text-orange-600">Lowest Score</p>
                         <p className="text-2xl font-bold text-orange-700 mt-1">{lowestScore.toFixed(1)}</p>
+                    </div>
+                    <div className="bg-white rounded-2xl shadow-lg p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-500">Avg Pass Probability</p>
+                                <p className="text-3xl font-bold text-gray-900 mt-1">
+                                    {predictions[0]?.pass_probability != null
+                                        ? `${(predictions.reduce((sum, p) => sum + (p.pass_probability ?? 0), 0) / totalPredictions * 100).toFixed(1)}%`
+                                        : 'N/A'}
+                                </p>
+                            </div>
+                            <div className="h-12 w-12 rounded-xl bg-green-100 flex items-center justify-center">
+                                <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1379,19 +1391,21 @@ export function Results() {
                                         )}
                                     </div>
                                 </th>
-                                <th
-                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                                    onClick={() => handleSort('School')}
-                                >
-                                    <div className="flex items-center space-x-1">
-                                        <span>School</span>
-                                        {sortField === 'School' && (
-                                            <svg className={`h-4 w-4 ${sortDirection === 'asc' ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                                            </svg>
-                                        )}
-                                    </div>
-                                </th>
+                                {hasSection && (
+                                    <th
+                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                                        onClick={() => handleSort('Section')}
+                                    >
+                                        <div className="flex items-center space-x-1">
+                                            <span>Section</span>
+                                            {sortField === 'Section' && (
+                                                <svg className={`h-4 w-4 ${sortDirection === 'asc' ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                                </svg>
+                                            )}
+                                        </div>
+                                    </th>
+                                )}
                                 <th
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                                     onClick={() => handleSort('prediction')}
@@ -1419,6 +1433,9 @@ export function Results() {
                                         <span>Probability Breakdown</span>
                                     </div>
                                 </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Pass Probability <br />P(MPS ≥ 75)
+                                </th>
                                 <th
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
@@ -1436,9 +1453,11 @@ export function Results() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             {result.learnerID || '-'}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {result.School || '-'}
-                                        </td>
+                                        {hasSection && (
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {result.Section || '-'}
+                                            </td>
+                                        )}
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             <span className={`font-semibold ${result.prediction >= 75 ? 'text-green-600' : 'text-red-600'
                                                 }`}>
@@ -1490,6 +1509,13 @@ export function Results() {
                                                     {(result.proficiency?.code ?? 0) >= 2 ? 'Passed' : 'Failed'}
                                                 </span>
                                             )}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {result.pass_probability != null
+                                                ? <span className={`font-semibold ${result.pass_probability >= 0.5 ? 'text-green-600' : 'text-red-600'}`}>
+                                                    {(result.pass_probability * 100).toFixed(1)}%
+                                                </span>
+                                                : '-'}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <button
@@ -1804,7 +1830,7 @@ export function Results() {
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
-                    <span>Analyze Another Dataset</span>
+                    <span>Analyze Different Dataset</span>
                 </button>
             </div>
         </div >

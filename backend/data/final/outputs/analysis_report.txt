@@ -1,0 +1,65 @@
+===================================================================
+  MPS PREDICTION PIPELINE - FULL ANALYSIS REPORT
+===================================================================
+
+  Best Model : GradientBoosting
+  Metrics    : MAE=5.4979  RMSE=7.3063  R^2=0.031
+
+  All models:
+  Model                    MAE    RMSE      R2
+  -------------------- ------- ------- -------
+  Linear                5.9877  7.4002  0.0059
+  Lasso                 5.9826  7.3883  0.0091
+  DecisionTree          7.7383 11.9099 -1.5749
+  RandomForest          5.3471  7.3466  0.0202
+  GradientBoosting      5.4979  7.3063   0.031 <- best
+
+-------------------------------------------------------------------
+  DISTRIBUTION SHIFT TEST (Welch t-test, alpha=0.05)
+-------------------------------------------------------------------
+  Column             Cohort0 mean Cohort1 mean   Dmean   p-value Shift?
+  ------------------ ---------- ---------- ------- --------- ------
+  Filipino_avg           85.058      85.28   0.222    0.4855 no
+  English_avg            84.396     84.693   0.296    0.3702 no
+  Math_avg               84.558     84.709   0.151    0.6397 no
+  AralPan_avg            84.865     85.122   0.257    0.4145 no
+  Science_avg             84.68     84.819   0.139    0.6729 no
+
+-------------------------------------------------------------------
+  HIGH CORRELATION PAIRS  (|Pearson r| >= 0.80)  - 10 found
+-------------------------------------------------------------------
+  Feature A              Feature B                   r
+  ---------------------- ---------------------- ------
+  AralPan_avg            Math_avg               +0.976
+  AralPan_avg            Filipino_avg           +0.974
+  Math_avg               English_avg            +0.974
+  Math_avg               Filipino_avg           +0.973
+  English_avg            Filipino_avg           +0.972
+  AralPan_avg            English_avg            +0.968
+  Science_avg            Filipino_avg           +0.949
+  Science_avg            English_avg            +0.947
+  Science_avg            Math_avg               +0.946
+  Science_avg            AralPan_avg            +0.946
+
+-------------------------------------------------------------------
+  VARIANCE INFLATION FACTORS  (sorted descending)
+-------------------------------------------------------------------
+  Feature                             VIF  Status
+  ---------------------------- ----------  ------
+  Math_avg                          31.59  HIGH
+  Filipino_avg                      29.49  HIGH
+  AralPan_avg                       29.05  HIGH
+  English_avg                       26.30  HIGH
+  Science_avg                       11.88  HIGH
+  Age                                1.00  OK
+
+-------------------------------------------------------------------
+  INTERPRETATION GUIDE
+-------------------------------------------------------------------
+  VIF < 5    OK       - no significant multicollinearity
+  VIF 5-10   MEDIUM   - moderate; consider review
+  VIF > 10   HIGH     - strong; consider PCA or feature removal
+  |r| > 0.8  High pairwise correlation (verify with VIF)
+  Shift?=YES - cohort means differ; within-cohort z-scoring used
+  school_year stripped from model features (z-score only)
+===================================================================

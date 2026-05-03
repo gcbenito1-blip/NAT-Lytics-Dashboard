@@ -1,0 +1,88 @@
+=================================================================
+  EDA SUMMARY REPORT - MPS EDUCATIONAL DATA
+=================================================================
+
+DATASET OVERVIEW
+-----------------------------------------------------------------
+  Total records      : 1285
+  Total columns      : 12
+  23-24               : 223 records
+  24-25               : 1062 records
+
+TARGET: MPS
+-----------------------------------------------------------------
+  Count   : 1285
+  Mean    : 69.913
+  Median  : 66.820
+  Std     : 7.993
+  Min/Max : 33.59 / 80.54
+  Skew    : -1.262
+  Kurt    : 4.475
+  Pass rate (>=75): 28.0%
+  23-24: mean=74.10  std=5.14  pass=50.2%  n=223
+  24-25: mean=69.03  std=8.21  pass=23.4%  n=1062
+
+SUBJECT AVG STATISTICS
+-----------------------------------------------------------------
+  Subject               Mean     Std     Min     Max    Skew   Pass%
+  ------------------ ------- ------- ------- ------- ------- -------
+  Filipino_avg         85.24    4.30   75.20   96.00   0.069  100.0%
+  English_avg          84.64    4.46   75.20   96.00   0.175  100.0%
+  Math_avg             84.68    4.29   75.20   96.20   0.145  100.0%
+  AralPan_avg          85.08    4.17   75.20   95.60   0.077  100.0%
+  Science_avg          84.80    4.39   75.00   95.67   0.181  100.0%
+
+NORMALITY TEST (Shapiro-Wilk, sample=50)
+-----------------------------------------------------------------
+  Column                 W-stat    p-value Normal?
+  -------------------- -------- ---------- -------
+  Filipino_avg           0.9758     0.3904 Yes
+  English_avg            0.9756     0.3857 Yes
+  Math_avg               0.9746     0.3508 Yes
+  AralPan_avg            0.9748     0.3578 Yes
+  Science_avg            0.9718     0.2728 Yes
+  MPS                    0.8650     0.0000 No
+
+MISSING VALUES
+-----------------------------------------------------------------
+  None - dataset is complete.
+
+HIGH CORRELATION PAIRS (|r| >= 0.80)  - 10 found
+-----------------------------------------------------------------
+  AralPan_avg            <-> Math_avg                r=+0.976
+  AralPan_avg            <-> Filipino_avg            r=+0.975
+  Math_avg               <-> English_avg             r=+0.974
+  Math_avg               <-> Filipino_avg            r=+0.973
+  English_avg            <-> Filipino_avg            r=+0.972
+  AralPan_avg            <-> English_avg             r=+0.969
+  Science_avg            <-> Filipino_avg            r=+0.949
+  Science_avg            <-> English_avg             r=+0.947
+  Science_avg            <-> Math_avg                r=+0.947
+  Science_avg            <-> AralPan_avg             r=+0.946
+
+CATEGORICAL SUMMARIES
+-----------------------------------------------------------------
+
+  Sex  (unique=2):
+    M                           657  (51.1%)
+    F                           628  (48.9%)
+
+  Mother Tongue  (unique=9):
+    Ilocano                     823  (64.0%)
+    Tagalog                     441  (34.3%)
+    Pangasinan                   11  (0.9%)
+    Maranao                       4  (0.3%)
+    English                       2  (0.2%)
+    Kamayo                        1  (0.1%)
+    Kapampangan                   1  (0.1%)
+    Hiligaynon                    1  (0.1%)
+    Cebuano / Sinugbuanong Binisay     1  (0.1%)
+
+  Nutritional Status(BMI)  (unique=5):
+    Normal                     1146  (89.2%)
+    Overweight                   74  (5.8%)
+    Wasted                       38  (3.0%)
+    Obese                        16  (1.2%)
+    Severely Wasted              11  (0.9%)
+
+=================================================================

@@ -1,0 +1,6 @@
+learnerID,Section,Sex,Age,Mother Tongue,Nutritional Status(BMI),Filipino 1,English 1,Math 1,Aral Pan 1,Filipino 2,English 2,Math 2,Aral Pan 2,Filipino 3,English 3,Math 3,Science 3,Aral Pan 3,Filipino 4,English 4,Math 4,Science 4,Aral Pan 4,Filipino 5,English 5,Math 5,Science 5,Aral Pan 5
+L001,A,M,15,Tagalog,Normal,85,90,78,88,80,85,82,90,75,80,85,92,78,88,90,85,80,82,88,90,85,80
+L002,B,F,16,Cebuano,Overweight,78,85,82,92,88,90,85,95,80,88,90,88,85,92,95,90,88,90,92,95,90,88
+L003,C,M,14,Ilocano,Underweight,92,88,95,80,90,92,88,85,90,92,78,85,90,80,85,78,82,80,85,80,85,88,90,85
+L004,D,F,15,Hiligaynon,Normal,80,82,85,90,85,88,90,92,85,90,88,92,90,88,90,85,82,80,85,90,92,88
+L005,E,M,16,Kapampangan,Overweight,88,90,80,85,90,92,88,95,90,92,88,90,95,92,90,88,90,92,88,90,95,90

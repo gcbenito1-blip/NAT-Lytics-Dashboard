@@ -1,0 +1,1063 @@
+learnerID,Sex,Age,Mother Tongue,Nutritional Status(BMI),Filipino 1,English 1,Math 1,Aral Pan 1,Filipino 2,English 2,Math 2,Aral Pan 2,Filipino 3,English 3,Math 3,Science 3,Aral Pan 3,Filipino 4,English 4,Math 4,Science 4,Aral Pan 4,Filipino 5,English 5,Math 5,Science 5,Aral Pan 5,School,MPS
+BES25-001,M,11,Ilocano,Normal,84,83,87,91,86,85,87,87,88,88,88,87,87,88,88,87,87,86,89,85,88,88,86,Badipa Elementary School,80.54
+BES25-002,M,11,Tagalog,Normal,84,83,85,87,86,86,87,87,86,87,87,86,89,90,90,90,89,90,89,84,86,86,86,Badipa Elementary School,80.54
+BES25-003,M,12,Ilocano,Normal,84,83,84,85,86,85,84,85,81,80,81,81,81,87,85,87,84,85,89,86,88,86,86,Badipa Elementary School,80.54
+BES25-004,M,11,Tagalog,Wasted,84,87,83,83,82,82,82,83,83,82,82,83,83,84,83,83,83,84,86,86,86,87,86,Badipa Elementary School,80.54
+BES25-005,M,11,Ilocano,Normal,81,80,80,80,84,82,83,84,80,79,78,78,79,86,85,83,82,84,85,83,85,85,84,Badipa Elementary School,80.54
+BES25-006,M,12,Tagalog,Normal,92,87,93,93,91,89,91,95,92,92,92,92,91,89,88,89,89,89,89,88,88,89,87,Badipa Elementary School,80.54
+BES25-007,M,12,Ilocano,Normal,85,84,83,82,88,88,92,88,90,90,90,89,90,88,87,89,87,88,87,87,88,89,87,Badipa Elementary School,80.54
+BES25-008,M,11,Ilocano,Normal,80,80,80,81,84,84,84,84,82,82,82,81,81,88,89,88,87,88,87,84,87,86,85,Badipa Elementary School,80.54
+BES25-009,M,11,Ilocano,Normal,93,92,90,92,91,90,89,89,91,88,92,91,95,89,88,88,89,88,89,89,89,89,88,Badipa Elementary School,80.54
+BES25-010,F,11,Ilocano,Normal,84,83,82,85,87,86,86,86,90,90,90,89,90,87,86,88,87,86,87,87,86,86,87,Badipa Elementary School,80.54
+BES25-011,M,11,Ilocano,Normal,84,83,84,85,82,82,82,82,82,81,81,80,81,86,87,85,86,87,88,87,86,86,85,Badipa Elementary School,80.54
+BES25-012,F,12,Ilocano,Normal,88,89,89,88,85,84,85,86,87,85,85,86,85,89,87,89,87,88,91,89,91,90,90,Badipa Elementary School,80.54
+BES25-013,M,11,Tagalog,Normal,86,86,86,86,92,92,92,91,92,92,91,92,92,92,89,94,91,89,90,89,91,90,89,Badipa Elementary School,80.54
+BES25-014,F,11,Ilocano,Normal,91,91,90,90,88,88,88,88,87,87,87,86,86,87,88,87,88,88,88,84,86,86,86,Badipa Elementary School,80.54
+BES25-015,M,12,Ilocano,Normal,87,90,88,87,89,88,88,90,86,87,86,87,87,85,85,83,86,86,86,85,86,87,85,Badipa Elementary School,80.54
+BES25-016,M,11,Ilocano,Normal,87,88,87,85,88,87,87,90,83,84,84,84,84,87,87,87,86,86,88,84,90,88,87,Badipa Elementary School,80.54
+BES25-017,M,12,Tagalog,Normal,89,87,90,91,89,89,89,89,85,84,85,85,83,85,84,84,84,84,85,85,85,85,85,Badipa Elementary School,80.54
+BES25-018,M,12,Ilocano,Normal,84,84,89,93,87,87,89,89,85,83,83,83,83,84,83,83,83,83,87,86,85,87,87,Badipa Elementary School,80.54
+BES25-019,F,11,Ilocano,Normal,85,82,86,86,85,85,85,84,81,81,81,81,81,89,87,90,87,88,91,88,91,89,89,Badipa Elementary School,80.54
+BES25-020,F,11,Ilocano,Normal,88,87,86,89,82,84,82,85,85,83,82,84,85,83,83,83,83,83,86,86,86,86,85,Badipa Elementary School,80.54
+BES25-021,F,11,Ilocano,Normal,84,83,84,85,77,77,77,78,78,78,78,78,78,88,88,89,88,88,85,83,84,85,85,Badipa Elementary School,80.54
+BES25-022,F,11,Ilocano,Normal,79,76,77,77,84,83,85,85,78,78,77,77,77,85,84,83,84,85,85,83,85,85,84,Badipa Elementary School,80.54
+BES25-023,F,11,Tagalog,Normal,88,86,90,88,92,92,92,90,90,90,90,89,90,89,88,88,88,89,87,88,88,89,87,Badipa Elementary School,80.54
+BES25-024,F,12,Ilocano,Normal,83,83,83,84,77,76,75,77,81,77,76,78,78,87,86,88,83,86,88,88,87,89,87,Badipa Elementary School,80.54
+BES25-025,F,11,Ilocano,Normal,83,85,83,83,84,84,84,84,86,86,86,86,86,84,84,81,83,85,85,84,85,85,85,Badipa Elementary School,80.54
+BES25-026,F,11,Ilocano,Normal,88,87,88,87,87,86,86,88,87,86,85,87,87,83,81,82,82,84,84,82,84,83,84,Badipa Elementary School,80.54
+BES25-027,F,11,Ilocano,Normal,83,81,76,78,81,80,80,87,80,89,89,88,89,87,86,85,86,87,88,85,86,87,86,Badipa Elementary School,80.54
+BES25-028,F,11,Ilocano,Normal,85,85,84,85,84,84,84,85,87,88,87,88,87,89,89,85,87,88,87,88,88,89,86,Badipa Elementary School,80.54
+BES25-029,F,12,Ilocano,Normal,92,92,91,90,83,82,81,82,81,79,80,78,81,87,85,86,85,87,90,86,88,88,88,Badipa Elementary School,80.54
+BES25-030,F,11,Ilocano,Normal,86,85,85,85,88,87,86,90,86,86,86,86,86,85,84,84,84,84,83,82,84,84,83,Badipa Elementary School,80.54
+BES25-031,F,11,Ilocano,Normal,85,88,94,91,90,90,91,90,91,89,91,91,91,88,87,88,88,89,88,88,89,90,88,Badipa Elementary School,80.54
+BES25-032,F,11,Ilocano,Normal,84,83,84,82,86,86,85,85,84,84,84,84,84,86,86,85,86,86,87,84,85,86,86,Badipa Elementary School,80.54
+BES25-033,F,13,Ilocano,Normal,78,78,78,79,77,76,76,76,77,77,77,77,77,86,86,87,87,86,85,83,84,85,85,Badipa Elementary School,80.54
+BES25-034,F,12,Ilocano,Normal,91,87,89,90,84,82,83,84,81,81,81,81,81,85,84,85,83,85,87,84,86,86,85,Badipa Elementary School,80.54
+BES25-035,F,12,Ilocano,Normal,90,90,89,89,89,90,89,90,87,87,86,86,86,88,87,88,87,88,89,84,86,87,87,Badipa Elementary School,80.54
+BES25-036,F,11,Ilocano,Normal,88,87,88,86,88,87,86,89,86,86,86,86,86,87,86,85,85,86,88,84,86,86,86,Badipa Elementary School,80.54
+BES25-037,F,14,Ilocano,Normal,79,79,79,79,77,77,77,78,84,84,85,85,84,86,86,87,86,86,85,83,84,85,84,Badipa Elementary School,80.54
+BES25-038,F,11,Ilocano,Normal,77,75,75,75,75,75,75,75,77,77,77,77,77,88,88,88,88,88,85,83,85,84,84,Badipa Elementary School,80.54
+BES25-039,F,11,Ilocano,Normal,80,79,80,81,82,82,82,81,79,80,80,80,81,84,84,85,85,85,86,85,86,85,85,Badipa Elementary School,80.54
+BES25-040,F,13,Ilocano,Normal,91,91,92,91,77,77,77,78,75,75,75,75,75,86,86,86,85,86,90,84,88,87,87,Badipa Elementary School,80.54
+BES25-041,F,11,Ilocano,Normal,81,80,84,90,84,82,86,87,83,82,84,84,84,87,87,84,86,87,86,84,84,85,85,Badipa Elementary School,80.54
+BES25-042,F,11,Ilocano,Normal,76,75,75,77,79,82,82,80,86,85,86,86,88,86,85,83,85,85,88,84,87,87,86,Badipa Elementary School,80.54
+BES25-043,F,12,Ilocano,Normal,79,78,75,77,81,79,80,81,82,83,82,83,84,84,85,81,85,85,83,82,82,83,83,Badipa Elementary School,80.54
+BES25-044,F,12,Ilocano,Normal,84,84,82,83,86,85,85,87,80,80,81,81,82,86,86,83,85,86,87,84,84,85,87,Badipa Elementary School,80.54
+BES25-045,F,12,Ilocano,Overweight,83,78,81,82,76,76,76,76,77,77,77,77,77,84,84,84,85,84,84,83,84,85,83,Badipa Elementary School,80.54
+BES25-046,F,12,Ilocano,Normal,82,83,85,86,84,85,85,86,83,82,82,82,82,85,85,86,86,85,86,84,85,86,85,Badipa Elementary School,80.54
+BES25-047,F,12,Ilocano,Normal,80,80,79,79,80,79,80,81,78,78,77,77,78,82,82,80,81,83,82,81,81,83,82,Badipa Elementary School,80.54
+BES25-048,F,11,Tagalog,Normal,82,84,82,85,85,86,85,86,86,85,85,86,86,84,83,82,83,84,81,81,81,83,83,Badipa Elementary School,80.54
+BES25-049,F,12,Ilocano,Normal,91,91,89,90,84,85,84,86,85,85,85,85,85,87,84,88,83,85,86,84,85,85,85,Badipa Elementary School,80.54
+BES25-050,F,12,Ilocano,Normal,79,77,78,81,84,83,83,83,79,79,79,79,79,87,86,86,86,86,89,86,89,89,86,Badipa Elementary School,80.54
+BES25-051,F,12,Ilocano,Normal,81,78,80,79,90,90,89,90,85,83,83,82,83,82,81,82,82,81,84,83,83,84,83,Badipa Elementary School,80.54
+BES25-052,F,11,Ilocano,Normal,91,91,90,90,92,87,87,91,85,86,86,85,86,84,83,84,84,84,83,82,84,83,83,Badipa Elementary School,80.54
+BES25-053,F,12,Ilocano,Normal,84,82,83,83,79,79,79,79,81,81,81,81,81,84,83,84,83,83,84,82,82,84,83,Badipa Elementary School,80.54
+BES25-054,F,12,Ilocano,Normal,80,80,85,86,82,82,84,86,82,81,81,81,81,84,84,82,84,85,83,82,83,82,82,Badipa Elementary School,80.54
+BES25-055,M,11,Ilocano,Normal,86,84,86,86,86,85,85,85,82,81,81,81,82,85,84,80,82,83,83,82,83,83,82,Badipa Elementary School,80.54
+BES25-056,M,11,Ilocano,Normal,79,75,82,81,80,80,81,81,78,77,78,77,77,84,84,86,85,85,82,81,83,83,83,Badipa Elementary School,80.54
+BES25-057,M,12,Ilocano,Normal,85,85,82,84,87,85,86,88,86,86,86,86,86,86,86,84,82,84,85,83,85,85,85,Badipa Elementary School,80.54
+BES25-058,M,12,Ilocano,Normal,87,89,93,91,90,90,90,90,84,83,84,84,83,83,82,86,82,83,83,82,84,83,82,Badipa Elementary School,80.54
+BES25-059,M,11,Ilocano,Normal,92,91,88,90,89,90,89,89,81,81,81,82,81,86,85,84,84,85,84,84,85,85,84,Badipa Elementary School,80.54
+BES25-060,M,12,Ilocano,Normal,84,80,84,84,88,86,87,89,84,84,85,84,85,85,83,83,84,85,83,81,83,82,82,Badipa Elementary School,80.54
+BES25-061,M,12,Tagalog,Normal,79,78,82,85,85,83,80,87,80,80,80,80,80,85,84,82,84,85,82,81,82,83,82,Badipa Elementary School,80.54
+BES25-062,M,12,Ilocano,Normal,86,83,85,85,85,84,85,85,84,83,84,83,83,85,85,85,85,85,82,81,82,82,82,Badipa Elementary School,80.54
+BES25-063,M,11,Ilocano,Normal,86,83,84,85,84,85,85,82,79,79,78,79,80,87,88,82,86,87,88,88,86,88,87,Badipa Elementary School,80.54
+BES25-064,M,11,Ilocano,Normal,81,78,75,76,80,78,81,81,83,83,84,83,84,82,82,80,82,83,81,80,80,81,81,Badipa Elementary School,80.54
+BES25-065,M,11,Ilocano,Normal,88,87,88,88,88,88,88,87,86,86,86,86,86,83,83,84,83,83,84,82,84,83,82,Badipa Elementary School,80.54
+BES25-066,M,11,Ilocano,Normal,92,90,89,90,84,83,86,84,83,82,83,83,82,87,87,85,86,86,87,84,86,86,85,Badipa Elementary School,80.54
+BES25-067,M,11,Ilocano,Normal,82,80,84,85,86,85,84,85,81,81,81,81,81,86,84,82,83,84,83,81,82,81,82,Badipa Elementary School,80.54
+BES25-068,M,12,Tagalog,Normal,82,83,83,84,85,84,84,84,84,84,84,83,83,84,83,83,83,83,85,84,84,85,84,Badipa Elementary School,80.54
+BES25-069,M,12,Ilocano,Normal,81,78,83,89,84,82,85,86,79,78,78,79,78,84,84,81,83,85,84,83,83,84,83,Badipa Elementary School,80.54
+BES25-070,F,12,Ilocano,Normal,81,82,80,81,84,83,83,82,80,81,80,80,81,83,81,82,81,84,84,82,83,84,83,Badipa Elementary School,80.54
+BES25-071,F,11,Ilocano,Normal,78,77,78,86,80,80,80,80,81,80,79,79,81,85,82,81,81,82,88,84,84,85,84,Badipa Elementary School,80.54
+BES25-072,F,11,Ilocano,Normal,83,83,83,85,83,85,85,85,85,84,84,84,85,85,83,83,83,85,83,82,83,82,83,Badipa Elementary School,80.54
+BES25-073,F,11,Ilocano,Normal,93,92,91,91,89,90,89,89,79,78,78,79,78,85,84,84,84,84,86,85,85,85,86,Badipa Elementary School,80.54
+BES25-074,F,10,Ilocano,Normal,80,80,80,82,86,86,86,86,83,82,82,82,82,82,81,82,82,82,82,76,76,79,78,Badipa Elementary School,80.54
+BES25-075,F,11,Ilocano,Normal,75,75,75,75,75,76,75,77,77,76,76,77,78,75,75,75,75,75,79,79,79,79,79,Badipa Elementary School,80.54
+BES25-076,F,12,Ilocano,Normal,75,75,75,76,77,76,76,77,77,76,76,76,76,78,76,76,76,76,75,75,75,75,75,Badipa Elementary School,80.54
+BES25-077,F,12,Ilocano,Normal,77,76,75,76,76,76,75,76,78,78,78,78,78,79,78,77,79,78,79,79,79,79,79,Badipa Elementary School,80.54
+BES25-078,F,13,Ilocano,Normal,75,76,75,76,76,76,76,77,77,76,76,76,76,76,76,76,76,76,75,75,75,75,75,Badipa Elementary School,80.54
+BES25-079,F,11,Ilocano,Normal,81,80,78,80,79,79,81,79,77,77,77,77,77,82,82,82,82,83,78,78,78,78,78,Badipa Elementary School,80.54
+BES25-080,F,11,Ilocano,Normal,81,79,79,81,75,75,76,76,76,76,76,76,76,78,78,78,78,76,77,77,77,77,77,Badipa Elementary School,80.54
+BES25-081,F,12,Ilocano,Normal,75,75,75,75,77,77,77,77,76,76,76,76,76,76,77,76,76,76,76,76,76,76,76,Badipa Elementary School,80.54
+BES25-082,F,11,Ilocano,Normal,82,81,80,81,81,81,81,81,83,82,82,82,82,83,82,81,82,86,83,83,83,83,83,Badipa Elementary School,80.54
+BES25-083,M,12,Ilocano,Normal,75,78,77,76,80,80,80,80,81,80,80,80,81,80,79,79,79,81,80,79,80,82,82,Badipa Elementary School,80.54
+BES25-084,M,12,Ilocano,Normal,75,75,75,75,79,79,79,79,76,76,76,76,76,75,75,75,75,75,76,76,76,76,76,Badipa Elementary School,80.54
+BES25-085,M,12,Ilocano,Normal,80,80,79,79,81,79,80,81,82,82,82,81,81,84,83,84,84,85,80,80,80,80,80,Badipa Elementary School,80.54
+BES25-086,M,11,Ilocano,Normal,78,78,79,80,80,80,80,80,80,78,80,80,79,76,76,76,76,77,80,80,80,80,80,Badipa Elementary School,80.54
+BES25-087,M,11,Ilocano,Normal,79,79,80,79,81,80,82,83,82,80,82,83,83,81,79,82,79,81,76,76,76,76,76,Badipa Elementary School,80.54
+BES25-088,M,14,Ilocano,Normal,76,75,75,75,77,77,78,77,79,78,78,78,79,76,75,76,76,78,75,75,75,75,76,Badipa Elementary School,80.54
+BES25-089,M,11,Ilocano,Normal,76,76,76,76,77,77,77,77,78,78,78,78,78,78,78,78,78,78,77,77,77,77,77,Badipa Elementary School,80.54
+BES25-090,M,11,Ilocano,Normal,75,75,75,75,84,81,82,85,80,79,79,78,78,76,75,76,75,76,76,76,76,76,76,Badipa Elementary School,80.54
+BES25-091,M,13,Tagalog,Normal,78,78,77,78,75,75,75,75,75,75,75,75,75,76,76,76,76,76,75,75,75,75,75,Badipa Elementary School,80.54
+BES25-092,M,12,Ilocano,Normal,77,75,76,76,77,77,76,77,77,76,76,77,77,78,77,77,76,79,77,77,77,77,77,Badipa Elementary School,80.54
+BES25-093,M,13,Ilocano,Normal,75,75,75,75,75,75,75,75,75,75,75,75,75,76,76,76,76,76,75,75,75,75,75,Badipa Elementary School,80.54
+BES25-094,M,12,Ilocano,Normal,79,77,78,80,78,78,78,78,76,76,76,76,76,78,77,77,77,77,78,78,78,78,78,Badipa Elementary School,80.54
+BES25-095,M,12,Ilocano,Normal,75,75,75,75,85,84,84,85,77,77,77,77,77,79,79,79,79,79,75,75,75,75,75,Badipa Elementary School,80.54
+BES25-096,M,11,Ilocano,Normal,77,75,77,76,86,85,86,87,80,80,80,80,80,77,76,76,76,77,78,78,78,78,78,Badipa Elementary School,80.54
+BES25-097,M,11,Ilocano,Normal,80,80,80,80,78,77,77,79,75,75,75,75,75,77,76,77,77,77,76,76,76,76,76,Badipa Elementary School,80.54
+BES25-098,M,11,Ilocano,Normal,86,83,83,83,85,85,85,85,83,82,83,82,82,78,77,77,77,79,80,80,80,80,80,Badipa Elementary School,80.54
+BES25-099,M,11,Ilocano,Normal,83.4741784,82.69953052,83.01408451,83.54929577,83.4600939,83.11267606,83.3943662,83.82629108,81.31924883,82.03286385,82.11737089,82.02816901,82.20187793,90,89,89,91,91,80,80,80,80,80,Badipa Elementary School,80.54
+BES25-100,M,11,Ilocano,Normal,76,75,75,76,85,85,84,83,81,81,81,81,81,76,75,75,75,76,76,76,76,76,76,Badipa Elementary School,80.54
+BES25-101,M,11,Ilocano,Normal,75,75,75,75,78,77,76,79,77,76,76,76,79,77,77,77,77,77,77,77,77,77,77,Badipa Elementary School,80.54
+BES25-102,M,11,Ilocano,Normal,75,75,75,75,80,80,80,80,81,80,81,79,79,76,75,76,77,78,78,78,78,78,78,Badipa Elementary School,80.54
+BES25-103,M,12,Ilocano,Normal,75,75,75,75,77,76,76,77,76,76,76,76,76,76,75,76,76,76,76,76,76,76,76,Badipa Elementary School,80.54
+BES25-104,M,12,Ilocano,Normal,75,75,75,78,76,76,76,76,78,75,76,77,76,80,75,75,77,79,82,82,82,82,82,Badipa Elementary School,80.54
+BES25-105,M,11,Ilocano,Normal,76,75,76,76,83,82,81,82,77,77,77,76,77,76,75,76,76,78,79,79,79,79,79,Badipa Elementary School,80.54
+BES25-106,F,11,Ilocano,Normal,92,89,89,90,91,90,90,90,83,83,82,82,82,84,83,83,83,84,87,86,86,86,87,Badipa Elementary School,80.54
+BES25-107,F,11,Ilocano,Normal,91,92,90,91,87,88,88,89,87,87,87,87,87,87,86,87,86,87,88,84,89,87,87,Badipa Elementary School,80.54
+BES25-108,F,11,Ilocano,Overweight,84,82,86,83,83,83,83,84,82,82,81,82,82,81,80,80,80,82,87,86,87,87,86,Badipa Elementary School,80.54
+BES25-109,F,11,Ilocano,Normal,85,82,82,87,81,80,82,81,82,82,84,83,83,79,78,80,80,81,81,81,81,81,81,Badipa Elementary School,80.54
+BES25-110,F,11,Tagalog,Normal,75,75,75,76,84,83,84,86,82,81,81,81,81,79,78,78,79,78,81,79,79,79,81,Badipa Elementary School,80.54
+BES25-111,F,11,Ilocano,Normal,81,80,81,81,82,80,81,82,78,78,78,78,78,79,79,79,80,79,80,79,79,79,79,Badipa Elementary School,80.54
+BES25-112,F,11,Ilocano,Normal,79,78,79,80,77,77,77,77,77,77,77,77,77,79,79,78,78,79,81,80,80,80,81,Badipa Elementary School,80.54
+BES25-113,F,11,Ilocano,Normal,76,76,77,78,79,76,78,79,78,78,78,78,78,81,80,80,80,80,80,79,79,78,79,Badipa Elementary School,80.54
+BES25-114,F,11,Ilocano,Normal,82,82,82,81,87,87,87,87,85,84,84,84,84,79,78,78,78,79,81,81,81,81,81,Badipa Elementary School,80.54
+BES25-115,F,11,Ilocano,Normal,76,76,76,78,84,84,85,84,82,81,81,80,80,81,79,75,76,79,80,79,76,80,78,Badipa Elementary School,80.54
+BES25-116,F,11,Ilocano,Normal,78,77,76,77,76,76,76,77,77,77,77,77,77,81,81,81,81,81,79,77,77,77,77,Badipa Elementary School,80.54
+BES25-117,F,11,Ilocano,Obese,92,89,90,89,84,85,85,86,86,85,85,84,85,81,79,79,79,80,84,83,83,83,84,Badipa Elementary School,80.54
+BES25-118,F,11,Ilocano,Normal,79,78,79,81,79,78,79,80,80,79,79,79,79,80,78,78,78,79,80,80,80,80,80,Badipa Elementary School,80.54
+BES25-119,F,11,Ilocano,Normal,77,76,77,78,79,77,79,79,77,77,77,77,78,82,82,83,82,82,81,80,80,81,82,Badipa Elementary School,80.54
+BES25-120,F,11,Ilocano,Normal,79,76,81,81,77,75,75,76,76,76,76,76,76,81,81,82,81,82,82,82,81,82,82,Badipa Elementary School,80.54
+BES25-121,F,11,Ilocano,Normal,79,78,80,85,82,82,82,84,77,77,77,77,77,80,79,79,79,81,81,81,81,81,81,Badipa Elementary School,80.54
+BES25-122,F,11,Ilocano,Normal,83,83,84,85,86,86,86,87,84,84,84,84,85,83,84,84,88,84,84,83,83,83,83,Badipa Elementary School,80.54
+BES25-123,M,11,Ilocano,Normal,79,75,80,81,82,81,82,82,76,76,76,76,76,79,78,80,79,80,80,79,79,79,80,Badipa Elementary School,80.54
+BES25-124,M,11,Ilocano,Normal,81,80,80,79,80,80,80,80,77,77,77,77,77,80,78,77,77,80,79,78,78,78,79,Badipa Elementary School,80.54
+BES25-125,M,11,Ilocano,Normal,86,82,84,85,87,84,86,86,85,84,85,84,84,79,78,78,78,78,80,80,80,80,80,Badipa Elementary School,80.54
+BES25-126,M,11,Ilocano,Normal,89,85,86,86,83,81,83,84,83,82,82,83,83,80,79,80,80,80,80,79,79,79,80,Badipa Elementary School,80.54
+BES25-127,M,11,Ilocano,Normal,76,76,76,76,80,80,80,80,83,82,83,83,82,79,79,79,79,79,76,76,76,76,76,Badipa Elementary School,80.54
+BES25-128,M,11,Ilocano,Normal,78,78,78,78,82,82,83,81,78,77,78,78,77,79,78,78,78,79,81,80,80,80,81,Badipa Elementary School,80.54
+BES25-129,M,11,Ilocano,Normal,79,79,78,78,75,76,76,76,77,77,77,76,77,80,81,80,80,80,79,79,79,79,79,Badipa Elementary School,80.54
+BES25-130,M,11,Ilocano,Normal,82,77,77,79,76,76,79,76,75,75,75,75,75,78,77,77,77,78,81,78,78,78,78,Badipa Elementary School,80.54
+BES25-131,M,11,Ilocano,Normal,79,80,79,79,77,77,77,77,77,77,78,76,78,81,81,81,81,81,80,80,81,81,81,Badipa Elementary School,80.54
+BES25-132,M,11,Ilocano,Normal,78,78,78,78,84,85,83,84,77,77,77,78,76,81,81,81,81,81,77,79,79,79,80,Badipa Elementary School,80.54
+BES25-133,M,11,Ilocano,Normal,75,75,75,75,79,79,79,79,76,76,76,76,76,79,79,79,79,79,76,76,77,76,77,Badipa Elementary School,80.54
+BES25-134,M,13,Ilocano,Normal,80,76,77,77,87,84,85,85,82,81,82,82,81,80,80,80,80,80,77,75,75,75,75,Badipa Elementary School,80.54
+BES25-135,M,11,Ilocano,Normal,76,76,76,78,79,79,79,79,78,78,78,78,78,80,80,81,81,81,80,76,76,76,77,Badipa Elementary School,80.54
+BES25-136,M,11,Ilocano,Normal,76,76,76,78,79,76,79,77,79,78,79,78,79,79,79,79,79,79,80,79,79,79,80,Badipa Elementary School,80.54
+BES25-137,M,12,Ilocano,Normal,86,83,84,86,78,78,78,78,76,76,76,76,81,79,80,80,80,79,80,79,79,79,80,Badipa Elementary School,80.54
+BES25-138,M,11,Tagalog,Normal,84,82,86,86,87,87,88,87,90,91,89,89,90,81,79,80,80,81,81,81,81,81,81,Badipa Elementary School,80.54
+BES25-139,M,11,Ilocano,Normal,77,75,76,77,79,79,79,79,77,76,76,76,76,79,79,79,79,79,80,79,80,79,80,Badipa Elementary School,80.54
+BES25-140,M,11,Ilocano,Normal,78,83,76,77,76,76,76,76,76,76,76,76,76,81,80,80,80,80,81,80,81,81,81,Badipa Elementary School,80.54
+BES25-141,M,11,Ilocano,Normal,79,78,79,80,80,79,80,81,75,75,75,75,75,76,76,76,76,76,78,78,78,78,78,Badipa Elementary School,80.54
+BES25-142,M,11,Ilocano,Normal,88,78,79,79,82,80,80,80,80,79,79,79,79,82,82,82,82,82,83,81,81,81,82,Badipa Elementary School,80.54
+BES25-143,M,11,Ilocano,Normal,88,87,88,87,85,84,86,86,86,85,85,85,85,81,80,80,80,81,80,79,79,79,80,Badipa Elementary School,80.54
+BES25-144,M,12,Ilocano,Normal,84,84,83,83,76,76,77,76,76,76,76,76,76,80,80,80,80,80,80,79,79,79,79,Badipa Elementary School,80.54
+BES25-145,M,11,Tagalog,Normal,83,81,82,82,82,81,83,82,80,79,80,80,80,81,80,79,79,81,82,82,82,82,82,Badipa Elementary School,80.54
+BES25-146,M,11,Tagalog,Normal,77,75,78,79,79,80,80,79,81,80,80,79,80,88,88,88,89,88,79,80,79,78,79,Badipa Elementary School,80.54
+BES25-147,M,11,Ilocano,Normal,88,86,90,89,93,94,94,91,93,95,95,93,93,93,92,95,94,92,89,90,90,91,88,Badipa Elementary School,80.54
+BES25-148,M,11,Ilocano,Normal,88,86,88,86,90,89,89,90,88,87,86,86,87,89,89,89,88,87,88,87,91,91,87,Badipa Elementary School,80.54
+BES25-149,M,11,Ilocano,Normal,90,91,89,89,86,83,85,86,86,85,85,85,85,89,89,90,90,89,89,89,92,88,87,Badipa Elementary School,80.54
+BES25-150,M,11,Ilocano,Normal,89,93,90,91,90,91,90,90,85,86,84,84,84,87,88,85,87,86,91,94,89,92,89,Badipa Elementary School,80.54
+BES25-151,M,11,Ilocano,Normal,94,91,89,92,94,94,95,93,92,91,92,90,91,89,91,90,90,90,93,92,96,93,90,Badipa Elementary School,80.54
+BES25-152,M,11,Ilocano,Normal,88,88,86,86,88,88,86,86,87,87,87,87,87,90,90,89,90,90,90,91,91,92,89,Badipa Elementary School,80.54
+BES25-153,M,11,Tagalog,Normal,92,94,94,94,91,91,91,92,93,93,93,92,93,92,92,91,92,91,92,95,93,93,91,Badipa Elementary School,80.54
+BES25-154,M,11,Ilocano,Normal,93,93,92,91,90,90,91,90,87,87,87,87,87,91,90,89,89,90,92,91,92,91,89,Badipa Elementary School,80.54
+BES25-155,M,11,Ilocano,Normal,87,90,87,86,89,88,89,90,88,87,87,86,87,90,90,88,89,89,91,89,89,92,88,Badipa Elementary School,80.54
+BES25-156,M,11,Ilocano,Normal,90,91,91,91,87,87,87,86,87,86,86,87,87,89,90,87,89,89,90,90,91,90,88,Badipa Elementary School,80.54
+BES25-157,M,11,Ilocano,Normal,95,91,90,92,93,93,93,92,91,92,93,91,93,90,90,92,91,90,93,92,96,93,90,Badipa Elementary School,80.54
+BES25-158,M,11,Ilocano,Normal,90,91,90,90,87,87,89,87,86,86,87,87,87,89,88,86,87,88,90,88,89,88,88,Badipa Elementary School,80.54
+BES25-159,M,11,Ilocano,Normal,90,89,89,89,91,91,90,92,88,88,88,87,87,90,90,91,90,90,92,93,93,92,90,Badipa Elementary School,80.54
+BES25-160,M,11,Ilocano,Normal,91,90,92,90,90,90,90,90,87,87,88,87,87,92,92,91,92,91,92,92,95,93,91,Badipa Elementary School,80.54
+BES25-161,M,11,Ilocano,Wasted,90,90,89,90,89,89,88,89,87,87,87,87,87,89,88,90,86,88,88,88,92,89,87,Badipa Elementary School,80.54
+BES25-162,M,11,Tagalog,Normal,92,92,88,91,90,90,90,90,92,92,91,91,92,89,88,88,88,88,88,89,88,88,88,Badipa Elementary School,80.54
+BES25-163,M,11,Tagalog,Normal,96,94,96,97,96,95,96,95,94,94,94,94,94,89,91,90,90,90,93,92,94,92,90,Badipa Elementary School,80.54
+BES25-164,M,11,Tagalog,Normal,90,90,90,89,90,89,89,89,92,93,93,92,92,91,90,92,91,91,91,91,90,91,89,Badipa Elementary School,80.54
+BES25-165,F,11,Ilocano,Normal,89,90,88,89,85,87,86,86,86,86,86,86,86,89,90,88,89,90,90,92,90,92,89,Badipa Elementary School,80.54
+BES25-166,F,11,Ilocano,Normal,92,93,91,91,88,88,87,89,86,86,86,86,86,89,90,90,89,91,93,94,94,92,91,Badipa Elementary School,80.54
+BES25-167,F,11,Ilocano,Normal,82,77,83,81,80,81,77,77,78,78,78,78,78,88,88,88,88,88,90,89,91,90,88,Badipa Elementary School,80.54
+BES25-168,F,11,Ilocano,Normal,88,90,90,91,88,85,87,88,85,85,84,84,83,88,89,87,86,89,88,90,89,88,88,Badipa Elementary School,80.54
+BES25-169,F,11,Ilocano,Normal,92,96,95,94,91,91,91,91,84,83,83,83,83,91,92,91,91,91,92,94,92,93,90,Badipa Elementary School,80.54
+BES25-170,F,11,Ilocano,Normal,91,92,90,90,87,89,88,88,86,86,86,86,86,91,90,91,91,91,93,94,94,94,91,Badipa Elementary School,80.54
+BES25-171,F,12,Ilocano,Normal,89,91,89,90,87,87,87,87,88,86,87,88,87,91,90,91,90,90,92,91,95,92,89,Badipa Elementary School,80.54
+BES25-172,F,11,Ilocano,Normal,92,93,91,90,89,88,88,90,86,86,86,87,87,92,92,91,92,92,94,94,95,95,93,Badipa Elementary School,80.54
+BES25-173,F,11,Ilocano,Normal,92,90,91,92,88,85,88,85,87,87,91,87,85,90,88,89,89,90,92,92,94,93,90,Badipa Elementary School,80.54
+BES25-174,F,11,Ilocano,Normal,95,95,94,91,94,93,93,93,92,91,92,91,91,91,90,91,89,90,93,91,91,92,90,Badipa Elementary School,80.54
+BES25-175,F,11,Ilocano,Normal,92,93,91,91,90,89,88,90,87,87,88,88,87,92,91,91,90,91,93,93,94,92,91,Badipa Elementary School,80.54
+BES25-176,F,11,Ilocano,Normal,83,80,81,82,83,82,82,83,90,90,89,89,90,88,87,87,88,88,86,87,87,87,86,Badipa Elementary School,80.54
+BES25-177,F,11,Ilocano,Normal,93,94,91,91,90,89,90,90,87,87,87,87,86,89,87,89,87,99,91,90,90,89,90,Badipa Elementary School,80.54
+BES25-178,F,12,Tagalog,Normal,80,77,80,79,86,85,85,86,79,79,77,78,76,86,86,85,85,85,90,85,90,89,88,Badipa Elementary School,80.54
+BES25-179,F,11,Ilocano,Normal,95,94,94,91,93,94,92,94,96,95,95,95,93,89,88,86,88,88,91,90,91,91,91,Badipa Elementary School,80.54
+BES25-180,F,11,Ilocano,Normal,91,91,90,91,92,93,92,93,91,91,90,90,90,92,92,91,92,91,93,95,94,94,91,Badipa Elementary School,80.54
+BES25-181,F,11,Ilocano,Normal,92,90,89,89,92,91,92,91,93,93,93,93,93,90,89,90,89,91,92,93,94,92,91,Badipa Elementary School,80.54
+BES25-182,F,10,Ilocano,Normal,89,89,87,89,84,85,85,86,86,85,85,85,85,89,88,90,87,87,90,88,91,90,89,Badipa Elementary School,80.54
+BES25-183,F,11,Ilocano,Normal,79,79,79,79,75,75,75,75,76,76,76,76,76,80,79,80,79,81,84,82,83,83,84,Badipa Elementary School,80.54
+BES25-184,F,11,Ilocano,Wasted,82,79,79,77,81,81,81,80,80,80,80,80,80,83,83,83,83,84,84,84,84,84,84,Badipa Elementary School,80.54
+BES25-185,F,11,Ilocano,Normal,83,84,83,85,84,84,84,84,76,76,76,76,76,83,82,82,83,84,84,83,83,83,83,Badipa Elementary School,80.54
+BES25-186,F,11,Ilocano,Normal,86,89,87,87,87,85,87,86,87,87,86,86,86,82,82,81,81,83,86,85,86,86,85,Badipa Elementary School,80.54
+BES25-187,F,11,Ilocano,Normal,84,82,86,90,86,84,87,87,83,83,82,82,82,83,81,82,82,83,84,84,83,84,84,Badipa Elementary School,80.54
+BES25-188,F,11,Ilocano,Normal,91,91,89,89,82,82,83,82,80,80,80,81,81,83,81,81,81,83,82,82,82,83,83,Badipa Elementary School,80.54
+BES25-189,F,11,Ilocano,Normal,77,75,77,76,85,83,82,85,76,76,76,76,76,82,82,83,82,83,83,82,82,82,82,Badipa Elementary School,80.54
+BES25-190,F,11,Ilocano,Normal,78,78,77,78,78,78,76,77,78,76,77,78,78,81,82,76,83,84,84,83,84,84,84,Badipa Elementary School,80.54
+BES25-191,F,11,Ilocano,Normal,82,82,81,82,83,83,83,83,78,78,78,78,78,81,81,81,82,82,84,83,83,84,84,Badipa Elementary School,80.54
+BES25-192,F,12,Ilocano,Normal,77,76,77,76,81,80,80,82,77,76,76,76,76,81,82,83,82,83,83,82,82,82,82,Badipa Elementary School,80.54
+BES25-193,F,11,Ilocano,Normal,82,81,82,82,80,82,82,82,79,79,79,79,79,85,85,84,82,82,81,81,80,81,80,Badipa Elementary School,80.54
+BES25-194,F,11,Ilocano,Normal,87,88,86,88,87,86,86,87,88,87,87,87,87,87,87,87,88,88,87,87,87,86,87,Badipa Elementary School,80.54
+BES25-195,F,11,Ilocano,Normal,82,81,83,82,82,82,84,84,82,81,81,81,82,82,79,78,82,82,86,82,83,83,86,Badipa Elementary School,80.54
+BES25-196,F,11,Ilocano,Normal,80,80,79,80,81,80,81,82,85,79,79,83,81,84,84,84,84,84,84,82,83,84,84,Badipa Elementary School,80.54
+BES25-197,F,11,Ilocano,Normal,85,87,87,87,88,82,85,84,85,85,85,85,85,83,82,84,83,84,84,83,84,84,84,Badipa Elementary School,80.54
+BES25-198,F,11,Ilocano,Normal,90,92,89,89,85,84,84,84,84,84,84,82,84,83,81,79,79,83,84,83,84,83,83,Badipa Elementary School,80.54
+BES25-199,F,11,Ilocano,Normal,87,85,89,91,89,89,90,90,86,84,84,84,83,83,81,81,81,83,88,88,87,88,89,Badipa Elementary School,80.54
+BES25-200,M,11,Ilocano,Normal,91,86,87,87,87,87,87,87,91,91,91,91,91,82,81,83,82,82,85,83,84,83,84,Badipa Elementary School,80.54
+BES25-201,M,11,Ilocano,Normal,76,75,76,75,76,75,75,76,76,76,76,76,76,83,83,83,83,83,84,82,82,82,83,Badipa Elementary School,80.54
+BES25-202,M,11,Ilocano,Normal,77,75,75,75,75,75,75,76,76,76,76,76,76,83,83,84,83,82,83,81,81,82,82,Badipa Elementary School,80.54
+BES25-203,M,11,Ilocano,Normal,84,81,84,84,84,82,84,85,83,83,82,82,82,82,82,82,82,82,83,81,81,82,81,Badipa Elementary School,80.54
+BES25-204,M,11,Ilocano,Normal,77,77,76,77,77,78,77,77,77,77,77,77,77,83,83,83,82,82,83,82,82,82,82,Badipa Elementary School,80.54
+BES25-205,M,12,Ilocano,Normal,79,80,80,80,76,76,76,76,78,78,78,78,78,83,78,80,80,82,81,81,80,81,82,Badipa Elementary School,80.54
+BES25-206,M,11,Ilocano,Normal,78,76,81,80,84,82,82,82,84,83,83,82,82,84,83,85,84,84,82,81,81,82,82,Badipa Elementary School,80.54
+BES25-207,M,11,Ilocano,Normal,78,76,76,78,79,78,78,78,79,79,79,79,79,85,85,85,84,85,85,83,82,82,85,Badipa Elementary School,80.54
+BES25-208,M,11,Ilocano,Normal,89,84,87,86,81,81,82,84,83,82,82,82,82,84,83,83,82,82,81,81,81,81,82,Badipa Elementary School,80.54
+BES25-209,M,11,Ilocano,Normal,83,83,84,83,78,78,78,80,79,79,78,78,78,83,83,83,83,83,83,81,81,82,82,Badipa Elementary School,80.54
+BES25-210,M,11,Ilocano,Normal,90,89,88,90,86,87,87,87,87,86,86,86,87,83,83,83,83,83,86,84,84,84,84,Badipa Elementary School,80.54
+BES25-211,M,11,Ilocano,Normal,86,87,85,85,84,81,81,86,84,84,84,84,84,83,83,82,82,83,84,82,85,85,85,Badipa Elementary School,80.54
+BES25-212,M,11,Ilocano,Normal,82,79,81,82,87,87,86,86,82,81,82,81,82,83,82,83,82,83,86,85,86,86,86,Badipa Elementary School,80.54
+BES25-213,M,11,Ilocano,Normal,77,76,75,76,82,81,82,82,77,77,77,77,78,82,80,81,82,82,82,81,81,82,83,Badipa Elementary School,80.54
+BES25-214,M,11,Ilocano,Overweight,79,80,78,78,78,78,77,78,82,81,81,82,82,82,81,81,81,83,83,81,82,82,81,Badipa Elementary School,80.54
+DAFSIS25-001,M,11,Ilocano,Normal,84,82,84,84,85,81,83,84,85,82,83,84,84,84,81,84,83,83,80,81,88,80,83,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-002,M,11,Ilocano,Normal,80,79,79,79,80,81,80,81,81,82,82,82,82,80,80,81,79,80,90,87,88,85,88,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-003,M,11,Ilocano,Normal,88,87,87,86,86,83,85,84,87,85,87,86,86,85,84,85,85,84,82,84,85,85,80,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-004,M,11,Ilocano,Overweight,85,86,86,85,82,81,81,82,86,86,85,85,85,81,81,84,82,82,79,80,78,80,82,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-005,M,11,Ilocano,Normal,91,92,90,89,91,90,90,89,91,90,90,91,90,90,90,91,90,90,97,95,92,94,93,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-006,M,11,Ilocano,Normal,87,89,86,86,85,85,86,84,86,86,86,89,89,84,85,82,82,83,83,82,77,82,78,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-007,M,11,Ilocano,Normal,85,83,84,85,86,82,84,84,87,86,86,87,87,84,82,84,84,83,83,86,78,87,86,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-008,M,11,Ilocano,Normal,86,87,86,85,84,85,84,85,87,87,87,86,87,84,84,84,83,84,82,83,80,82,79,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-009,M,11,Ilocano,Normal,87,87,87,86,84,82,84,84,86,84,86,86,87,86,84,85,85,85,83,86,86,85,88,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-010,M,11,Ilocano,Normal,80,80,79,79,84,84,84,85,87,87,87,87,87,76,75,75,75,76,77,81,79,79,77,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-011,M,11,Ilocano,Normal,89,87,88,87,87,86,87,87,90,89,89,90,89,90,89,91,90,89,93,92,93,92,95,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-012,M,11,Ilocano,Wasted,88,86,87,87,87,86,87,86,90,89,90,90,91,87,86,87,87,87,95,93,91,95,93,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-013,M,11,Ilocano,Normal,86,88,84,84,85,85,85,86,85,85,84,84,85,84,85,84,84,85,84,84,79,84,79,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-014,F,11,Ilocano,Normal,78,79,77,78,80,77,78,78,81,80,80,80,80,77,77,77,77,78,76,79,79,78,79,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-015,F,11,Ilocano,Normal,85,84,85,84,88,86,86,85,90,89,89,89,89,86,85,86,86,86,92,92,86,91,93,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-016,F,11,Ilocano,Normal,87,86,86,86,87,86,86,87,87,86,86,86,87,88,87,86,84,86,92,88,87,86,85,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-017,F,11,Ilocano,Normal,88,87,87,87,88,87,87,87,90,89,89,89,90,90,89,90,90,90,97,94,92,93,94,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-018,F,11,Ilocano,Normal,85,86,85,85,86,85,84,86,81,81,81,81,81,78,78,82,79,80,90,87,89,86,87,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-019,F,11,Ilocano,Normal,87,86,86,86,87,86,84,86,89,88,87,88,89,89,88,90,88,89,96,93,92,94,93,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-020,F,11,Ilocano,Normal,91,91,90,89,89,89,89,89,91,91,90,90,90,94,95,94,94,94,98,97,94,96,96,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-021,F,11,Ilocano,Normal,80,82,80,81,79,80,78,79,81,80,80,82,80,85,85,84,84,86,87,85,83,84,84,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-022,F,11,Ilocano,Wasted,82,81,81,82,78,78,77,78,84,81,81,81,84,82,81,83,83,84,80,78,82,79,80,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-023,F,12,Ilocano,Normal,92,92,88,88,85,84,84,84,86,85,85,85,85,87,85,89,85,87,95,94,92,93,91,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-024,F,12,Ilocano,Normal,85,84,85,85,87,87,88,89,88,87,88,88,87,85,84,87,85,87,91,86,88,85,85,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-025,F,12,Ilocano,Normal,90,88,88,88,88,88,88,87,88,89,89,89,89,90,89,90,90,90,97,95,90,95,93,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-026,F,12,Ilocano,Normal,87,88,86,87,85,81,83,83,86,84,85,85,85,83,82,81,82,82,83,89,79,88,84,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-027,F,12,Ilocano,Normal,86,87,85,85,85,83,83,85,85,83,84,85,85,83,82,82,83,83,81,84,90,84,83,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-028,F,12,Ilocano,Normal,84,85,85,85,86,86,84,84,86,86,86,86,86,82,81,82,82,82,85,84,87,84,86,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-029,M,11,Ilocano,Normal,87,86,82,89,90,91,91,90,91,90,90,90,90,81,81,83,83,84,85,86,82,85,86,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-030,M,12,Ilocano,Normal,87,86,85,85,86,84,86,85,87,85,85,85,86,86,85,87,87,87,87,86,79,85,83,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-031,M,12,Ilocano,Normal,80,80,80,83,85,81,81,83,84,81,81,82,83,79,77,78,77,78,79,80,78,80,77,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-032,M,12,Ilocano,Normal,84,82,84,84,83,82,83,83,83,83,83,83,82,83,83,81,80,82,86,81,88,82,84,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-033,M,12,Ilocano,Normal,90,91,89,88,87,85,86,85,89,88,89,90,89,86,85,87,86,86,90,87,87,86,89,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-034,M,12,Ilocano,Normal,84,82,84,84,84,82,83,83,86,85,86,86,86,84,83,87,82,83,87,86,87,86,84,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-035,M,12,Ilocano,Normal,87,84,86,84,90,89,90,90,91,90,90,90,90,90,90,87,89,86,91,93,89,92,91,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-036,M,12,Ilocano,Normal,80,79,81,82,85,83,84,85,81,81,81,81,81,78,78,79,77,78,81,80,81,79,79,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-037,M,12,Ilocano,Normal,89,89,89,91,84,83,84,84,91,91,90,91,91,93,94,91,92,94,94,95,92,93,91,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-038,M,11,Ilocano,Normal,76,77,76,77,77,76,76,77,78,77,77,77,77,77,77,78,80,79,78,79,80,79,79,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-039,M,12,Ilocano,Obese,86,84,85,86,85,85,84,85,87,86,86,86,86,89,89,91,88,90,96,93,91,93,93,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-040,M,12,Ilocano,Normal,85,85,83,84,85,84,84,85,87,86,86,86,87,80,80,80,80,80,83,86,86,89,81,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-041,M,12,Ilocano,Normal,78,78,78,78,85,83,84,85,83,81,81,82,82,75,75,75,75,75,79,79,79,78,78,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-042,F,11,Ilocano,Overweight,93,92,92,92,91,91,90,90,92,91,91,90,91,94,93,94,94,94,94,93,94,94,94,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-043,M,11,Ilocano,Normal,76,76,77,77,75,75,75,75,80,78,78,79,79,77,76,77,77,78,76,79,78,79,77,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-044,M,11,Ilocano,Normal,86,85,88,86,85,84,83,84,88,88,88,88,88,88,88,88,86,87,89,91,92,91,89,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-045,M,11,Ilocano,Wasted,92,83,90,89,91,89,90,89,91,89,91,91,91,90,90,89,90,90,93,92,88,91,90,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-046,F,11,Ilocano,Normal,87,86,86,86,86,86,84,86,84,88,87,88,89,89,88,90,88,89,96,93,92,94,93,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-047,F,11,Ilocano,Normal,91,91,90,89,89,89,89,89,91,91,90,90,90,94,95,94,94,94,98,97,94,96,96,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-048,M,11,Ilocano,Normal,87,89,89,91,84,83,84,84,91,91,90,91,91,93,94,91,92,94,94,95,92,92,91,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-049,M,11,Ilocano,Normal,76,77,76,78,77,76,76,77,77,77,77,77,77,78,77,78,82,79,78,79,80,79,79,Don Alipio Fernandez Sr. Integrated School,73.08
+DAFSIS25-050,M,11,Ilocano,Normal,86,84,85,86,85,85,84,85,87,86,85,86,86,89,89,91,88,90,96,93,91,93,93,Don Alipio Fernandez Sr. Integrated School,73.08
+DAPSMECSE25-001,M,11,Ilocano,Normal,92,91,93,93,92,92,94,94,93,93,94,94,93,93,94,93,94,92,95,94,94,96,92,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-002,F,11,Ilocano,Normal,78,79,78,78,81,79,79,80,79,78,78,78,78,85,84,84,85,86,85,84,85,87,87,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-003,M,11,Ilocano,Normal,87,87,89,88,87,86,86,87,91,89,90,91,89,93,92,93,94,92,93,93,93,95,91,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-004,M,11,Ilocano,Normal,79,78,78,78,80,80,78,80,85,84,84,85,85,87,85,84,84,86,85,83,84,87,85,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-005,F,11,Ilocano,Normal,85,84,85,86,87,84,85,87,85,84,84,84,86,86,85,84,85,86,84,85,84,86,83,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-006,F,12,Ilocano,Normal,81,81,79,83,88,85,86,89,87,86,85,86,87,87,85,86,84,86,82,81,83,84,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-007,F,11,Ilocano,Normal,87,84,85,87,88,85,85,88,88,86,86,87,87,84,82,83,84,85,83,82,81,84,81,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-008,F,11,Ilocano,Normal,78,75,78,78,80,80,80,82,81,77,77,78,78,82,80,81,81,82,80,80,85,83,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-009,F,11,Ilocano,Normal,78,77,78,80,82,82,80,84,86,84,85,86,87,83,81,80,81,81,83,83,84,85,85,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-010,F,11,Ilocano,Normal,86,85,86,87,87,86,85,88,84,85,85,87,85,87,86,86,85,86,87,86,89,90,88,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-011,F,12,Ilocano,Normal,88,88,86,87,88,88,88,87,95,87,87,89,89,88,88,87,87,87,90,89,86,90,88,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-012,F,11,Ilocano,Normal,76,75,76,76,79,79,78,83,83,84,84,86,84,80,79,79,79,80,83,81,82,80,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-013,F,11,Ilocano,Normal,75,75,75,75,75,75,75,75,76,76,76,76,76,75,75,75,75,75,75,75,75,75,75,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-014,M,10,Ilocano,Normal,82,81,85,86,85,84,84,85,85,83,86,86,87,87,86,85,85,86,85,85,84,89,85,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-015,M,11,Ilocano,Normal,76,75,75,76,76,75,75,76,79,78,81,78,77,79,77,80,78,79,84,81,83,84,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-016,M,10,Ilocano,Normal,77,76,76,79,82,81,79,80,82,79,77,80,85,83,82,82,82,82,83,81,83,90,86,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-017,M,10,Ilocano,Normal,79,79,78,79,81,81,78,80,79,78,79,78,78,82,82,82,82,82,80,80,79,78,81,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-018,F,11,Ilocano,Normal,88,88,86,87,88,88,88,87,90,87,87,89,89,88,88,87,87,87,90,89,86,90,88,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-019,M,10,Ilocano,Normal,75,75,75,76,77,77,77,78,77,77,82,78,78,76,76,76,76,76,76,75,76,76,77,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-020,F,11,Ilocano,Normal,76,75,76,76,79,79,78,83,83,84,84,86,84,80,79,79,79,80,83,81,82,80,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-021,M,11,Ilocano,Normal,88,85,87,88,87,86,86,87,87,83,85,88,88,90,90,86,90,87,84,82,85,83,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-022,M,11,Ilocano,Normal,76,75,75,76,76,75,75,76,79,78,81,78,77,79,77,80,78,79,84,81,83,84,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-023,M,10,Ilocano,Normal,77,75,76,77,78,78,78,78,84,83,84,84,84,83,80,80,81,81,80,80,82,84,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-024,F,11,Ilocano,Normal,89,89,91,91,90,88,89,89,89,88,92,95,88,92,91,93,91,93,95,94,92,93,94,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-025,F,11,Ilocano,Normal,81,81,79,83,88,85,86,89,87,86,85,86,87,87,85,86,84,86,82,81,83,84,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-026,F,15,Tagalog,Normal,86,85,86,86,83,82,83,83,83,82,81,83,82,86,84,85,85,86,84,82,86,87,85,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-027,F,11,Ilocano,Normal,87,84,85,87,88,85,85,88,88,86,86,87,87,84,82,83,84,85,83,82,81,84,81,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-028,M,11,Ilocano,Normal,79,79,78,79,81,81,78,80,79,78,79,78,78,82,82,82,82,82,80,80,79,75,81,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-029,M,11,Ilocano,Normal,85,81,88,85,85,84,88,86,89,89,89,89,89,85,85,85,86,84,83,82,87,83,83,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-030,M,12,Ilocano,Normal,83,83,84,84,78,77,79,80,78,79,86,77,79,85,83,84,84,85,83,82,83,88,85,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-031,M,11,Pangasinan,Normal,89,90,88,89,80,82,79,81,84,85,84,85,84,85,81,80,81,80,83,78,80,79,83,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-032,M,11,Tagalog,Normal,90,89,88,90,91,88,88,89,88,88,88,91,89,86,86,86,86,87,84,81,82,82,84,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-033,M,11,Ilocano,Normal,75,75,75,75,76,75,75,76,76,76,76,77,76,80,79,79,80,80,89,88,88,88,87,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DAPSMESE25-034,M,11,Ilocano,Normal,75,75,75,75,77,76,77,78,76,76,76,76,76,77,76,76,78,75,78,77,77,77,78,Don Amadeo Perez Sr. Memorial Elementary School - East,75.71
+DCBMES25-001,M,12,Ilocano,Normal,86,85,86,86,87,86,86,87,86,85,85,85,86,88,84,81,88,87,91,87,87,90,89,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-002,M,12,Ilocano,Normal,87,86,86,87,82,78,82,81,80,81,81,80,80,90,87,83,89,88,88,87,88,87,87,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-003,M,11,Ilocano,Normal,82,81,80,79,78,76,77,79,80,81,82,80,80,86,82,82,84,84,87,85,86,86,85,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-004,M,11,Ilocano,Normal,91,90,90,90,91,94,93,92,92,93,91,93,92,95,94,91,96,91,96,94,94,95,95,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-005,M,12,Ilocano,Normal,81,77,80,79,76,75,77,77,77,78,77,77,77,78,77,77,79,76,83,79,79,81,83,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-006,M,11,Ilocano,Normal,79,76,79,76,77,76,78,79,84,81,82,82,82,84,81,81,82,83,82,82,83,81,83,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-007,M,11,Ilocano,Normal,80,78,80,78,81,79,79,82,83,79,80,81,81,83,79,81,83,79,84,85,86,84,84,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-008,M,11,Ilocano,Normal,84,84,84,85,80,79,78,81,84,85,84,83,86,82,79,81,81,82,85,83,84,85,87,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-009,M,11,Ilocano,Normal,82,79,81,79,76,75,76,76,77,77,77,78,77,86,84,85,85,84,85,85,86,85,83,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-010,M,11,Ilocano,Overweight,96,96,97,97,96,95,96,96,82,89,84,82,82,91,93,89,89,91,86,85,86,86,85,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-011,F,11,Ilocano,Normal,78,76,77,76,75,75,75,75,77,77,77,76,77,81,79,79,82,80,83,82,83,83,81,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-012,F,12,Ilocano,Normal,85,84,82,82,75,75,75,75,77,76,78,77,77,83,84,83,84,88,90,89,88,88,86,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-013,F,11,Ilocano,Normal,87,85,85,85,92,90,89,91,89,89,89,90,90,88,89,87,90,89,91,91,92,91,90,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-014,F,11,Ilocano,Normal,84,80,85,84,87,86,87,87,85,84,85,84,84,85,82,85,86,85,86,87,87,87,87,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-015,F,11,Ilocano,Normal,88,89,87,88,89,88,87,88,86,87,86,87,87,88,86,86,86,88,87,89,90,87,88,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-016,F,11,Ilocano,Normal,89,91,92,91,92,92,94,90,84,83,83,85,85,92,88,90,89,80,92,90,91,91,89,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-017,F,11,Ilocano,Normal,85,82,82,82,84,83,82,84,84,82,82,83,83,88,87,83,87,86,87,86,87,87,86,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-018,F,11,Ilocano,Normal,84,83,86,83,84,83,85,86,85,85,84,84,84,85,86,84,84,87,87,88,89,87,87,Don Clemente Blanco Memorial Elementary School,33.59
+DCBMES25-019,F,11,Ilocano,Normal,89,89,88,89,90,89,90,89,92,90,90,90,90,89,87,85,87,88,80,80,89,88,89,Don Clemente Blanco Memorial Elementary School,33.59
+LANES25-001,M,12,Ilocano,Normal,78,78,78,78,80,81,81,80,81,79,80,79,80,77,78,78,79,80,81,79,79,79,80,Lananpin Elementary School,62.7
+LANES25-002,F,11,Tagalog,Normal,83,80,78,81,85,85,81,84,80,78,78,79,79,84,85,82,81,81,82,80,80,80,83,Lananpin Elementary School,62.7
+LANES25-003,M,11,Ilocano,Normal,83,83,83,84,85,85,85,84,79,78,78,79,78,87,86,84,81,82,89,87,87,88,86,Lananpin Elementary School,62.7
+LANES25-004,M,11,Ilocano,Normal,79,77,77,79,79,77,79,79,79,78,78,78,79,78,77,77,80,78,80,83,86,80,85,Lananpin Elementary School,62.7
+LANES25-005,M,12,Ilocano,Normal,77,77,78,78,82,81,81,82,82,81,81,82,82,79,78,79,79,79,79,78,78,78,77,Lananpin Elementary School,62.7
+LANES25-006,F,12,Ilocano,Normal,75,75,75,75,75,75,75,75,75,75,75,75,75,81,80,80,81,80,80,78,77,78,78,Lananpin Elementary School,62.7
+LANES25-007,F,11,Ilocano,Normal,80,79,82,81,78,78,78,78,79,80,79,79,78,82,83,81,81,80,85,82,82,82,83,Lananpin Elementary School,62.7
+LANES25-008,F,12,Ilocano,Normal,83,81,81,81,84,84,82,81,83,83,84,83,84,84,84,85,84,84,84,84,82,83,83,Lananpin Elementary School,62.7
+LANES25-009,F,11,Ilocano,Normal,90,90,89,90,89,88,89,89,90,90,90,90,90,92,91,92,91,91,89,88,89,89,89,Lananpin Elementary School,62.7
+LANES25-010,M,13,Ilocano,Normal,90,90,91,90,82,80,81,82,84,83,81,81,83,84,83,83,83,84,83,82,83,82,84,Lananpin Elementary School,62.7
+LANES25-011,M,11,Ilocano,Normal,83,82,82,83,84,84,83,85,86,87,86,86,86,84,82,81,84,84,84,82,82,82,83,Lananpin Elementary School,62.7
+LANES25-012,M,11,Ilocano,Wasted,81,80,81,82,81,81,81,81,83,81,82,83,83,81,82,83,77,81,84,82,82,82,84,Lananpin Elementary School,62.7
+LANES25-013,F,11,Ilocano,Overweight,81,82,81,80,84,83,84,84,82,82,82,83,84,83,83,81,81,80,83,83,83,84,83,Lananpin Elementary School,62.7
+LANES25-014,M,11,Ilocano,Normal,92,92,92,92,91,91,92,88,91,88,90,90,89,89,90,88,90,92,84.65789474,90,89,89,91,Lananpin Elementary School,62.7
+LANES25-015,M,12,Ilocano,Normal,86,85,86,86,88,87,87,88,88,88,87,88,88,87,88,86,87,87,86,87,87,88,89,Lananpin Elementary School,62.7
+LANES25-016,M,11,Ilocano,Obese,83,81,83,83,86,86,85,85,86,86,86,86,86,85,85,83,85,85,86,86,85,87,86,Lananpin Elementary School,62.7
+LANES25-017,M,11,Ilocano,Normal,82,81,83,83,82,82,82,82,86,85,85,85,86,82,81,80,82,82,86,85,86,85,87,Lananpin Elementary School,62.7
+LANES25-018,M,12,Ilocano,Normal,83,81,84,84,88,87,87,89,87,86,86,87,87,86,84,83,84,85,85,84,84,83,85,Lananpin Elementary School,62.7
+LANES25-019,M,12,Ilocano,Normal,83,84,81,83,78,78,78,78,81,80,80,80,82,79,78,77,79,79,85,82,83,82,83,Lananpin Elementary School,62.7
+LANES25-020,M,12,Ilocano,Overweight,81,80,81,82,82,82,82,82,83,81,81,81,83,83,82,81,82,83,84,83,83,83,85,Lananpin Elementary School,62.7
+LANES25-021,M,11,Ilocano,Normal,79,78,77,77,80,79,80,81,81,81,81,81,82,77,78,79,77,79,78,77,77,77,77,Lananpin Elementary School,62.7
+LANES25-022,F,11,Tagalog,Normal,94,91,91,91,92,91,91,92,91,90,91,91,91,93,91,92,92,91,87,87,89,88,88,Lananpin Elementary School,62.7
+LANES25-023,F,11,Ilocano,Normal,78,78,78,79,78,78,80,83,82,80,81,81,80,84,85,83,83,81,82,80,80,80,83,Lananpin Elementary School,62.7
+LANES25-024,M,11,Ilocano,Wasted,86,85,86,86,82,82,81,84,83,83,84,82,84,83,83,85,83,84,83,81,84,82,85,Lananpin Elementary School,62.7
+LANES25-025,M,12,Ilocano,Normal,87,88,86,88,87,86,87,87,90,90,90,90,90,93,89,91,91,91,90,90,90,90,90,Lananpin Elementary School,62.7
+LANES25-026,F,12,Ilocano,Normal,82,80,82,83,76,76,76,76,80,79,79,79,80,82,84,82,80,81,80,78,79,78,80,Lananpin Elementary School,62.7
+LANES25-027,M,11,Ilocano,Normal,78,79,78,78,81,82,81,82,82,81,81,81,82,76,78,78,78,80,80,78,78,78,79,Lananpin Elementary School,62.7
+LANES25-028,F,11,Ilocano,Normal,83,80,81,82,82,82,82,82,82,82,81,82,83,83,82,82,81,82,84,86,84,84,84,Lananpin Elementary School,62.7
+LANES25-029,M,11,Ilocano,Wasted,76,76,80,82,83,84,82,83,82,79,80,79,81,78,78,78,78,84,80,81,79,82,82,Lananpin Elementary School,62.7
+LANES25-030,F,12,Tagalog,Normal,84,82,82,84,91,91,92,91,93,92,91,93,92,88,84,87,84,86,89,88,90,84,85,Lananpin Elementary School,62.7
+LANES25-031,F,11,Tagalog,Normal,87,88,87,89,87,87,88,91,85,85,85,85,85,78,80,77,81,78,87,85,84,85,87,Lananpin Elementary School,62.7
+LANES25-032,F,12,Ilocano,Normal,82,81,83,84,85,85,85,86,86,86,86,85,85,86,84,83,84,84,88,88,88,86,88,Lananpin Elementary School,62.7
+LANES25-033,F,12,Ilocano,Normal,82,82,80,79,99,97,92,94,95,94,94,94,95,87,86,88,87,87,85,87,87,87,87,Lananpin Elementary School,62.7
+LANES25-034,F,11,Ilocano,Normal,94,93,90,90,87,87,87,86,87,86,86,87,87,86,85,84,85,86,88,87,84,86,87,Lananpin Elementary School,62.7
+LANES25-035,M,11,Ilocano,Normal,82,80,82,82,84,85,86,84,83,83,84,82,83,83,83,83,82,82,78,78,77,77,77,Lananpin Elementary School,62.7
+LANES25-036,F,12,Tagalog,Normal,91,89,91,91,91,90,90,90,91,90,90,87,87,93,93,92,93,93,92,92,92,92,92,Lananpin Elementary School,62.7
+LANES25-037,F,11,Ilocano,Normal,90,90,86,89,92,91,92,91,90,90,90,90,90,87,85,84,87,86,87,85,84,86,86,Lananpin Elementary School,62.7
+LANES25-038,F,11,Tagalog,Normal,91,89,91,92,91,90,91,91,89,88,86,87,90,91,91,90,90,91,91,92,91,92,92,Lananpin Elementary School,62.7
+LANES25-039,F,12,Ilocano,Normal,86,87,86,87,85,84,84,83,91,90,90,90,90,91,90,92,90,90,87,89,87,89,90,Lananpin Elementary School,62.7
+LANES25-040,M,11,Ilocano,Normal,81,77,79,81,79,78,79,80,80,78,80,78,78,76,80,80,78,80,81,79,78,78,80,Lananpin Elementary School,62.7
+LANES25-041,F,13,Ilocano,Normal,87,85,83,86,85,85,85,86,85,83,84,84,84,84,83,83,84,85,87,84,84,85,85,Lananpin Elementary School,62.7
+LANES25-042,F,11,Ilocano,Normal,82,82,80,82,83,84,85,86,86,85,85,85,85,84,82,82,84,85,86,86,85,86,86,Lananpin Elementary School,62.7
+LANES25-043,F,11,Ilocano,Normal,90,92,90,92,92,93,92,92,90,90,90,90,90,93,90,92,90,92,92,92,92,93,92,Lananpin Elementary School,62.7
+LANES25-044,M,11,Ilocano,Normal,88,91,88,89,85,84,85,86,90,89,90,89,90,93,91,88,92,91,90,90,90,90,90,Lananpin Elementary School,62.7
+LANES25-045,M,11,Ilocano,Normal,83,84,82,81,85,85,84,85,86,85,85,86,86,82,80,80,83,83,86,84,86,85,85,Lananpin Elementary School,62.7
+LANES25-046,M,12,Ilocano,Overweight,85,84,86,85,89,88,88,88,88,88,88,88,88,89,86,91,88,89,88,89,89,88,90,Lananpin Elementary School,62.7
+LANES25-047,M,12,Ilocano,Normal,83,84,79,82,88,87,88,86,86,85,85,86,86,87,86,85,86,87,90,91,91,90,92,Lananpin Elementary School,62.7
+LANES25-048,F,11,Ilocano,Normal,75,75,76,80,82,81,80,82,82,80,79,80,80,76,77,75,76,80,80,78,77,77,79,Lananpin Elementary School,62.7
+LANES25-049,F,11,Ilocano,Normal,82,81,82,83,89,88,86,86,86,85,87,85,85,85,84,83,84,86,85,86,83,85,85,Lananpin Elementary School,62.7
+LANES25-050,M,11,Ilocano,Normal,89,89,89,88,84,83,83,83,84,83,83,85,84,83,83,82,83,83,82,83,83,83,83,Lananpin Elementary School,62.7
+LANES25-051,M,12,Tagalog,Wasted,84,80,82,87,84,84,84,85,83,79,78,79,77,82,81,80,81,83,84,85,87,87,88,Lananpin Elementary School,62.7
+LANES25-052,F,11,Ilocano,Normal,85,87,85,85,87,86,85,86,87,85,86,85,85,82,80,79,81,82,86,85,84,84,85,Lananpin Elementary School,62.7
+LANES25-053,F,11,Ilocano,Normal,84,84,83,85,84,84,84,84,87,86,87,86,86,85,85,84,86,86,88,87,88,87,87,Lananpin Elementary School,62.7
+LANES25-054,F,12,Ilocano,Normal,87,89,88,90,86,86,86,88,87,87,88,87,87,88,87,86,87,87,89,89,90,90,89,Lananpin Elementary School,62.7
+LANES25-055,F,12,Ilocano,Normal,86,81,86,86,87,88,86,86,87,86,87,86,87,88,86,88,87,88,86,86,86,86,87,Lananpin Elementary School,62.7
+LANES25-056,M,12,Ilocano,Normal,77,76,78,79,79,78,79,79,80,78,80,78,78,80,78,78,80,80,81,81,82,81,82,Lananpin Elementary School,62.7
+LANES25-057,M,12,Ilocano,Wasted,84,83,83,83,79,79,79,80,81,79,81,80,80,82,81,81,82,83,84,83,84,83,85,Lananpin Elementary School,62.7
+LANES25-058,M,11,Ilocano,Normal,83,82,78,77,77,77,77,77,80,78,80,78,78,77,78,77,78,79,77,76,75,76,77,Lananpin Elementary School,62.7
+LANES25-059,F,11,Ilocano,Normal,90,91,87,87,84,84,85,86,86,86,86,86,86,84,82,81,82,83,85,85,84,84,86,Lananpin Elementary School,62.7
+LANES25-060,F,11,Ilocano,Overweight,86,85,81,81,81,81,81,81,84,83,82,82,81,84,83,82,82,82,85,84,83,84,84,Lananpin Elementary School,62.7
+LANES25-061,M,11,Tagalog,Normal,86,83,87,85,86,83,87,87,86,83,85,83,85,88,86,89,90,87,89,88,86,88,86,Lananpin Elementary School,62.7
+LANES25-062,M,11,Ilocano,Normal,84,87,86,86,84,84,84,84,87,86,88,86,86,85,84,84,85,85,89,88,88,88,88,Lananpin Elementary School,62.7
+LANES25-063,F,11,Ilocano,Normal,88,87,87,85,86,86,86,87,90,89,90,89,89,92,91,91,90,91,87,86,87,86,86,Lananpin Elementary School,62.7
+LANES25-064,M,11,Ilocano,Normal,85,85,88,87,88,87,90,88,86,85,85,86,86,85,84,83,85,84,88,89,89,88,90,Lananpin Elementary School,62.7
+LANES25-065,F,12,Ilocano,Overweight,80,81,86,84,86,84,87,88,86,85,85,86,87,83,79,83,77,82,86,85,83,82,85,Lananpin Elementary School,62.7
+LANES25-066,M,11,Ilocano,Normal,81,76,77,77,81,81,81,81,81,80,81,81,82,77,79,77,78,79,81,79,78,79,79,Lananpin Elementary School,62.7
+LANES25-067,F,11,Tagalog,Normal,87,85,84,85,88,87,88,89,87,86,87,86,87,84,83,82,84,84,88,87,85,86,87,Lananpin Elementary School,62.7
+LANES25-068,F,11,Ilocano,Normal,76,76,75,76,77,77,77,77,85,84,83,84,83,85,81,80,81,83,81,78,80,80,80,Lananpin Elementary School,62.7
+LANES25-069,M,11,Ilocano,Normal,81,80,81,82,85,84,87,84,83,82,83,84,83,84,84,83,84,84,84,83,84,83,85,Lananpin Elementary School,62.7
+LANES25-070,M,12,Ilocano,Normal,76,75,78,76,80,79,79,80,81,81,80,80,81,76,76,78,77,79,76,76,76,76,76,Lananpin Elementary School,62.7
+LANES25-071,M,11,Ilocano,Normal,82,82,82,83,83,82,83,83,83,83,84,82,83,83,83,84,83,83,85,84,82,82,84,Lananpin Elementary School,62.7
+LANES25-072,F,11,Ilocano,Normal,92,92,89,90,87,87,88,89,87,86,86,87,87,89,86,85,87,88,89,86,85,85,86,Lananpin Elementary School,62.7
+LANES25-073,M,11,Ilocano,Normal,80,80,81,81,82,81,83,81,81,79,81,79,80,81,80,81,80,80,83,82,82,82,83,Lananpin Elementary School,62.7
+LANES25-074,M,12,Ilocano,Normal,76,75,76,77,77,77,77,77,79,78,79,78,78,79,81,83,78,82,83,84,83,83,84,Lananpin Elementary School,62.7
+LANES25-075,M,11,Ilocano,Normal,76,77,76,77,82,81,81,82,82,81,81,81,82,83,83,83,83,83,82,81,81,81,83,Lananpin Elementary School,62.7
+LANES25-076,M,12,Tagalog,Wasted,75,75,75,76,76,76,76,76,82,80,80,80,82,80,78,79,79,81,81,77,77,77,77,Lananpin Elementary School,62.7
+LANES25-077,F,11,Ilocano,Normal,86,87,85,86,85,85,84,85,85,84,84,84,85,85,84,83,85,85,86,87,88,88,88,Lananpin Elementary School,62.7
+LANES25-078,F,11,Ilocano,Normal,81,80,81,82,80,79,80,81,80,78,80,79,79,85,85,84,83,82,83,81,82,82,83,Lananpin Elementary School,62.7
+LANES25-079,F,11,Ilocano,Normal,92,93,93,91,92,92,93,94,90,90,90,90,90,94,93,94,92,94,91,91,90,91,90,Lananpin Elementary School,62.7
+LANES25-080,M,13,Ilocano,Normal,86,85,87,87,86,85,86,85,87,86,87,86,87,89,89,88,88,88,84,87,85,85,86,Lananpin Elementary School,62.7
+LANES25-081,F,11,Ilocano,Normal,82,84,82,85,91,90,90,90,90,90,90,90,90,88,86,87,87,87,86,85,84,85,86,Lananpin Elementary School,62.7
+LANES25-082,F,11,Ilocano,Normal,82,81,83,83,83,82,83,84,82,81,81,82,83,82,80,81,83,83,85,86,83,84,85,Lananpin Elementary School,62.7
+LANES25-083,F,12,Ilocano,Normal,91,91,92,93,93,92,93,94,90,90,90,90,90,94,90,91,89,91,90,90,90,90,90,Lananpin Elementary School,62.7
+LANES25-084,M,13,Tagalog,Wasted,81,80,82,81,84,84,84,85,87,86,85,86,84,90,88,88,86,87,85,85,86,86,88,Lananpin Elementary School,62.7
+LANES25-085,F,11,Ilocano,Normal,89,89,91,90,90,90,92,91,90,90,90,90,90,90,90,90,89,89,90,89,89,90,88,Lananpin Elementary School,62.7
+LANES25-086,M,12,Ilocano,Normal,76,75,76,76,75,75,75,76,80,78,79,78,78,76,76,76,76,76,76,76,76,76,77,Lananpin Elementary School,62.7
+LANES25-087,M,11,Ilocano,Normal,82,82,82,82,83,83,83,83,84,83,83,83,84,86,85,84,84,85,85,83,84,85,84,Lananpin Elementary School,62.7
+LANES25-088,M,11,Ilocano,Overweight,79,79,79,81,83,82,82,84,85,84,85,84,85,83,82,84,84,84,84,86,86,84,85,Lananpin Elementary School,62.7
+LANES25-089,M,11,Ilocano,Normal,79,79,77,78,82,81,81,82,82,82,80,82,83,80,80,80,80,81,78,75,79,77,80,Lananpin Elementary School,62.7
+LANES25-090,M,11,Ilocano,Normal,81,81,83,83,85,84,85,86,86,85,86,85,86,85,83,84,83,85,87,86,87,87,87,Lananpin Elementary School,62.7
+LANES25-091,M,11,Ilocano,Normal,81,80,82,83,85,84,83,85,84,82,83,84,84,84,83,83,83,84,82,81,82,80,83,Lananpin Elementary School,62.7
+LANES25-092,F,11,Tagalog,Normal,92,90,91,92,90,90,90,91,93,92,92,92,91,94,91,89,89,93,92,89,86,89,89,Lananpin Elementary School,62.7
+LANES25-093,M,11,Ilocano,Wasted,80,79,79,79,82,78,78,80,84,80,81,82,81,85,82,79,84,84,84,83,82,82,84,Lananpin Elementary School,62.7
+LANES25-094,F,11,Ilocano,Normal,81,80,80,81,78,79,78,78,83,81,82,81,82,84,83,82,83,82,85,83,84,82,84,Lananpin Elementary School,62.7
+LANES25-095,M,11,Ilocano,Normal,85,83,86,85,86,85,86,86,87,87,86,87,87,88,87,88,88,87,84,85,86,86,86,Lananpin Elementary School,62.7
+LANES25-096,M,11,Ilocano,Overweight,91,88,87,89,84,83,83,85,84,81,83,84,84,84,83,82,83,83,80,79,79,79,82,Lananpin Elementary School,62.7
+LANES25-097,F,11,Ilocano,Normal,80,79,77,80,82,82,82,82,82,83,84,81,83,81,83,82,80,81,83,81,81,82,83,Lananpin Elementary School,62.7
+LANES25-098,F,11,Ilocano,Normal,80,80,81,82,83,81,82,82,83,81,82,81,83,82,82,82,82,82,82,81,81,81,83,Lananpin Elementary School,62.7
+LANES25-099,M,11,Ilocano,Normal,85,85,85,85,87,87,87,87,87,86,86,87,87,87,87,88,88,88,84,84,83,85,86,Lananpin Elementary School,62.7
+LANES25-100,F,12,Ilocano,Normal,88,86,88,88,91,88,90,89,90,90,90,90,90,91,91,91,91,90,90,91,90,90,91,Lananpin Elementary School,62.7
+LANES25-101,F,12,Ilocano,Wasted,87,85,87,87,87,86,85,85,87,86,86,87,87,88,87,89,87,86,86,87,87,88,88,Lananpin Elementary School,62.7
+LANES25-102,F,11,Ilocano,Normal,90,86,83,86,87,87,85,85,88,87,87,88,88,86,86,84,86,86,89,90,90,90,91,Lananpin Elementary School,62.7
+LANES25-103,F,11,Ilocano,Normal,83,79,76,78,77,77,77,77,81,79,81,79,80,84,84,81,82,81,86,85,82,84,83,Lananpin Elementary School,62.7
+LANES25-104,M,11,Ilocano,Normal,86,87,84,86,86,84,87,86,84,83,84,84,83,91,90,90,90,90,88,86,86,88,86,Lananpin Elementary School,62.7
+LANES25-105,M,12,Ilocano,Normal,81,80,81,81,81,81,81,81,82,80,81,82,82,81,82,81,80,81,85,82,84,82,84,Lananpin Elementary School,62.7
+LANES25-106,M,11,Ilocano,Normal,83,84,83,83,85,85,87,85,88,88,88,87,87,86,84,84,85,86,86,86,83,85,85,Lananpin Elementary School,62.7
+LANES25-107,M,11,Ilocano,Normal,84,83,85,86,86,86,90,88,88,88,88,88,88,86,85,84,85,86,86,87,87,87,87,Lananpin Elementary School,62.7
+LANES25-108,M,12,Ilocano,Normal,83,81,84,85,85,84,84,84,83,83,83,82,83,81,81,79,76,80,83,81,81,81,81,Lananpin Elementary School,62.7
+LANES25-109,F,11,Ilocano,Wasted,94,94,94,94,92,91,91,92,91,89,91,92,90,88,89,91,87,87,89,89,88,90,88,Lananpin Elementary School,62.7
+LANES25-110,M,12,Ilocano,Normal,84,83,85,84,84,84,84,84,84,84,84,84,84,84,83,83,83,84,84,83,83,83,82,Lananpin Elementary School,62.7
+LANES25-111,M,12,Ilocano,Normal,82,80,83,82,84,83,85,82,85,84,84,84,84,84,84,84,83,84,86,86,84,85,87,Lananpin Elementary School,62.7
+LANES25-112,M,11,Ilocano,Normal,78,77,80,80,81,81,81,81,82,81,80,82,82,80,80,81,81,80,83,84,83,83,84,Lananpin Elementary School,62.7
+LANES25-113,F,12,Ilocano,Overweight,87,86,85,85,90,86,87,89,84,85,84,84,83,90,89,86,88,88,91,89,89,89,89,Lananpin Elementary School,62.7
+LANES25-114,F,12,Ilocano,Normal,82,81,81,83,82,82,82,82,83,83,82,83,83,84,83,82,83,83,84,83,83,82,85,Lananpin Elementary School,62.7
+LANES25-115,F,10,Ilocano,Normal,84,81,84,86,87,82,86,87,80,79,80,82,82,84,80,80,81,84,87,85,85,86,87,Lananpin Elementary School,62.7
+LANES25-116,F,11,Ilocano,Normal,81,80,81,82,85,82,85,84,85,83,82,84,83,88,85,94,85,86,82,80,81,80,83,Lananpin Elementary School,62.7
+LANES25-117,M,12,Ilocano,Normal,82,80,81,82,84,83,83,83,82,82,82,82,83,84,83,83,83,84,85,85,82,85,84,Lananpin Elementary School,62.7
+LANES25-118,M,11,Ilocano,Normal,92,90,93,95,95,95,91,94,90,90,90,90,90,92,91,89,91,90,91,91,92,91,92,Lananpin Elementary School,62.7
+LANES25-119,M,11,Ilocano,Normal,75,75,75,75,85,82,88,82,84,82,82,81,81,79,76,77,76,78,83,86,83,84,85,Lananpin Elementary School,62.7
+LANES25-120,M,11,Ilocano,Normal,76,75,77,77,85,86,88,87,82,81,81,82,82,82,82,82,81,83,78,78,77,81,85,Lananpin Elementary School,62.7
+LANES25-121,M,11,Ilocano,Wasted,82,82,80,81,81,80,81,82,81,80,80,80,81,78,77,79,77,80,81,80,79,79,80,Lananpin Elementary School,62.7
+LANES25-122,M,11,Ilocano,Normal,80,79,80,79,80,79,79,79,81,80,80,80,81,76,77,77,76,80,81,79,79,80,81,Lananpin Elementary School,62.7
+LANES25-123,M,11,Ilocano,Normal,82,80,84,84,86,85,85,85,82,82,82,82,82,85,85,84,83,83,83,83,83,84,84,Lananpin Elementary School,62.7
+LANES25-124,M,11,Ilocano,Normal,80,79,79,79,80,79,80,79,78,77,79,77,77,79,78,79,79,79,77,76,76,78,78,Lananpin Elementary School,62.7
+LANES25-125,F,11,Ilocano,Normal,81,80,80,80,84,83,83,84,85,84,84,86,85,86,84,83,84,84,86,86,86,84,86,Lananpin Elementary School,62.7
+LANES25-126,M,11,Ilocano,Normal,82,80,83,83,87,86,90,88,83,83,83,84,83,84,83,83,83,83,82,80,80,80,82,Lananpin Elementary School,62.7
+LANES25-127,M,11,Ilocano,Wasted,76,76,78,80,78,78,79,81,80,78,79,80,80,80,78,78,80,79,76,76,76,76,76,Lananpin Elementary School,62.7
+LANES25-128,M,11,Ilocano,Normal,80,79,81,82,77,76,77,78,80,79,79,78,78,80,80,81,77,80,81,79,79,79,81,Lananpin Elementary School,62.7
+LANES25-129,M,11,Ilocano,Normal,81,79,81,82,83,81,83,83,83,82,83,81,82,80,79,77,80,81,80,77,78,78,79,Lananpin Elementary School,62.7
+LANES25-130,M,11,Ilocano,Obese,82,81,83,82,81,80,81,81,83,83,82,83,84,84,84,84,85,85,88,87,85,88,86,Lananpin Elementary School,62.7
+LANES25-131,F,12,Ilocano,Normal,79,80,80,79,76,76,76,76,78,78,79,78,79,82,81,82,80,81,76,76,76,76,77,Lananpin Elementary School,62.7
+LANES25-132,F,11,Ilocano,Normal,82,81,83,83,82,82,82,82,85,85,85,85,85,84,82,81,84,84,84,85,83,85,85,Lananpin Elementary School,62.7
+LANES25-133,F,12,Ilocano,Wasted,87,86,82,84,87,86,88,86,86,86,85,85,86,86,83,83,85,85,90,89,90,90,92,Lananpin Elementary School,62.7
+LANES25-134,F,11,Ilocano,Normal,76,76,75,76,82,80,83,82,81,79,90,80,79,84,80,81,82,81,82,81,81,81,82,Lananpin Elementary School,62.7
+LANES25-135,M,12,Ilocano,Normal,82,81,82,83,86,85,89,86,85,85,86,85,85,82,79,79,82,83,86,88,84,85,86,Lananpin Elementary School,62.7
+LANES25-136,M,11,Ilocano,Normal,91,92,92,92,92,92,92,93,90,90,90,90,90,92,91,91,92,90,91,91,91,90,92,Lananpin Elementary School,62.7
+LANES25-137,M,12,Ilocano,Normal,82,80,82,82,82,82,82,83,83,82,82,83,83,83,82,81,83,83,82,81,81,80,84,Lananpin Elementary School,62.7
+LANES25-138,M,11,Ilocano,Normal,81,81,80,81,80,80,80,80,81,81,80,81,81,81,79,78,80,81,81,80,80,80,83,Lananpin Elementary School,62.7
+LANES25-139,M,11,Ilocano,Overweight,76,78,76,77,86,85,88,86,89,89,89,89,89,87,84,85,86,85,84,86,86,85,85,Lananpin Elementary School,62.7
+LANES25-140,F,12,Ilocano,Normal,85,83,85,86,87,86,89,87,89,88,89,88,88,90,90,89,90,88,88,86,87,88,88,Lananpin Elementary School,62.7
+LANES25-141,F,11,Ilocano,Normal,87,85,87,87,87,87,87,87,90,90,90,90,90,88,89,87,88,88,87,80,88,87,87,Lananpin Elementary School,62.7
+LANES25-142,M,12,Ilocano,Normal,85,84,85,85,89,88,88,87,87,86,86,86,87,87,87,87,86,88,87,88,87,87,86,Lananpin Elementary School,62.7
+LANES25-143,M,12,Ilocano,Normal,86,85,87,86,85,84,85,85,86,86,86,86,86,84,84,82,85,84,87,87,87,87,87,Lananpin Elementary School,62.7
+LANES25-144,M,11,Ilocano,Normal,79,77,79,79,79,79,79,79,81,81,81,80,81,82,81,85,79,82,82,80,81,79,81,Lananpin Elementary School,62.7
+LANES25-145,M,12,Ilocano,Normal,81,82,79,82,90,89,88,88,88,88,88,87,87,87,84,86,85,86,86,85,85,85,86,Lananpin Elementary School,62.7
+LANES25-146,F,12,Ilocano,Normal,79,79,81,80,77,77,77,77,85,83,83,85,85,81,80,80,81,81,84,82,81,82,83,Lananpin Elementary School,62.7
+LANES25-147,M,12,Ilocano,Normal,85,85,81,84,77,77,77,77,79,77,79,78,77,81,82,76,79,82,83,82,84,83,82,Lananpin Elementary School,62.7
+LANES25-148,M,12,Ilocano,Normal,82,82,82,82,85,84,85,85,85,85,85,85,85,84,84,84,84,85,85,84,85,84,85,Lananpin Elementary School,62.7
+LANES25-149,F,12,Ilocano,Normal,85,84,84,84,83,83,83,83,84,84,84,83,83,83,81,80,82,82,85,84,84,83,85,Lananpin Elementary School,62.7
+LANES25-150,F,11,Ilocano,Normal,81,77,78,78,83,82,83,83,79,79,79,79,79,83,83,81,79,81,86,85,81,83,83,Lananpin Elementary School,62.7
+LANES25-151,M,12,Ilocano,Normal,81,79,81,81,79,79,79,79,81,80,81,80,81,83,82,84,77,82,85,83,85,82,83,Lananpin Elementary School,62.7
+LANES25-152,M,11,Ilocano,Normal,83,82,83,84,88,87,89,88,86,85,85,86,86,85,85,84,85,85,85,85,86,85,85,Lananpin Elementary School,62.7
+LANES25-153,M,11,Ilocano,Normal,82,80,80,80,81,80,80,80,83,81,83,81,80,84,83,83,82,82,84,83,85,82,85,Lananpin Elementary School,62.7
+NAN25-001,M,11,Ilocano,Normal,91,91,93,91,92,89,87,92,91,93,80,92,90,93,94,93,93,93,95,94,94,94,94,Nancayasan Elementary School,58.64
+NAN25-002,F,11,Ilocano,Normal,87,86,88,89,92,91,91,91,91,91,90,90,90,91,91,91,91,90,89,88,87,88,88,Nancayasan Elementary School,58.64
+NAN25-003,F,11,Ilocano,Normal,97,97,96,94,96,96,96,96,97,97,98,97,97,94,94,94,94,94,96,95,96,95,95,Nancayasan Elementary School,58.64
+NAN25-004,F,11,Ilocano,Normal,84,84,82,82,82,82,82,81,81,81,79,80,80,84,83,82,82,84,88,87,86,86,86,Nancayasan Elementary School,58.64
+NAN25-005,F,11,Ilocano,Normal,87,87,85,86,86,83,84,85,79,80,78,77,76,86,85,85,85,87,89,88,88,88,88,Nancayasan Elementary School,58.64
+NAN25-006,F,11,Tagalog,Normal,84,84,88,91,87,87,89,89,82,79,79,80,79,83,84,83,84,84,88,88,88,88,87,Nancayasan Elementary School,58.64
+NAN25-007,F,11,Ilocano,Obese,92,93,91,91,95,94,96,94,95,95,96,95,95,92,92,92,92,91,94,95,95,93,92,Nancayasan Elementary School,58.64
+NAN25-008,F,11,Ilocano,Normal,83,81,81,83,81,80,79,80,80,79,80,77,80,82,82,81,82,82,89,88,87,88,87,Nancayasan Elementary School,58.64
+NAN25-009,F,11,Ilocano,Normal,89,84,86,87,90,90,92,92,90,91,90,91,91,92,92,91,92,92,94,95,94,93,92,Nancayasan Elementary School,58.64
+NAN25-010,F,11,Ilocano,Normal,81,82,81,81,80,81,79,79,82,81,81,80,81,81,80,80,80,81,85,85,84,85,85,Nancayasan Elementary School,58.64
+NAN25-011,F,11,Ilocano,Normal,97,98,95,96,96,96,96,96,97,97,98,97,97,94,94,94,94,94,96,95,96,95,95,Nancayasan Elementary School,58.64
+NAN25-012,F,11,Ilocano,Normal,90,91,90,89,91,88,90,90,93,89,90,90,90,91,91,91,92,91,93,93,93,92,91,Nancayasan Elementary School,58.64
+NAN25-013,F,11,Ilocano,Normal,86,84,82,86,87,86,85,85,80,79,78,77,80,85,85,86,89,84,89,87,87,87,87,Nancayasan Elementary School,58.64
+NAN25-014,F,11,Tagalog,Normal,86,84,83,86,92,89,92,90,89,89,88,88,88,89,89,89,90,90,92,89,89,91,91,Nancayasan Elementary School,58.64
+NAN25-015,F,11,Ilocano,Overweight,89,88,89,89,85,85,85,84,80,81,78,77,80,86,86,86,93,87,88,88,88,88,87,Nancayasan Elementary School,58.64
+NAN25-016,F,11,Ilocano,Normal,88,89,88,87,90,88,89,91,92,92,91,91,92,91,90,89,90,90,95,92,91,91,91,Nancayasan Elementary School,58.64
+NAN25-017,F,11,Ilocano,Normal,87,89,88,89,92,91,92,92,92,91,91,91,92,91,91,90,91,91,93,93,92,92,91,Nancayasan Elementary School,58.64
+NAN25-018,F,11,Ilocano,Normal,86,84,85,85,87,86,86,87,81,81,80,79,80,86,85,86,86,85,91,89,89,89,89,Nancayasan Elementary School,58.64
+NAN25-019,F,9,Ilocano,Normal,86,84,87,87,89,90,89,89,93,92,91,92,92,92,91,90,90,90,93,94,93,91,90,Nancayasan Elementary School,58.64
+NAN25-020,F,12,Ilocano,Normal,85,84,83,84,83,82,82,84,81,79,79,79,80,81,80,79,79,80,87,86,85,86,84,Nancayasan Elementary School,58.64
+NAN25-021,M,11,Ilocano,Normal,95,96,95,94,94,93,96,94,95,94,96,94,94,93,92,94,92,92,94,93,93,93,92,Nancayasan Elementary School,58.64
+NAN25-022,M,11,Ilocano,Wasted,87,84,84,90,91,90,92,91,93,92,93,91,92,91,91,90,90,90,93,93,92,93,92,Nancayasan Elementary School,58.64
+NAN25-023,M,11,Ilocano,Normal,85,87,85,85,89,89,90,89,91,89,89,88,89,90,89,90,90,90,92,90,92,90,90,Nancayasan Elementary School,58.64
+NAN25-024,M,11,Ilocano,Normal,83,82,83,84,83,82,83,83,81,78,80,78,81,86,84,86,84,85,90,90,92,89,89,Nancayasan Elementary School,58.64
+NAN25-025,M,11,Ilocano,Normal,92,88,86,89,93,92,94,93,94,92,95,94,94,90,88,88,89,90,93,94,94,93,92,Nancayasan Elementary School,58.64
+NAN25-026,M,11,Ilocano,Normal,91,88,89,92,94,93,95,94,90,93,90,94,94,92,92,92,92,91,92,93,93,90,90,Nancayasan Elementary School,58.64
+NAN25-027,M,11,Ilocano,Normal,83,84,81,83,79,79,78,80,81,81,81,81,82,86,85,85,87,87,88,86,85,87,86,Nancayasan Elementary School,58.64
+NAN25-028,M,11,Ilocano,Normal,88,85,88,88,85,84,85,85,81,81,78,80,81,81,80,79,81,81,91,83,84,89,89,Nancayasan Elementary School,58.64
+NAN25-029,M,11,Ilocano,Normal,85,85,85,87,86,86,86,86,90,88,88,89,89,89,89,89,90,89,92,92,92,93,92,Nancayasan Elementary School,58.64
+NAN25-030,M,11,Ilocano,Normal,86,87,85,85,81,80,82,80,80,78,79,78,80,81,80,81,82,81,89,86,86,87,87,Nancayasan Elementary School,58.64
+NAN25-031,M,11,Ilocano,Normal,87,85,83,89,87,85,85,87,81,81,80,80,81,87,86,86,86,87,91,90,89,89,89,Nancayasan Elementary School,58.64
+NAN25-032,M,11,Pangasinan,Normal,92,90,91,93,91,88,92,91,82,81,82,82,82,85,84,83,83,85,92,89,91,89,90,Nancayasan Elementary School,58.64
+NAN25-033,M,11,Ilocano,Normal,90,91,88,91,93,92,92,93,94,94,92,93,94,90,92,91,92,91,92,92,94,93,91,Nancayasan Elementary School,58.64
+NAN25-034,M,10,Ilocano,Normal,81,80,80,81,82,80,82,83,79,78,77,77,79,80,80,80,79,80,85,84,86,84,84,Nancayasan Elementary School,58.64
+NAN25-035,M,11,Ilocano,Wasted,89,91,87,89,90,87,91,91,91,90,90,90,90,87,86,86,87,86,89,84,84,88,86,Nancayasan Elementary School,58.64
+NAN25-036,M,10,Ilocano,Normal,85,85,84,86,89,88,84,89,84,82,82,84,84,84,84,84,85,84,85,87,87,88,86,Nancayasan Elementary School,58.64
+NAN25-037,M,11,Ilocano,Normal,82,81,81,82,79,79,78,79,90,89,90,90,88,85,84,83,83,83,90,86,85,89,89,Nancayasan Elementary School,58.64
+NAN25-038,M,11,Tagalog,Normal,88,87,86,87,88,87,87,88,91,91,90,91,92,91,90,91,92,91,94,93,94,93,92,Nancayasan Elementary School,58.64
+NAN25-039,M,11,Ilocano,Normal,87,84,84,88,90,89,91,91,90,88,92,89,91,91,91,91,91,92,91,91,91,90,89,Nancayasan Elementary School,58.64
+NAN25-040,M,11,Ilocano,Normal,83,82,83,83,83,82,83,83,84,78,80,78,82,86,84,86,84,85,90,91,92,89,89,Nancayasan Elementary School,58.64
+NAN25-041,F,12,Tagalog,Normal,75,81,89,90,78,95,85,90,80,85,89,87,78,81,89,81,77,79,77,86,79,76,75,Nancayasan Elementary School,58.64
+NAN25-042,F,11,Tagalog,Normal,90,88,75,77,91,92,83,75,83,81,83,75,95,75,93,85,81,82,85,85,92,94,90,Nancayasan Elementary School,58.64
+NAN25-043,F,11,Tagalog,Obese,84,91,75,83,95,80,86,94,82,76,76,75,79,92,80,87,92,81,81,84,75,77,88,Nancayasan Elementary School,58.64
+NAN25-044,M,12,Tagalog,Normal,81,89,93,85,88,89,81,85,89,92,85,81,93,89,83,88,88,86,82,79,78,78,91,Nancayasan Elementary School,58.64
+NAN25-045,F,11,Tagalog,Normal,89,81,81,79,93,90,78,84,88,93,92,90,86,91,93,80,76,83,81,82,84,87,82,Nancayasan Elementary School,58.64
+NAN25-046,F,13,Ilocano,Normal,94,92,76,88,89,78,94,85,89,92,77,82,87,86,90,85,76,82,84,83,83,87,77,Nancayasan Elementary School,58.64
+NAN25-047,M,11,Ilocano,Normal,78,78,92,91,95,87,81,77,84,95,82,76,84,94,86,91,86,82,83,79,77,88,94,Nancayasan Elementary School,58.64
+NAN25-048,F,12,Tagalog,Normal,82,85,88,89,77,93,94,93,85,95,83,87,80,91,91,81,89,88,77,81,83,76,92,Nancayasan Elementary School,58.64
+NAN25-049,F,11,Tagalog,Normal,92,85,95,80,76,93,86,86,80,92,85,91,75,88,94,95,95,88,79,79,93,90,95,Nancayasan Elementary School,58.64
+NAN25-050,F,11,Ilocano,Normal,91,78,85,87,87,81,95,78,93,88,87,83,93,94,76,82,85,83,93,82,94,81,88,Nancayasan Elementary School,58.64
+NAN25-051,F,14,Tagalog,Normal,88,79,88,81,95,92,89,87,82,75,78,87,90,77,93,92,86,88,92,94,95,79,78,Nancayasan Elementary School,58.64
+NAN25-052,M,12,Tagalog,Normal,84,84,84,89,76,89,86,87,88,77,81,75,94,77,75,81,94,84,76,77,89,75,92,Nancayasan Elementary School,58.64
+NAN25-053,M,12,Ilocano,Normal,88,90,86,80,95,85,82,76,95,82,83,90,89,81,84,84,87,83,75,86,80,94,81,Nancayasan Elementary School,58.64
+NAN25-054,M,14,Ilocano,Normal,77,79,93,91,93,89,75,81,82,84,88,76,75,77,90,91,85,93,90,91,75,84,79,Nancayasan Elementary School,58.64
+NAN25-055,M,13,Tagalog,Normal,95,83,75,90,95,94,94,81,90,75,95,94,80,95,78,95,91,86,79,80,79,92,77,Nancayasan Elementary School,58.64
+NAN25-056,F,11,Tagalog,Normal,81,81,76,77,84,75,84,89,88,90,83,75,81,88,91,82,94,91,87,75,94,91,81,Nancayasan Elementary School,58.64
+NAN25-057,M,14,Tagalog,Normal,88,76,85,76,83,88,91,95,94,84,83,75,93,81,76,82,76,84,82,88,80,84,87,Nancayasan Elementary School,58.64
+NAN25-058,M,13,Tagalog,Wasted,82,95,78,79,92,94,75,93,83,82,75,91,93,94,76,83,89,84,90,79,94,93,90,Nancayasan Elementary School,58.64
+NAN25-059,F,14,Ilocano,Normal,95,94,76,83,93,92,80,85,76,87,87,93,77,77,95,77,77,87,80,92,90,77,81,Nancayasan Elementary School,58.64
+NAN25-060,M,14,Ilocano,Normal,85,93,87,87,80,82,81,82,84,88,83,93,87,92,89,90,79,91,80,94,84,94,80,Nancayasan Elementary School,58.64
+NAN25-061,M,11,Ilocano,Normal,87,93,91,85,92,76,90,95,95,79,80,93,86,83,83,81,92,95,95,81,79,80,91,Nancayasan Elementary School,58.64
+NAN25-062,M,14,Ilocano,Normal,79,91,85,77,75,84,80,93,81,93,75,78,76,88,78,84,87,86,75,91,75,81,76,Nancayasan Elementary School,58.64
+NAN25-063,F,11,Tagalog,Normal,77,91,91,89,93,88,80,93,75,94,89,80,93,93,84,91,95,76,92,89,76,85,90,Nancayasan Elementary School,58.64
+NAN25-064,M,12,Ilocano,Normal,82,86,82,90,90,79,76,90,75,83,92,88,94,80,76,92,84,90,89,86,84,89,85,Nancayasan Elementary School,58.64
+NAN25-065,F,13,Tagalog,Normal,86,78,79,87,88,91,81,77,93,81,80,76,79,95,92,94,83,79,79,79,87,95,83,Nancayasan Elementary School,58.64
+NAN25-066,M,14,Ilocano,Overweight,93,80,91,87,76,86,91,90,95,87,90,76,82,75,91,83,86,79,75,79,82,76,95,Nancayasan Elementary School,58.64
+NAN25-067,F,11,Ilocano,Normal,75,77,91,78,82,92,87,88,84,78,95,93,89,88,78,78,81,84,93,77,78,83,90,Nancayasan Elementary School,58.64
+NAN25-068,F,13,Tagalog,Normal,75,93,88,92,87,93,79,77,85,77,79,79,87,90,84,95,77,84,78,75,82,88,80,Nancayasan Elementary School,58.64
+NAN25-069,M,13,Tagalog,Normal,76,93,75,80,94,84,89,81,94,86,87,88,86,81,87,88,86,88,80,78,85,90,86,Nancayasan Elementary School,58.64
+NAN25-070,F,13,Tagalog,Normal,78,93,95,87,86,75,80,78,81,93,92,80,77,75,91,93,81,85,94,78,78,79,94,Nancayasan Elementary School,58.64
+NAN25-071,M,14,Ilocano,Normal,83,95,95,75,95,92,88,88,92,89,75,83,77,75,84,88,83,76,87,77,75,82,80,Nancayasan Elementary School,58.64
+UISC25-001,M,11,Tagalog,Normal,89,87,88,87,91,90,94,90,87,89,87,87,90,90,89,90,90,89,90,90,90,90,90,Urdaneta City SPED Center,72.08
+UISC25-002,F,12,Ilocano,Normal,88,88,87,87,83,83,83,83,85,84,84,84,84,90,89,88,88,88,90,90,89,90,90,Urdaneta City SPED Center,72.08
+UISC25-003,F,11,Tagalog,Normal,91,91,90,90,91,89,91,91,88,87,87,87,88,92,92,93,91,91,92,93,93,92,91,Urdaneta City SPED Center,72.08
+UISC25-004,F,11,Tagalog,Normal,95,92,94,91,86,89,89,89,87,89,87,87,86,91,93,92,92,91,89,91,88,91,91,Urdaneta City SPED Center,72.08
+UISC25-005,F,11,Tagalog,Overweight,83,82,81,81,86,85,85,86,84,86,84,85,84,88,89,88,86,87,88,88,88,88,88,Urdaneta City SPED Center,72.08
+UISC25-006,M,11,Ilocano,Normal,87,87,85,86,87,87,87,86,87,86,86,87,87,89,91,88,88,89,90,90,89,90,90,Urdaneta City SPED Center,72.08
+UISC25-007,F,11,Tagalog,Normal,94,94,94,94,94,94,94,93,93,94,93,93,92,93,94,95,94,93,93,92,93,92,90,Urdaneta City SPED Center,72.08
+UISC25-008,F,12,Ilocano,Normal,90,88,89,90,91,90,90.80991736,90,88,89,88,87,88,94,94,91,91,92,93,94,90,93,93,Urdaneta City SPED Center,72.08
+UISC25-009,M,11,Tagalog,Normal,86,85,85,87,90,89,89,90,92,92,92,92,92,88,91,89,90,89,90,89,89,89,90,Urdaneta City SPED Center,72.08
+UISC25-010,F,11,Ilocano,Normal,83,83,80,82,93,93,93,93,93,92,93,92,93,95,94,93,91,91,92,93,93,91,91,Urdaneta City SPED Center,72.08
+UISC25-011,M,11,Ilocano,Normal,83,81,83,84,87,86,87,87,87,86,86,86,86,88,88,88,88,87,89,90,90,89,91,Urdaneta City SPED Center,72.08
+UISC25-012,M,11,Tagalog,Normal,91,89,89,91,92,91,91,91,93,92,93,93,93,94,95,94,95,93,94,93,93,92,92,Urdaneta City SPED Center,72.08
+UISC25-013,F,11,Tagalog,Normal,86,85,85,88,90,90,90,90,93,92,92,91,93,91,90,89,89,90,91,90,89,90,90,Urdaneta City SPED Center,72.08
+UISC25-014,F,11,Ilocano,Normal,87,85,85,87,87,85,86,87,88,86,87,89,87,94,92,92,92,90,91,92,91,91,90,Urdaneta City SPED Center,72.08
+UISC25-015,F,11,Tagalog,Overweight,85,84,84,84,88,88,87,88,87,86,86,87,87,89,91,90,90,89,92,94,90,92,92,Urdaneta City SPED Center,72.08
+UISC25-016,M,11,Tagalog,Normal,89,87,89,90,89,92,89,90,93,93,92,92,93,91,94,92,91,91,89,92,87,92,90,Urdaneta City SPED Center,72.08
+UISC25-017,F,11,Tagalog,Normal,92,90,91,92,92,90,91,91,93,92,92,93,93,95,95,94,93,94,94,94,93,93,93,Urdaneta City SPED Center,72.08
+UISC25-018,F,11,Tagalog,Normal,87,84,86,86,90,88,89,89,89,87,88,87,88,93,92,91,91,89,93,93,92,91,92,Urdaneta City SPED Center,72.08
+UISC25-019,F,11,Tagalog,Normal,86,86,86,86,83,83,82,82,86,86,83,83,84,91,90,89,86,88,91,91,90,90,90,Urdaneta City SPED Center,72.08
+UISC25-020,F,11,Tagalog,Overweight,89,88,89,90,91,90,90,91,92,92,92,92,93,90,91,88,88,86,91,91,89,90,90,Urdaneta City SPED Center,72.08
+UISC25-021,F,11,Ilocano,Normal,91,87,91,93,90,89,89,90,91,89,90,88,87,92,93,92,89,89,91,91,87,91,91,Urdaneta City SPED Center,72.08
+UISC25-022,F,11,Tagalog,Severely Wasted,87,83,86,86,88,87,86,87,85,83,83,85,84,91,92,89,88,91,91,89,89,88,91,Urdaneta City SPED Center,72.08
+UISC25-023,M,11,Tagalog,Normal,90,87,88,91,91,90,90,90,92,91,92,92,91,94,94,88,91,90,90,91,87,91,90,Urdaneta City SPED Center,72.08
+UISC25-024,M,12,Tagalog,Normal,84,84,84,87,86,84,80,87,86,86,86,87,87,89,89,89,90,89,89,90,89,90,90,Urdaneta City SPED Center,72.08
+UISC25-025,F,12,English,Normal,94,91,93,92,92,93,93,92,92,92,91,91,92,92,95,89,91,90,89,91,88,89,88,Urdaneta City SPED Center,72.08
+UISC25-026,F,11,Tagalog,Normal,89,91,93,95,93,92,92,93,91,90,90,90,91,93,93,94,93,93,90,92,93,93,93,Urdaneta City SPED Center,72.08
+UISC25-027,F,11,Tagalog,Severely Wasted,86,86,86,87,90,89,90,91,88,89,88,90,89,86,87,87,88,86,88,89,87,89,89,Urdaneta City SPED Center,72.08
+UISC25-028,M,11,Filipino,Normal,82,82,80,82,85,84,85,85,93,91,92,91,90,91,90,91,92,92,89,89,88,89,89,Urdaneta City SPED Center,72.08
+UISC25-029,F,11,Tagalog,Normal,88,89,87,89,92,92,92,93,92,92,91,91,92,89,88,88,87,88,87,83,86,88,86,Urdaneta City SPED Center,72.08
+UISC25-030,M,11,Tagalog,Normal,87,87,86,86,88,87,88,87,87,87,86,87,86,87,86,85,86,86,88,88,90,90,89,Urdaneta City SPED Center,72.08
+UISC25-031,F,11,Tagalog,Normal,89,90,89,90,91,90,90,91,89,90,90,87,89,90,91,91,91,91,92,91,88,89,81,Urdaneta City SPED Center,72.08
+UISC25-032,M,12,Tagalog,Normal,85,84,86,84,85,85,84,84,88,87,88,87,87,92,91,93,92,92,92,92,93,91,91,Urdaneta City SPED Center,72.08
+UISC25-033,M,12,Tagalog,Normal,91,88,88,94,92,91,91,92,90,89,89,90,91,90,91,84,90,89,90,90,90,90,90,Urdaneta City SPED Center,72.08
+UISC25-034,F,11,Tagalog,Normal,91,89,86,91,91,90,90,91,93,92,92,92,93,93,91,90,90,91,91,91,93,91,90,Urdaneta City SPED Center,72.08
+UISC25-035,F,12,Tagalog,Normal,90,91,89,92,91,93,90,91,90,89,91,92,90,94,92,94,94,92,93,92,92,91,91,Urdaneta City SPED Center,72.08
+UISC25-036,M,12,Tagalog,Normal,83,83,87,86,86,85,86,85,88,88,88,88,87,84,84,84,84,83,88,88,87,87,87,Urdaneta City SPED Center,72.08
+UISC25-037,M,12,Ilocano,Normal,82,82,82,84,86,83,84,83,87,84,85,85,85,86,85,85,88,86,88,89,89,90,88,Urdaneta City SPED Center,72.08
+UISC25-038,M,11,Tagalog,Overweight,91,91,91,92,89,92,89,90,89,89,88,87,87,84,85,84,87,85,92,91,90,91,91,Urdaneta City SPED Center,72.08
+UISC25-039,M,11,Tagalog,Normal,85,84,83,83,84,82,83,83,86,85,85,85,85,86,85,85,84,85,85,85,83,85,84,Urdaneta City SPED Center,72.08
+UISC25-040,M,12,Tagalog,Normal,88,85,89,89,88,88,88,88,89,87,87,87,88,89,89,89,88,88,89,89,89,90,90,Urdaneta City SPED Center,72.08
+UISC25-041,M,11,Tagalog,Normal,93,89,88,94,92,92,91,91,93,93,93,94,94,90,92,89,92,90,93,91,91,93,90,Urdaneta City SPED Center,72.08
+UISC25-042,M,11,Tagalog,Normal,94,94,93,94,95,96,95,95,95,96,94,95,95,95,95,96,96,95,94,94,95,96,93,Urdaneta City SPED Center,72.08
+UISC25-043,F,11,Tagalog,Normal,90,91,89,93,94,95,94,95,94,94,94,94,94,92,91,89,89,90,93,92,92,93,90,Urdaneta City SPED Center,72.08
+UISC25-044,F,11,Tagalog,Normal,89,89,89,95,92,93,93,93,94,94,94,93,95,90,86,89,86,88,91,89,90,89,88,Urdaneta City SPED Center,72.08
+UISC25-045,M,11,Tagalog,Normal,92,92,90,93,95,94,94,95,95,94,94,94,95,92,92,90,91,91,91,90,90,90,89,Urdaneta City SPED Center,72.08
+UISC25-046,F,12,Tagalog,Normal,93,92,91,95,96,95,95,94,95,95,95,95,96,95,96,93,94,95,93,96,94,95,92,Urdaneta City SPED Center,72.08
+UISC25-047,M,12,Tagalog,Normal,92,91,91,92,92,91,92,91,93,92,92,93,93,92,92,92,91,93,92,94,92,93,91,Urdaneta City SPED Center,72.08
+UISC25-048,F,11,Tagalog,Normal,89,90,89,92,95,95,94,95,95,94,94,94,95,89,91,88,89,90,93,92,92,90,89,Urdaneta City SPED Center,72.08
+UISC25-049,F,11,Tagalog,Normal,93,94,92,93,91,90,89,90,93,92,96,94,92,95,94,94,93,93,94,93,89,90,92,Urdaneta City SPED Center,72.08
+UISC25-050,M,11,Tagalog,Normal,90,89,91,92,94,94,94,94,94,94,94,94,95,91,90,91,89,88,91,92,91,90,88,Urdaneta City SPED Center,72.08
+UISC25-051,M,11,Tagalog,Normal,88,89,87,92,94,95,94,93,94,95,94,95,95,91,88,89,88,90,91,91,90,90,88,Urdaneta City SPED Center,72.08
+UISC25-052,M,11,Tagalog,Normal,96,94,95,96,96,95,96,96,94,94,93,94,94,94,95,93,91,91,91,94,93,94,90,Urdaneta City SPED Center,72.08
+UISC25-053,F,11,Tagalog,Normal,93,93,91,95,94,94,94,94,94,93,94,93,94,96,93,90,91,92,93,93,93,93,91,Urdaneta City SPED Center,72.08
+UISC25-054,F,11,Tagalog,Normal,93,93,95,93,96,95,96,96,94,95,94,93,94,93,94,91,91,92,91,92,93,93,90,Urdaneta City SPED Center,72.08
+UISC25-055,F,11,Tagalog,Overweight,89,90,88,91,92,93,93,93,92,93,93,93,94,92,94,88,92,90,92,94,93,92,92,Urdaneta City SPED Center,72.08
+UISC25-056,M,11,Tagalog,Normal,91,89,90,93,94,93,94,94,94,94,94,92,94,89,89,89,88,90,91,89,89,88,88,Urdaneta City SPED Center,72.08
+UISC25-057,F,12,Tagalog,Normal,91,91,88,92,95,95,94,95,94,94,94,94,95,93,91,91,89,91,92,92,91,92,88,Urdaneta City SPED Center,72.08
+UISC25-058,F,11,Tagalog,Normal,93,94,92,94,95,95,94,95,95,94,95,96,95,94,96,94,95,94,92,95,94,95,91,Urdaneta City SPED Center,72.08
+UISC25-059,M,11,Tagalog,Normal,89,90,89,90,94,93,94,94,93,94,93,92,95,93,93,90,92,92,92,92,91,92,93,Urdaneta City SPED Center,72.08
+UISC25-060,F,12,Tagalog,Normal,91,92,89,95,95,94,94,95,94,93,94,93,95,93,95,90,92,93,93,94,93,93,91,Urdaneta City SPED Center,72.08
+UISC25-061,F,12,Tagalog,Overweight,90,89,88,93,94,94,94,95,93,93,93,93,95,92,93,89,91,91,93,92,92,91,89,Urdaneta City SPED Center,72.08
+UISC25-062,F,12,Tagalog,Normal,91,93,90,94,94,94,94,94,94,94,94,94,95,93,96,90,92,89,92,93,93,92,90,Urdaneta City SPED Center,72.08
+UISC25-063,F,12,Tagalog,Normal,92,95,93,94,96,95,95,95,94,94,94,94,95,92,96,91,92,91,91,94,93,93,89,Urdaneta City SPED Center,72.08
+UISC25-064,F,12,Tagalog,Normal,88,89,88,91,95,94,94,95,93,93,94,94,95,91,91,89,88,89,91,91,90,88,88,Urdaneta City SPED Center,72.08
+UISC25-065,F,11,Tagalog,Normal,93,91,91,89,95,95,95,95,94,94,93,93,95,92,93,88,91,92,92,94,93,93,90,Urdaneta City SPED Center,72.08
+UISC25-066,F,12,Tagalog,Overweight,90,89,88,93,95,95,95,95,94,94,94,94,95,93,93,89,91,94,94,94,93,94,89,Urdaneta City SPED Center,72.08
+UISC25-067,M,12,Tagalog,Normal,93,92,94,95,95,95,94,96,95,95,94,94,95,92,95,95,93,92,94,93,93,95,95,Urdaneta City SPED Center,72.08
+UISC25-068,M,11,Tagalog,Normal,89,88,90,90,94,93,94,94,94,93,94,93,94,92,95,92,92,90,93,95,95,94,90,Urdaneta City SPED Center,72.08
+UISC25-069,M,11,Tagalog,Normal,95,93,95,97,95,95,94,95,95,95,95,94,96,96,96,95,94,96,93,95,94,95,94,Urdaneta City SPED Center,72.08
+UISC25-070,M,11,Tagalog,Normal,88,90,92,91,94,95,94,93,93,95,94,94,95,89,91,93,92,89,91,90,90,90,88,Urdaneta City SPED Center,72.08
+UISC25-071,F,12,Tagalog,Normal,93,92,94,91,94,92,93,92,94,94,94,94,95,94,94,94,94,94,93,94,94,93,93,Urdaneta City SPED Center,72.08
+UISC25-072,F,11,Tagalog,Normal,93,92,92,90,96,95,95,95,95,95,95,94,95,95,95,95,94,95,94,95,93,93,92,Urdaneta City SPED Center,72.08
+UISC25-073,F,11,Tagalog,Normal,92,92,90,90,95,95,94,95,94,94,94,94,94,88,91,89,91,89,91,92,90,92,88,Urdaneta City SPED Center,72.08
+UISC25-074,F,11,Tagalog,Normal,94,94,93,95,95,94,95,96,94,95,95,94,94,96,96,95,96,96,93,94,94,96,93,Urdaneta City SPED Center,72.08
+UISC25-075,F,11,Tagalog,Normal,92,91,91,93,94,93,93,94,93,93,94,94,93,92,93,92,91,90,93,93,93,94,92,Urdaneta City SPED Center,72.08
+UISC25-076,M,12,Tagalog,Normal,93,93,93,94,96,96,96,95,96,96,96,95,96,94,96,93,94,95,91,94,94,93,94,Urdaneta City SPED Center,72.08
+UISC25-077,F,11,Tagalog,Normal,92,92,91,94,92,94,92,94,93,92,93,93,94,90,91,86,89,89,91,93,91,91,88,Urdaneta City SPED Center,72.08
+UISC25-078,M,11,Ilocano,Normal,91,91,89,90,92,90,89,89,90,88,88,87,87,88,88,90,88,87,89,89,90,89,87,Urdaneta City SPED Center,72.08
+UISC25-079,M,11,Ilocano,Normal,91,93,86,89,93,93,93,93,93,93,93,93,93,89,91,89,91,88,89,90,88,90,89,Urdaneta City SPED Center,72.08
+UISC25-080,M,11,Tagalog,Obese,85,84,82,82,89,91,89,89,91,89,89,88,88,91,93,91,92,91,90,91,86,90,91,Urdaneta City SPED Center,72.08
+UISC25-081,M,11,Tagalog,Normal,98,97,98,97,92,91,91,92,90,93,93,93,92,87,94,93,91,89,91,90,92,90,90,Urdaneta City SPED Center,72.08
+UISC25-082,F,10,Pangasinan,Normal,90,92,88,89,91,91,91,91,92,93,92,92,93,95,95,93,92,90,92,93,92,92,92,Urdaneta City SPED Center,72.08
+UISC25-083,F,12,Tagalog,Normal,92,91,92,93,90,92,90,92,89,88,89,89,89,93,92,92,91,89,92,93,90,92,91,Urdaneta City SPED Center,72.08
+UISC25-084,F,11,Tagalog,Normal,90,91,86,91,92,91,90,91,93,92,93,92,93,91,92,88,91,90,93,92,87,90,93,Urdaneta City SPED Center,72.08
+UISC25-085,F,11,Tagalog,Normal,91,89,90,90,91,90,90,91,93,92,93,92,93,88,91,91,92,90,93,93,93,91,92,Urdaneta City SPED Center,72.08
+UISC25-086,M,11,Tagalog,Normal,90,90,88,91,92,90,91,91,92,92,94,93,93,91,93,91,92,91,91,92,88,93,91,Urdaneta City SPED Center,72.08
+UISC25-087,F,11,Tagalog,Normal,92,94,94,95,91,92,91,92,92,93,92,92,93,96,95,93,94,92,94,94,90,94,92,Urdaneta City SPED Center,72.08
+UISC25-088,M,11,Tagalog,Normal,88,90,87,93,93,92,92,93,92,92,94,91,91,93,91,93,90,90,90,92,89,92,90,Urdaneta City SPED Center,72.08
+UISC25-089,F,11,Ilocano,Normal,89,87,90,90,91,90,90,90,89,89,88,89,90,94,93,91,88,89,92,94,91,93,92,Urdaneta City SPED Center,72.08
+UISC25-090,F,13,Ilocano,Normal,84,84,84,85,88,83,84,85,87,85,85,87,87,93,90,91,91,90,92,92,91,91,93,Urdaneta City SPED Center,72.08
+UISC25-091,F,11,Tagalog,Normal,89,89,91,90,90,89,89,90,90,88,89,87,87,91,91,91,90,91,91,89,86,88,91,Urdaneta City SPED Center,72.08
+UISC25-092,F,11,Tagalog,Normal,94,92,92,94,93,93,93,93,93,92,93,92,93,94,96,96,95,93,92,94,93,93,91,Urdaneta City SPED Center,72.08
+UISC25-093,M,11,Tagalog,Overweight,96,94,95,93,97,95,95,96,90,90,90,88,88,91,91,91,91,91,89,89,87,88,89,Urdaneta City SPED Center,72.08
+UISC25-094,M,11,Tagalog,Normal,81,86,81,84,85,86,87,86,87,88,87,86,87,92,93,93,94,91,92,93,88,92,91,Urdaneta City SPED Center,72.08
+UISC25-095,M,11,Tagalog,Normal,88,87,92,91,91,91,91,91,91,91,91,91,91,94,93,89,89,93,91,92,88,91,90,Urdaneta City SPED Center,72.08
+UISC25-096,M,11,Tagalog,Normal,91,90,87,91,91,92,92,91,93,93,94,93,93,94,96,96,96,93,92,93,94,95,92,Urdaneta City SPED Center,72.08
+UISC25-097,M,11,Tagalog,Normal,89,89,88,90,91,91,91,90,93,93,93,94,93,91,93,91,92,89,88,87,88,86,89,Urdaneta City SPED Center,72.08
+UISC25-098,M,11,Tagalog,Normal,88,87,89,89,88,90,88,89,88,89,88,87,87,81,84,81,82,87,87,90,87,90,89,Urdaneta City SPED Center,72.08
+UISC25-099,M,11,Tagalog,Normal,86,87,86,87,86,91,89,88,90,93,93,90,86,92,94,93,93,93,93,92,91,91,90,Urdaneta City SPED Center,72.08
+UISC25-100,F,12,Tagalog,Normal,95,95,94,93,89,89,90,90,89,89,87,87,88,89,91,89,90,89,89,89,86,90,91,Urdaneta City SPED Center,72.08
+UISC25-101,F,11,Tagalog,Normal,91,88,88,90,92,90,90,90,92,92,92,92,93,91,93,88,88,89,93,93,91,91,91,Urdaneta City SPED Center,72.08
+UISC25-102,F,12,Tagalog,Normal,91,88,89,90,91,90,91,90,90,88,87,87,89,97,96,94,93,94,95,94,91,94,94,Urdaneta City SPED Center,72.08
+UISC25-103,F,11,English,Normal,92,92,90,95,93,93,93,93,93,92,93,93,93,92,93,92,93,88,91,93,88,82,91,Urdaneta City SPED Center,72.08
+UISC25-104,F,11,Tagalog,Normal,84,84,84,83,90,89,89,89,87,86,86,86,87,85,86,85,86,85,88,95,87,89,89,Urdaneta City SPED Center,72.08
+UISC25-105,F,12,Ilocano,Normal,92,93,96,93,94,93,92,93,95,94,93,94,94,92,95,92,91,91,91,92,92,91,90,Urdaneta City SPED Center,72.08
+UISC25-106,F,12,Tagalog,Normal,90,95,94,93,87,87,86,86,89,90,89,88,87,93,94,95,94,92,95,96,95,96,95,Urdaneta City SPED Center,72.08
+UISC25-107,M,11,Tagalog,Obese,89,86,88,91,92,92,92,92,92,91,92,92,92,95,94,94,92,92,92,93,93,92,91,Urdaneta City SPED Center,72.08
+UISC25-108,F,11,Ilocano,Normal,88,87,86,85,88,87,88,87,88,87,87,88,87,90,89,89,87,89,90,91,91,90,90,Urdaneta City SPED Center,72.08
+UISC25-109,F,11,Tagalog,Normal,79,79,79,80,84,83,83,85,84,86,83,84,84,87,90,89,86,89,90,90,88,89,89,Urdaneta City SPED Center,72.08
+UISC25-110,M,12,Tagalog,Normal,90,87,88,89,93,92,92,92,92,91,91,91,91,86,87,85,85,87,89,89,89,89,90,Urdaneta City SPED Center,72.08
+UISC25-111,M,12,Tagalog,Wasted,91,88,88,91,91,90,90,91,91,91,91,91,91,91,91,92,88,88,92,88,91,90,90,Urdaneta City SPED Center,72.08
+UISC25-112,M,11,Tagalog,Overweight,90,83,87,90,92,92,92,93,91,90,92,92,92,88,90,89,90,88,91,90,88,90,90,Urdaneta City SPED Center,72.08
+UISC25-113,F,11,Tagalog,Normal,94,91,88,91,92,90,90,91,93,92,92,93,92,93,90,89,90,91,92,92,86,91,91,Urdaneta City SPED Center,72.08
+UISC25-114,F,11,Tagalog,Normal,93,93,91,91,92,91,91,91,94,93,92,92,93,95,93,93,91,92,92,94,92,93,91,Urdaneta City SPED Center,72.08
+UISC25-115,F,11,Tagalog,Normal,89,89,92,89,90,90,90,90,93,93,93,93,93,90,93,91,87,88,92,92,93,90,91,Urdaneta City SPED Center,72.08
+UISC25-116,M,11,Tagalog,Overweight,86,90,92,89,93,92,93,92,92,91,92,92,92,88,91,92,88,89,90,90,89,90,91,Urdaneta City SPED Center,72.08
+UISC25-117,F,11,Tagalog,Normal,89,90,85,87,87,86,85,87,86,85,85,85,87,92,91,90,90,89,90,92,88,90,91,Urdaneta City SPED Center,72.08
+UISC25-118,F,11,Tagalog,Normal,88,89,88,89,91,90,90,91,93,92,93,93,93,90,91,89,87,89,91,91,90,90,90,Urdaneta City SPED Center,72.08
+UISC25-119,M,11,Tagalog,Overweight,94,94,93,95,95,94,95,96,94,95,95,94,94,96,96,95,96,96,93,94,94,96,93,Urdaneta City SPED Center,72.08
+UISC25-120,F,11,Tagalog,Normal,92,92,90,91,95,95,94,96,94,94,94,94,94,88,91,89,91,89,91,92,90,92,88,Urdaneta City SPED Center,72.08
+UISC25-121,M,11,Tagalog,Normal,90,90,87,91,92,90,90,91,92,92,94,93,93,91,93,91,92,91,91,92,88,93,91,Urdaneta City SPED Center,72.08
+UISC25-122,F,11,Tagalog,Normal,89,91,89,92,95,95,94,95,95,94,94,94,95,89,91,88,89,90,93,92,92,90,89,Urdaneta City SPED Center,72.08
+UICS25-001,M,11,Pangasinan,Normal,90,89,81,89,90,90,89,90,88,89,89,89,89,89,89,90,88,90,89,88,88,89,88,Urdaneta I Central School,66.82
+UICS25-002,F,11,Ilocano,Normal,88,87,88,86,88,87,86,86,87,86,86,86,86,92,89,88,86,89,91,87,86,88,88,Urdaneta I Central School,66.82
+UICS25-003,M,12,Tagalog,Normal,79,78,78,77,78,78,78,78,80,79,79,79,79,81,81,81,80,83,82,90,89,90,90,Urdaneta I Central School,66.82
+UICS25-004,M,11,Tagalog,Normal,90,90,90,90,89,89,89,90,89,88,87,87,88,87,89,88,87,89,88,89,92,91,91,Urdaneta I Central School,66.82
+UICS25-005,F,11,Ilocano,Normal,87,87,87,86,88,87,88,89,87,86,87,86,87,86,85,84,88,85,85,86,85,87,91,Urdaneta I Central School,66.82
+UICS25-006,M,11,Ilocano,Normal,86,85,85,86,87,87,87,88,88,87,88,88,88,85,83,84,84,84,88,88,85,88,85,Urdaneta I Central School,66.82
+UICS25-007,F,11,Ilocano,Normal,84,83,83,84,83,84,83,82,84,84,85,85,84,84,83,83,82,86,86,86,87,86,89,Urdaneta I Central School,66.82
+UICS25-008,F,12,Ilocano,Normal,84,84,86,86,87,86,86,88,86,86,85,85,86,87,86,86,86,86,86,85,84,85,85,Urdaneta I Central School,66.82
+UICS25-009,F,11,Tagalog,Normal,90,90,90,92,89,89,92,90,91,90,89,87,87,91,91,91,92,91,92,89,88,89,90,Urdaneta I Central School,66.82
+UICS25-010,M,11,Tagalog,Normal,81,81,81,80,84,83,83,84,83,82,82,82,83,81,80,81,81,82,82,89,89,89,89,Urdaneta I Central School,66.82
+UICS25-011,F,11,Tagalog,Normal,87,85,86,87,88,87,87,88,87,86,86,87,87,83,82,82,83,84,88,88,88,87,88,Urdaneta I Central School,66.82
+UICS25-012,F,12,Tagalog,Normal,83,83,83,87,86,86,86,86,85,85,85,85,85,86,84,86,84,85,88,86,85,86,89,Urdaneta I Central School,66.82
+UICS25-013,F,11,Tagalog,Normal,90,91,90,89,90,89,89,88,87,87,88,88,88,91,92,91,93,91,91,89,89,89,89,Urdaneta I Central School,66.82
+UICS25-014,M,12,Tagalog,Normal,82,82,82,82,81,81,80,80,83,83,82,83,83,85,85,86,84,84,85,81,81,82,82,Urdaneta I Central School,66.82
+UICS25-015,M,11,Tagalog,Normal,78,76,77,80,83,82,83,83,83,82,81,80,83,83,82,82,83,83,90,83,84,84,85,Urdaneta I Central School,66.82
+UICS25-016,M,11,Ilocano,Normal,87,86,85,83,86,85,84,83,84,84,83,83,84,86,85,84,84,85,83,91,89,90,90,Urdaneta I Central School,66.82
+UICS25-017,F,11,Ilocano,Normal,85,86,88,87,88,87,88,89,89,87,87,87,87,89,88,89,87,88,92,89,88,89,89,Urdaneta I Central School,66.82
+UICS25-018,F,11,Tagalog,Normal,89,90,89,89,88,89,88,89,89,88,87,87,87,86,87,88,87,87,87,83,83,84,85,Urdaneta I Central School,66.82
+UICS25-019,M,11,Ilocano,Normal,89,87,90,90,90,89,89,90,89,88,88,87,88,87,88,90,87,87,89,88,87,88,87,Urdaneta I Central School,66.82
+UICS25-020,F,11,Tagalog,Normal,83,82,83,83,88,86,86,86,87,86,85,86,86,89,89,89,89,89,90,92,89,90,90,Urdaneta I Central School,66.82
+UICS25-021,M,11,Tagalog,Normal,81,78,77,83,84,83,83,84,85,84,83,84,85,86,87,86,86,86,86,82,82,84,82,Urdaneta I Central School,66.82
+UICS25-022,F,11,Tagalog,Normal,86,85,86,87,88,87,88,88,87,86,87,86,87,84,84,81,87,86,88,89,86,88,90,Urdaneta I Central School,66.82
+UICS25-023,F,11,Ilocano,Normal,90,89,91,89,89,89,90,88,86,85,85,85,86,87,87,88,86,86,86,89,90,89,90,Urdaneta I Central School,66.82
+UICS25-024,F,11,Tagalog,Normal,87,88,86,86,88,86,85,85,87,87,86,87,87,90,91,89,88,89,90,89,87,88,87,Urdaneta I Central School,66.82
+UICS25-025,M,11,Tagalog,Normal,86,81,87,85,89,89,89,89,90,89,88,87,87,92,91,92,92,91,89,87,84,85,88,Urdaneta I Central School,66.82
+UICS25-026,F,11,Tagalog,Normal,91,91,89,89,89,89,89,87,85,85,86,84,85,85,84,84,84,84,88,81,80,81,80,Urdaneta I Central School,66.82
+UICS25-027,F,11,Tagalog,Normal,85,79,80,84,87,86,86,88,87,86,86,86,87,90,90,90,91,90,91,88,82,87,88,Urdaneta I Central School,66.82
+UICS25-028,M,12,Tagalog,Normal,81,81,83,83,84,83,84,84,85,85,86,82,85,87,86,85,86,87,85,87,88,88,87,Urdaneta I Central School,66.82
+UICS25-029,M,11,Tagalog,Normal,90,90,89,87,88,88,88,89,88,87,87,88,87,86,90,87,88,87,90,81,80,81,82,Urdaneta I Central School,66.82
+UICS25-030,M,11,Tagalog,Normal,87,86,85,85,85,82,84,84,88,88,87,88,88,91,92,91,92,91,89,87,86,88,88,Urdaneta I Central School,66.82
+UICS25-031,M,11,Ilocano,Normal,76,76,76,76,79,77,78,78,82,82,82,82,82,86,85,86,86,86,89,90,89,90,90,Urdaneta I Central School,66.82
+UICS25-032,F,12,Tagalog,Normal,90,91,90,90,89,89,90,90,87,86,86,85,87,91,90,90,89,90,89,82,82,83,82,Urdaneta I Central School,66.82
+UICS25-033,M,12,Ilocano,Severely Wasted,90,89,90,89,88,87,88,88,90,87,87,87,87,86,87,90,87,87,88,90,88,90,90,Urdaneta I Central School,66.82
+UICS25-034,M,12,Tagalog,Normal,89,89,91,91,90,89,89,90,90,88,87,88,88,86,84,83,87,86,86,83,85,86,85,Urdaneta I Central School,66.82
+UICS25-035,M,12,Ilocano,Overweight,87,90,88,80,84,86,85,86,85,85,85,86,86,85,85,84,87,86,85,85,85,85,85,Urdaneta I Central School,66.82
+UICS25-036,F,11,Ilocano,Normal,86,83,85,87,87,86,86,86,82,81,82,83,82,80,79,80,80,81,81,89,90,90,91,Urdaneta I Central School,66.82
+UICS25-037,F,11,Tagalog,Normal,82,80,83,85,81,89,89,95,83,82,82,82,84,89,88,88,87,87,90,87,87,87,88,Urdaneta I Central School,66.82
+UICS25-038,F,12,Tagalog,Normal,84,83,85,84,88,87,86,87,87,86,85,85,85,83,84,85,85,87,88,89,88,89,89,Urdaneta I Central School,66.82
+UICS25-039,M,12,Tagalog,Normal,77,79,79,77,81,82,82,82,89,88,89,87,85,87,87,85,84,89,87,89,88,88,87,Urdaneta I Central School,66.82
+UICS25-040,M,12,Tagalog,Normal,85,84,88,85,88,87,88,88,87,86,87,87,86,86,86,85,85,86,81,87,86,88,86,Urdaneta I Central School,66.82
+UICS25-041,F,11,Tagalog,Normal,92,89,92,93,90,91,91,92,86,86,85,86,86,92,90,91,88,90,90,88,86,88,92,Urdaneta I Central School,66.82
+UICS25-042,M,11,Tagalog,Normal,87,87,88,85,91,93,91,87,88,85,92,89,90,85,88,86,86,86,86,92,91,91,92,Urdaneta I Central School,66.82
+UICS25-043,M,12,Tagalog,Normal,88,87,87,92,92,89,89,89,92,92,91,93,92,88,90,88,85,88,90,85,85,84,86,Urdaneta I Central School,66.82
+UICS25-044,M,11,Tagalog,Normal,82,82,84,84,83,83,83,84,84,82,82,83,83,84,85,86,85,83,84,85,86,85,85,Urdaneta I Central School,66.82
+UICS25-045,F,11,Tagalog,Normal,88,91,87,88,85,85,85,85,82,82,82,82,82,85,85,86,85,83,88,85,85,86,84,Urdaneta I Central School,66.82
+UICS25-046,M,11,Tagalog,Normal,90,89,90,91,90,90,90,91,92,93,90,92,92,90,91,88,86,89,90,87,87,86,86,Urdaneta I Central School,66.82
+UICS25-047,F,11,Tagalog,Normal,87,87,86,86,88,88,89,89,87,87,88,87,87,83,82,82,82,83,89,89,88,88,90,Urdaneta I Central School,66.82
+UICS25-048,M,11,Tagalog,Obese,87,79,85,87,88,87,86,89,89,87,86,87,88,90,90,88,84,89,88,88,87,86,87,Urdaneta I Central School,66.82
+UICS25-049,M,12,Tagalog,Overweight,89,91,87,88,90,89,90,90,89,89,89,87,87,91,91,93,91,91,89,87,89,88,90,Urdaneta I Central School,66.82
+UICS25-050,M,11,Kapampangan,Normal,90,94,90,90,89,88,87,87,85,86,85,84,84,90,90,90,90,90,88,88,88,88,87,Urdaneta I Central School,66.82
+UICS25-051,F,12,Tagalog,Normal,86,86,85,89,91,90,90,90,92,92,92,91,92,88,86,87,85,86,90,90,90,89,91,Urdaneta I Central School,66.82
+UICS25-052,F,11,Tagalog,Overweight,90,85,85,88,89,88,88,89,90,89,90,90,89,89,88,87,88,86,91,92,91,91,92,Urdaneta I Central School,66.82
+UICS25-053,F,11,Ilocano,Normal,85,84,86,86,88,87,87,88,87,85,85,85,85,91,91,88,86,89,91,90,90,90,90,Urdaneta I Central School,66.82
+UICS25-054,F,11,Tagalog,Normal,87,86,86,85,88,87,88,88,87,86,87,86,87,90,90,90,91,91,89,87,85,87,89,Urdaneta I Central School,66.82
+UICS25-055,F,11,Tagalog,Overweight,88,86,85,89,91,90,90,90,92,92,92,92,93,91,89,88,87,87,92,91,91,91,91,Urdaneta I Central School,66.82
+UICS25-056,F,11,Tagalog,Normal,82,81,80,82,86,86,85,85,85,85,83,84,84,90,90,89,90,90,91,90,88,90,90,Urdaneta I Central School,66.82
+UICS25-057,M,12,Tagalog,Normal,86,85,82,84,90,89,88,90,90,90,89,89,90,91,92,92,91,92,90,90,86,90,90,Urdaneta I Central School,66.82
+UICS25-058,F,11,Tagalog,Normal,89,89,89,91,90,89,89,90,89,88,88,87,87,88,88,88,86,86,86,86,86,87,87,Urdaneta I Central School,66.82
+UICS25-059,F,11,Tagalog,Normal,90,91,88,87,89,88,86,85,87,87,87,86,86,91,92,91,91,91,91,90,86,88,90,Urdaneta I Central School,66.82
+UICS25-060,M,11,Tagalog,Normal,80,79,79,79,88,87,87,88,87,87,86,86,87,85,86,85,84,84,79,77,77,77,77,Urdaneta I Central School,66.82
+UICS25-061,F,11,Tagalog,Normal,87,86,88,91,92,92,92,92,92,91,91,91,92,91,92,89,89,88,88,88,87,89,90,Urdaneta I Central School,66.82
+UICS25-062,F,11,Ilocano,Normal,84,83,84,84,89,88,88,88,89,88,87,88,87,85,84,85,84,84,88,90,86,88,87,Urdaneta I Central School,66.82
+UICS25-063,M,11,Tagalog,Normal,83,81,85,84,83,83,84,85,83,82,82,82,82,85,83,82,82,84,86,87,88,87,87,Urdaneta I Central School,66.82
+UICS25-064,F,12,Tagalog,Normal,90,89,91,97,93,92,92,93,91,90,90,90,90,94,91,88,88,89,93,90,92,88,92,Urdaneta I Central School,66.82
+UICS25-065,M,11,Tagalog,Normal,94,93,91,95,92,90,90,91,93,93,93,93,92,88,89,88,86,88,91,90,91,90,90,Urdaneta I Central School,66.82
+UICS25-066,F,12,Tagalog,Normal,94,89,93,91,93,92,92,92,91,90,90,90,92,91,89,88,88,88,90,90,91,90,90,Urdaneta I Central School,66.82
+UICS25-067,F,11,Tagalog,Normal,81,81,81,82,83,83,83,84,84,83,83,82,83,84,83,83,83,84,87,86,85,85,85,Urdaneta I Central School,66.82
+UICS25-068,M,12,Tagalog,Overweight,86,83,87,88,87,86,87,87,87,88,87,85,87,91,91,92,91,91,90,88,87,88,89,Urdaneta I Central School,66.82
+UICS25-069,M,11,Tagalog,Normal,89,87,90,90,86,85,86,87,86,83,84,86,86,90,91,91,91,90,87,87,86,86,90,Urdaneta I Central School,66.82
+UICS25-070,M,11,Tagalog,Normal,89,87,86,92,92,90,90,90,92,92,91,91,92,80,89,88,89,90,91,90,90,90,89,Urdaneta I Central School,66.82
+UICS25-071,F,12,Tagalog,Normal,86,86,91,87,87,91,89,88,88,90,89,89,90,88,90,86,89,85,92,87,84,89,89,Urdaneta I Central School,66.82
+UICS25-072,M,12,Tagalog,Obese,86,84,84,85,88,87,87,87,87,86,86,86,87,91,91,91,91,91,88,88,87,88,90,Urdaneta I Central School,66.82
+UICS25-073,M,11,Tagalog,Normal,87,87,89,90,88,89,86,90,90,90,90,90,90,90,91,88,87,89,90,89,90,89,90,Urdaneta I Central School,66.82
+UICS25-074,M,11,Tagalog,Overweight,78,78,78,79,78,78,78,80,83,82,82,83,83,82,81,80,81,81,87,87,87,87,87,Urdaneta I Central School,66.82
+UICS25-075,M,12,Tagalog,Normal,91,93,91,89,90,89,89,90,89,88,88,88,88,92,92,91,92,91,91,92,86,90,90,Urdaneta I Central School,66.82
+UICS25-076,M,12,Ilocano,Normal,90,91,90,89,88,87,88,87,89,88,89,90,87,93,93,92,93,94,92,87,86,87,90,Urdaneta I Central School,66.82
+UICS25-077,M,12,Ilocano,Normal,89,89,88,91,88,88,87,88,88,88,87,87,87,87,87,88,86,85,84,83,85,84,85,Urdaneta I Central School,66.82
+UICS25-078,M,11,Tagalog,Normal,91,88,88,93,92,90,90,91,93,93,92,93,93,95,94,88,90,92,91,92,91,91,90,Urdaneta I Central School,66.82
+UICS25-079,M,12,Tagalog,Overweight,83.90609137,82.97468354,83.60759494,84.18387909,91,90,90,90,93,92,91,91,92,91,90,87,87,87,89,90,89,89,90,Urdaneta I Central School,66.82
+UICS25-080,M,11,Tagalog,Normal,77,75,78,78,80,79,79,81,78,77,77,77,80,80,80,81,80,81,80,78,78,78,80,Urdaneta I Central School,66.82
+UICS25-081,M,12,Tagalog,Normal,90,88,89,93,92,92,93,92,92,91,90,91,92,92,89,90,89,90,93,89,91,88,93,Urdaneta I Central School,66.82
+UICS25-082,F,11,Tagalog,Normal,87,87,89,89,90,89,89,89,90,89,88,87,87,93,93,91,89,90,92,92,89,91,92,Urdaneta I Central School,66.82
+UICS25-083,F,11,Ilocano,Normal,90,84,85,84,88,86,87,87,86,83,83,86,85,88,87,86,86,87,87,85,85,86,87,Urdaneta I Central School,66.82
+UICS25-084,F,11,Ilocano,Normal,92,89,91,92,90,89,89,90,92,91,89,88,87,97,96,95,94,95,93,95,92,93,92,Urdaneta I Central School,66.82
+UICS25-085,F,12,Tagalog,Normal,89,87,87,87,88,84,87,87,84,83,83,84,85,91,91,91,91,92,92,89,87,88,90,Urdaneta I Central School,66.82
+UICS25-086,F,11,Tagalog,Normal,85,85,84,84,86,85,85,85,85,85,84,84,84,90,91,87,90,90,89,88,85,87,90,Urdaneta I Central School,66.82
+UICS25-087,F,11,Tagalog,Normal,87,87,86,91,91,92,90,93,90,89,89,89,89,86,86,88,86,84,88,89,89,89,89,Urdaneta I Central School,66.82
+UICS25-088,F,12,Tagalog,Normal,90,90,90,90,91,89,91,90,87,87,88,87,87,91,92,91,92,91,89,89,90,89,93,Urdaneta I Central School,66.82
+UICS25-089,F,11,Tagalog,Normal,87,82,85,84,89,88,89,89,89,87,88,89,89,88,87,87,86,86,88,88,89,91,89,Urdaneta I Central School,66.82
+UICS25-090,F,11,Tagalog,Normal,82,84,81,82,86,86,84,84,80,80,79,79,81,90,90,91,91,90,89,88,86,87,90,Urdaneta I Central School,66.82
+UICS25-091,F,11,Tagalog,Normal,86,85,85,86,88,89,88,89,87,86,87,87,87,86,86,85,85,86,85,85,85,84,86,Urdaneta I Central School,66.82
+UICS25-092,M,11,Tagalog,Severely Wasted,79,82,79,79,85,84,87,85,85,84,84,86,85,85,86,85,84,86,81,79,79,81,80,Urdaneta I Central School,66.82
+UICS25-093,M,11,Ilocano,Normal,79,79,79,79,79,79,80,80,79,79,79,80,81,82,80,80,80,85,86,86,86,85,85,Urdaneta I Central School,66.82
+UICS25-094,F,11,Tagalog,Normal,88,88,86,86,88,88,87,86,86,86,87,85,85,86,82,83,83,84,83,83,81,83,81,Urdaneta I Central School,66.82
+UICS25-095,F,11,Tagalog,Normal,84,85,85,86,86,85,85,86,85,85,85,85,86,86,85,86,84,87,87,86,85,86,86,Urdaneta I Central School,66.82
+UICS25-096,F,11,Ilocano,Normal,83,82,83,83,87,85,86,87,87,86,87,86,86,85,84,84,84,84,88,87,87,87,87,Urdaneta I Central School,66.82
+UICS25-097,M,12,Tagalog,Normal,90,84,84,91,92,92,92,93,90,90,91,91,91,88,86,87,85,84,88,88,89,88,90,Urdaneta I Central School,66.82
+UICS25-098,F,11,Tagalog,Normal,86,84,85,86,86,84,85,86,86,85,85,86,86,87,87,86,85,87,86,86,87,87,88,Urdaneta I Central School,66.82
+UICS25-099,F,11,Ilocano,Normal,79,80,80,81,80,81,81,82,83,82,84,82,83,79,78,79,79,80,80,80,80,80,80,Urdaneta I Central School,66.82
+UICS25-100,F,11,Tagalog,Normal,85,85,85,85,85,87,88,87,87,86,87,87,87,86,86,88,86,86,86,87,86,87,87,Urdaneta I Central School,66.82
+UICS25-101,M,12,Tagalog,Normal,79,78,78,77,77,76,77,79,82,81,81,81,82,84,83,81,79,83,81,81,81,82,82,Urdaneta I Central School,66.82
+UICS25-102,M,11,Tagalog,Normal,87,86,87,86,88,88,88,87,86,86,85,86,86,80,78,79,78,79,81,81,80,81,82,Urdaneta I Central School,66.82
+UICS25-103,M,12,Tagalog,Normal,79,77,75,79,82,82,82,82,80,82,81,83,82,83,81,81,81,84,81,80,80,82,82,Urdaneta I Central School,66.82
+UICS25-104,F,12,Ilocano,Normal,78,78,79,79,84,81,83,83,79,79,79,80,79,84,84,79,80,81,85,84,82,84,85,Urdaneta I Central School,66.82
+UICS25-105,F,11,Ilocano,Overweight,85,84,84,85,85,83,83,84,81,79,79,80,80,84,82,83,86,85,84,84,84,84,84,Urdaneta I Central School,66.82
+UICS25-106,F,13,Tagalog,Normal,80,80,80,80,80,80,80,80,79,79,79,79,79,87,85,87,88,85,77,76,77,77,77,Urdaneta I Central School,66.82
+UICS25-107,F,14,Ilocano,Overweight,87,86,89,88,83,81,84,82,79,78,79,78,78,78,77,77,78,78,81,81,80,80,83,Urdaneta I Central School,66.82
+UICS25-108,F,11,Ilocano,Normal,83,81,82,83,84,82,82,84,84,80,84,82,83,86,84,86,86,85,84,83,82,82,83,Urdaneta I Central School,66.82
+UICS25-109,M,12,Tagalog,Normal,83,82,85,83,85,85,85,85,82,81,81,81,82,84,83,82,83,84,84,82,80,80,83,Urdaneta I Central School,66.82
+UICS25-110,F,12,Ilocano,Normal,80,80,80,81,86,85,85,86,85,85,84,84,84,84,83,83,84,85,87,86,85,84,85,Urdaneta I Central School,66.82
+UICS25-111,M,11,Tagalog,Normal,82,81,84,89,81,81,82,85,85,83,83,84,85,80,80,80,79,80,82,81,82,81,82,Urdaneta I Central School,66.82
+UICS25-112,F,12,Tagalog,Normal,90,89,86,95,93,92,92,93,92,91,91,91,92,88,87,86,86,84,88,88,89,89,89,Urdaneta I Central School,66.82
+UICS25-113,M,11,Tagalog,Normal,81,81,80,80,88,87,87,86,86,85,86,85,86,78,78,78,79,79,81,81,80,81,81,Urdaneta I Central School,66.82
+UICS25-114,F,11,Tagalog,Normal,88,87,88,87,87,87,86,87,86,85,85,85,86,83,82,82,82,83,86,86,88,87,86,Urdaneta I Central School,66.82
+UICS25-115,F,11,Tagalog,Normal,92,94,93,92,89,87,87,89,86,85,85,85,86,86,85,86,84,83,83,82,81,82,80,Urdaneta I Central School,66.82
+UICS25-116,M,11,Ilocano,Wasted,80,80,84,82,81,81,84,84,83,84,84,83,83,83,81,83,81,84,86,84,81,81,85,Urdaneta I Central School,66.82
+UICS25-117,M,11,Tagalog,Normal,85,83,84,87,88,86,86,87,88,86,86,88,88,84,84,84,84,85,84,84,85,84,83,Urdaneta I Central School,66.82
+UICS25-118,M,12,Tagalog,Normal,89,83,87,86,80,80,80,80,82,82,82,81,82,80,78,78,78,78,80,80,80,79,79,Urdaneta I Central School,66.82
+UICS25-119,M,13,Tagalog,Normal,83,82,83,82,84,82,81,85,83,82,82,81,84,79,78,79,79,79,80,79,79,80,81,Urdaneta I Central School,66.82
+UICS25-120,M,11,Tagalog,Normal,77,76,77,77,84,82,81,82,81,80,79,79,80,79,78,79,79,79,79,78,78,79,80,Urdaneta I Central School,66.82
+UICS25-121,M,12,Tagalog,Normal,79,78,78,78,76,76,76,76,78,77,77,78,78,78,77,80,77,78,81,81,81,81,82,Urdaneta I Central School,66.82
+UICS25-122,M,11,Tagalog,Normal,84,83,84,83,83,83,84,84,84,84,84,85,85,86,85,85,86,86,82,83,80,82,82,Urdaneta I Central School,66.82
+UICS25-123,F,11,Ilocano,Normal,85,85,87,87,86,85,87,87,85,84,84,84,85,87,86,86,86,87,85,86,86,87,87,Urdaneta I Central School,66.82
+UICS25-124,F,11,Ilocano,Normal,84,84,85,84,87,85,85,87,86,83,83,85,85,84,83,83,84,85,86,83,82,82,85,Urdaneta I Central School,66.82
+UICS25-125,F,11,Ilocano,Normal,86,86,85,86,87,86,86,86,87,86,86,86,87,85,84,83,86,83,86,86,86,85,85,Urdaneta I Central School,66.82
+UICS25-126,F,11,Ilocano,Normal,82,83,82,82,85,84,84,85,83,81,81,82,83,84,86,84,84,85,86,87,85,85,85,Urdaneta I Central School,66.82
+UICS25-127,F,11,Tagalog,Normal,84,84,85,86,85,85,85,86,81,81,82,82,82,81,79,80,80,81,81,81,80,81,82,Urdaneta I Central School,66.82
+UICS25-128,F,12,Ilocano,Normal,90,90,91,89,89,90,90,90,90,89,89,87,87,85,85,85,84,85,87,86,86,87,87,Urdaneta I Central School,66.82
+UICS25-129,F,11,Tagalog,Normal,90,87,87,91,92,92,92,93,91,89,90,90,91,90,87,87,84,88,90,90,89,91,90,Urdaneta I Central School,66.82
+UICS25-130,F,11,Ilocano,Normal,87,87,90,89,91,89,89,90,88,85,87,87,88,85,84,85,86,84,87,85,84,84,86,Urdaneta I Central School,66.82
+UICS25-131,F,11,Pangasinan,Normal,85,85,85,85,88,88,88,89,87,86,87,87,87,84,84,85,84,84,87,86,86,88,86,Urdaneta I Central School,66.82
+UICS25-132,M,11,Tagalog,Normal,85,84,85,85,88,86,87,88,88,86,86,87,88,84,84,85,83,84,88,87,86,88,88,Urdaneta I Central School,66.82
+UICS25-133,M,11,Tagalog,Normal,77,76,77,77,82,81,82,82,81,80,80,80,80,80,79,79,79,79,81,80,79,79,80,Urdaneta I Central School,66.82
+UICS25-134,M,13,Tagalog,Normal,77,76,79,79,82,81,81,82,82,81,81,81,82,84,84,84,83,84,81,83,81,81,81,Urdaneta I Central School,66.82
+UICS25-135,M,11,Ilocano,Normal,85,85,83,84,86,84,83,85,83,82,82,83,83,85,84,83,83,85,87,86,85,87,83,Urdaneta I Central School,66.82
+UICS25-136,M,12,Tagalog,Normal,81,81,81,81,81,81,81,81,84,82,82,83,83,82,81,81,81,82,82,82,82,83,82,Urdaneta I Central School,66.82
+UICS25-137,M,11,Tagalog,Normal,78,78,76,78,83,82,82,83,82,81,81,80,80,82,78,78,80,79,85,83,83,83,85,Urdaneta I Central School,66.82
+UICS25-138,F,11,Ilocano,Normal,84,78,83,87,82,80,82,85,80,80,80,79,80,79,78,78,80,80,78,78,78,78,79,Urdaneta I Central School,66.82
+UICS25-139,M,12,Tagalog,Severely Wasted,78,78,78,78,79,78,78,79,79,77,76,77,78,81,80,79,79,79,80,79,79,79,80,Urdaneta I Central School,66.82
+UICS25-140,M,11,Ilocano,Normal,78,85,79,87,87,84,86,87,83,86,87,85,86,82,78,76,78,83,77,77,76,76,77,Urdaneta I Central School,66.82
+UICS25-141,M,12,Ilocano,Normal,82,80,82,81,82,81,81,83,80,81,81,80,82,85,83,84,83,85,84,83,82,85,83,Urdaneta I Central School,66.82
+UICS25-142,F,12,Tagalog,Normal,79,79,77,79,78,77,77,78,80,78,77,79,80,79,78,79,79,79,80,79,79,79,80,Urdaneta I Central School,66.82
+UICS25-143,M,12,Ilocano,Overweight,81,81,81,82,87,85,86,87,87,86,86,86,87,82,82,82,81,82,81,79,79,80,80,Urdaneta I Central School,66.82
+UICS25-144,M,12,Hiligaynon,Normal,87,81,85,87,86,85,88,86,89,86,87,89,87,86,88,83,88,84,87,81,77,80,80,Urdaneta I Central School,66.82
+UICS25-145,M,11,Ilocano,Normal,81,80,81,81,84,84,84,84,83,81,83,83,83,79,78,79,78,79,81,81,81,82,82,Urdaneta I Central School,66.82
+UICS25-146,M,11,Tagalog,Normal,82,81,81,82,85,84,83,85,81,81,81,81,81,81,81,83,81,81,76,76,76,76,76,Urdaneta I Central School,66.82
+UICS25-147,M,12,Tagalog,Normal,78,77,78,77,76,75,75,76,78,77,78,78,78,80,79,81,79,78,80,80,79,80,81,Urdaneta I Central School,66.82
+UICS25-148,M,11,Tagalog,Normal,77,76,78,79,82,81,81,83,81,80,80,80,80,81,80,79,79,79,80,79,79,79,80,Urdaneta I Central School,66.82
+UICS25-149,M,13,Ilocano,Normal,76,75,76,76,78,76,76,77,87,85,86,87,80,80,80,81,80,83,86,84,83,84,85,Urdaneta I Central School,66.82
+UICS25-150,F,11,Tagalog,Normal,80,80,78,80,81,81,79,79,77,76,76,77,77,81,80,80,80,80,81,80,80,80,81,Urdaneta I Central School,66.82
+UICS25-151,F,13,Tagalog,Normal,81,81,82,83,78,80,80,79,80,79,81,81,81,82,82,83,82,83,81,80,80,80,80,Urdaneta I Central School,66.82
+UICS25-152,M,11,Ilocano,Normal,84,82,84,84,85,85,85,86,82,82,82,82,82,84,84,85,84,86,83,83,84,83,84,Urdaneta I Central School,66.82
+UICS25-153,M,11,Ilocano,Normal,75,76,76,77,80,80,80,80,81,81,81,81,81,81,80,80,80,80,82,81,81,83,83,Urdaneta I Central School,66.82
+UICS25-154,F,11,Ilocano,Normal,78,76,78,79,79,79,80,79,80,78,79,79,80,80,79,78,78,78,77,77,77,77,77,Urdaneta I Central School,66.82
+UICS25-155,M,11,Ilocano,Normal,78,78,78,78,81,81,82,82,85,83,82,80,81,76,76,75,75,76,76,76,76,76,77,Urdaneta I Central School,66.82
+UICS25-156,M,11,Ilocano,Normal,80,79,80,80,81,80,80,81,80,79,79,79,80,78,78,77,78,79,78,78,78,78,79,Urdaneta I Central School,66.82
+UICS25-157,M,11,Ilocano,Normal,78,78,78,78,82,80,81,81,79,79,79,80,80,78,78,78,78,78,79,78,78,78,79,Urdaneta I Central School,66.82
+UICS25-158,M,12,Maranao,Normal,83,78,81,85,78,77,77,78,76,75,75,75,75,81,81,82,82,81,82,80,80,80,80,Urdaneta I Central School,66.82
+UICS25-159,M,11,Tagalog,Normal,90,90,93,92,91,89,92,91,87,87,86,87,86,87,87,86,86,85,86,85,87,88,86,Urdaneta I Central School,66.82
+UICS25-160,M,11,Tagalog,Normal,78,78,75,77,80,80,80,82,80,79,79,80,80,76,76,76,76,77,76,76,76,76,77,Urdaneta I Central School,66.82
+UICS25-161,M,11,Ilocano,Normal,80,79,79,78,84,82,83,83,81,80,81,80,81,78,78,77,78,78,78,78,79,78,81,Urdaneta I Central School,66.82
+UICS25-162,M,12,Tagalog,Normal,75,75,76,76,77,76,75,76,82,81,82,82,82,83,81,81,81,82,75,75,76,76,76,Urdaneta I Central School,66.82
+UICS25-163,M,13,Ilocano,Normal,75,76,75,75,77,76,76,77,76,76,76,76,76,75,75,75,75,75,76,76,76,76,76,Urdaneta I Central School,66.82
+UICS25-164,M,12,Tagalog,Normal,86,84,85,86,88,87,87,87,85,84,83,82,84,81,79,81,79,82,82,82,82,83,83,Urdaneta I Central School,66.82
+UICS25-165,M,12,Tagalog,Normal,85,81,84,85,86,84,84,86,85,84,84,84,84,84,86,87,85,86,87,85,87,86,87,Urdaneta I Central School,66.82
+UICS25-166,M,14,Tagalog,Normal,82,81,81,80,78,76,78,79,78,77,77,77,77,76,76,76,76,75,76,76,76,76,76,Urdaneta I Central School,66.82
+UICS25-167,M,12,Tagalog,Normal,77,76,77,78,75,75,75,76,78,77,77,78,78,77,77,77,76,77,76,76,76,76,75,Urdaneta I Central School,66.82
+UICS25-168,F,11,Tagalog,Normal,81,82,79,81,81,82,78,81,85,83,83,80,82,84,83,84,83,84,82,82,80,81,82,Urdaneta I Central School,66.82
+UICS25-169,F,12,Tagalog,Normal,79,79,79,79,78,78,78,78,80,79,79,79,81,79,77,77,78,79,80,81,83,83,86,Urdaneta I Central School,66.82
+UICS25-170,F,11,Tagalog,Normal,81,79,80,80,82,82,82,82,82,81,81,82,83,80,79,77,77,77,76,76,76,76,76,Urdaneta I Central School,66.82
+UICS25-171,M,13,Tagalog,Normal,83,82,84,84,82,82,82,82,81,81,80,80,81,84,83,83,83,83,87,84,80,82,86,Urdaneta I Central School,66.82
+UICS25-172,F,12,Tagalog,Normal,81,81,81,82,83,83,82,83,86,86,86,84,86,86,85,85,85,87,86,86,86,87,84,Urdaneta I Central School,66.82
+UICS25-173,M,12,Ilocano,Normal,75,75,75,75,76,76,75,76,77,77,77,78,79,80,79,79,78,77,80,80,80,79,81,Urdaneta I Central School,66.82
+UICS25-174,F,11,Tagalog,Normal,80,79,81,83,87,86,87,87,89,87,87,88,89,87,86,86,86,85,88,88,90,90,88,Urdaneta I Central School,66.82
+UICS25-175,M,11,Ilocano,Normal,82,81,80,81,83,82,81,82,83,83,84,82,83,85,84,84,83,85,86,86,85,87,83,Urdaneta I Central School,66.82
+UICS25-176,M,11,Ilocano,Normal,81,80,82,82,80,80,83,82,85,81,84,81,84,81,80,80,80,81,79,78,78,78,78,Urdaneta I Central School,66.82
+UICS25-177,M,11,Tagalog,Normal,86,86,87,86,87,87,87,87,87,86,86,86,86,83,81,80,81,81,86,85,86,85,85,Urdaneta I Central School,66.82
+UICS25-178,F,11,Tagalog,Normal,89,87,86,90,92,92,92,92,90,90,89,90,91,88,86,88,87,86,87,87,87,87,88,Urdaneta I Central School,66.82
+UICS25-179,F,11,Ilocano,Normal,86,85,86,85,88,86,86,87,85,83,85,82,84,82,81,82,81,82,83,81,81,81,83,Urdaneta I Central School,66.82
+UICS25-180,F,11,Ilocano,Normal,85,84,81,81,80,80,80,80,82,80,81,82,82,87,85,86,86,86,88,83,85,84,86,Urdaneta I Central School,66.82
+UICS25-181,F,11,Ilocano,Wasted,82,76,77,80,82,82,82,85,82,82,82,82,82,86,86,85,85,86,81,81,82,81,83,Urdaneta I Central School,66.82
+UICS25-182,F,11,Tagalog,Normal,88,83,83,89,92,92,92,92,92,92,91,90,91,91,89,87,86,89,90,89,87,89,90,Urdaneta I Central School,66.82
+UICS25-183,F,11,Pangasinan,Normal,76,75,77,78,84,84,84,85,85,85,84,84,86,83,82,82,82,83,82,80,80,80,82,Urdaneta I Central School,66.82
+UICS25-184,F,11,Ilocano,Wasted,83,80,80,84,85,85,85,85,84,83,82,83,84,84,84,86,85,84,83,80,80,81,82,Urdaneta I Central School,66.82
+UICS25-185,F,11,Tagalog,Wasted,79,79,80,81,82,87,82,83,84,85,85,86,87,86,86,87,85,85,83,81,81,82,83,Urdaneta I Central School,66.82
+UICS25-186,F,11,Tagalog,Normal,90,89,92,90,86,87,87,88,85,86,86,86,86,84,83,83,83,85,89,80,78,80,78,Urdaneta I Central School,66.82
+UICS25-187,M,11,Ilocano,Normal,87,87,87,86,87,82,87,88,85,86,86,87,86,86,86,85,85,86,80,84,84,84,88,Urdaneta I Central School,66.82
+UICS25-188,M,11,Tagalog,Normal,80,79,79,82,82,89,81,82,81,81,81,82,82,81,83,80,80,81,80,79,79,80,80,Urdaneta I Central School,66.82
+UICS25-189,F,11,Ilocano,Normal,89,91,90,91,90,86,88,89,86,82,82,86,83,86,85,85,86,87,84,84,84,84,85,Urdaneta I Central School,66.82
+UICS25-190,M,11,Ilocano,Normal,84,81,83,85,87,83,85,86,84,85,84,83,84,82,82,82,82,83,86,83,80,82,85,Urdaneta I Central School,66.82
+UICS25-191,M,11,Tagalog,Normal,80,77,80,84,84,84,84,86,83,81,82,82,83,79,78,77,79,79,79,80,79,79,81,Urdaneta I Central School,66.82
+UICS25-192,F,11,Ilocano,Overweight,77,75,76,76,84,85,83,84,76,76,76,76,76,83,83,83,82,82,82,83,81,81,81,Urdaneta I Central School,66.82
+UICS25-193,M,11,Ilocano,Normal,87,85,88,88,88,84,87,87,86,85,84,86,86,85,85,85,84,85,88,87,86,87,88,Urdaneta I Central School,66.82
+UICS25-194,M,11,Tagalog,Normal,85,83,85,84,86,90,84,85,83,82,82,82,83,83,82,84,82,83,81,81,80,80,81,Urdaneta I Central School,66.82
+UICS25-195,M,11,Ilocano,Overweight,88,90,87,86,91,86,89,90,87,87,87,87,87,82,81,81,81,82,83,83,83,83,84,Urdaneta I Central School,66.82
+UICS25-196,F,11,Tagalog,Normal,85,85,85,85,87,91,86,87,86,83,84,86,86,85,84,85,84,84,86,89,89,86,85,Urdaneta I Central School,66.82
+UICS25-197,M,11,Ilocano,Normal,86,83,85,85,91,88,89,90,90,88,89,92,89,86,86,83,84,85,80,80,79,81,81,Urdaneta I Central School,66.82
+UICS25-198,F,11,Tagalog,Normal,89,86,83,88,88,80,88,89,86,87,87,86,87,88,88,87,79,85,86,85,86,86,85,Urdaneta I Central School,66.82
+UICS25-199,F,10,Ilocano,Normal,82,81,82,84,81,80,80,82,82,81,81,82,82,81,80,80,85,79,83,82,83,82,83,Urdaneta I Central School,66.82
+UICS25-200,M,11,Tagalog,Normal,89,83,84,84,86,85,87,86,87,88,86,87,88,85,85,86,85,84,82,82,81,82,83,Urdaneta I Central School,66.82
+UICS25-201,F,11,Ilocano,Normal,89,88,89,88,88,90,89,89,84.91689751,89,88,81,86,81,86,86,86,87,86,87,87,86,81,Urdaneta I Central School,66.82
+UICS25-202,M,11,Ilocano,Obese,80,77,80,81,81,84,82,84,84.91689751,84,81,81,80,80,81,84,83,85,83,83,88,87,86,Urdaneta I Central School,66.82
+UICS25-203,M,12,Ilocano,Normal,87,85,85,87,87,82,83,86,84.91689751,85,84,83,85,85,85,82,82,82,83,82,83,83,80,Urdaneta I Central School,66.82
+UICS25-204,F,11,Tagalog,Normal,76,76,77,77,77,80,79,79,84.91689751,81,78,76,76,76,76,84,82,81,82,83,80,79,79,Urdaneta I Central School,66.82
+UICS25-205,F,12,Tagalog,Normal,85,86,86,86,86,80,83,80,84.91689751,80,80,80,80,80,80,83,82,80,83,84,86,85,85,Urdaneta I Central School,66.82
+UICS25-206,M,11,Ilocano,Normal,82,80,81,83,83,86,84,82,84.91689751,80,84,83,83,84,85,84,83,83,84,85,87,86,85,Urdaneta I Central School,66.82
+UICS25-207,F,12,Tagalog,Normal,87,86,86,86,86,86,86,86,84.91689751,86,84,83,82,82,83,85,86,88,86,84,87,86,87,Urdaneta I Central School,66.82
+UICS25-208,M,11,Tagalog,Normal,84,85,85,86,86,88,87,87,84.91689751,89,89,87,87,88,87,84,83,83,83,85,88,87,86,Urdaneta I Central School,66.82
+UICS25-209,F,11,Iloko,Normal,88,88,88,87,87,84,84,83,84.91689751,83,85,84,86,84,84,80,80,80,80,81,86,82,81,Urdaneta I Central School,66.82
+UICS25-210,M,11,Tagalog,Overweight,83,82,82,82,82,84,84,83,84.91689751,85,87,86,86,84,85,83,81,83,86,86,83,85,83,Urdaneta I Central School,66.82
+UICS25-211,F,11,Tagalog,Normal,82,81,81,81,81,83,83,83,84.91689751,83,83,83,82,82,82,82,81,81,81,82,78,78,78,Urdaneta I Central School,66.82
+UICS25-212,M,11,Iloko,Overweight,80,80,84,83,83,86,85,85,84.91689751,86,87,87,86,84,84,84,84,84,85,85,87,86,85,Urdaneta I Central School,66.82
+UICS25-213,F,11,Ilocano,Normal,86,83,87,85,85,87,87,88,84.91689751,89,87,86,87,87,86,88,87,87,87,85,85,85,85,Urdaneta I Central School,66.82
+UICS25-214,M,11,Tagalog,Overweight,83,83,87,88,88,81,83,84,84.91689751,88,83,83,84,84,84,85,85,85,84,85,86,85,84,Urdaneta I Central School,66.82
+UICS25-215,M,11,Ilocano,Normal,86,84,85,82,82,87,87,87,84.91689751,88,87,87,86,86,87,82,82,83,82,83,84,86,86,Urdaneta I Central School,66.82
+UICS25-216,F,11,Tagalog,Normal,84,81,81,85,85,86,86,85,84.91689751,88,82,82,82,81,83,84,83,82,83,83,83,81,81,Urdaneta I Central School,66.82
+UICS25-217,F,11,Tagalog,Normal,86,85,87,87,87,88,87,88,84.91689751,87,87,87,87,87,88,85,84,86,85,85,87,86,85,Urdaneta I Central School,66.82
+UICS25-218,F,11,Ilocano,Normal,80,83,85,84,84,92,89,92,84.91689751,90,87,86,88,90,89,83,82,82,82,84,81,81,81,Urdaneta I Central School,66.82
+UICS25-219,F,11,Ilocano,Normal,79,79,79,80,80,81,80,80,84.91689751,81,86,84,83,83,84,84,83,83,82,84,86,85,86,Urdaneta I Central School,66.82
+UICS25-220,M,11,Tagalog,Normal,90,91,89,89,89,87,90,91,84.91689751,87,89,90,90,89,84,85,86,87,85,85,87,87,88,Urdaneta I Central School,66.82
+UICS25-221,F,11,Iloko,Normal,89,86,87,91,91,90,87,86,84.91689751,90,86,86,86,85,86,85,83,80,87,85,85,86,83,Urdaneta I Central School,66.82
+UICS25-222,F,12,Pangasinan,Normal,87,86,86,87,87,88,87,86,84.91689751,87,86,86,85,85,86,83,82,81,82,83,83,82,81,Urdaneta I Central School,66.82
+UICS25-223,M,11,Ilocano,Overweight,76,76,76,76,76,81,80,81,84.91689751,82,81,80,80,80,82,83,82,81,81,83,82,82,81,Urdaneta I Central School,66.82
+UICS25-224,M,11,Tagalog,Overweight,81,80,81,82,82,86,85,86,84.91689751,86,86,85,87,86,85,84,83,82,82,84,84,81,80,Urdaneta I Central School,66.82
+UICS25-225,M,11,Tagalog,Overweight,81,80,84,83,83,84,84,85,84.91689751,85,85,84,85,84,84,80,84,84,85,85,86,85,84,Urdaneta I Central School,66.82
+UICS25-226,M,12,Ilocano,Overweight,84,81,86,84,84,81,80,82,84.91689751,82,87,83,79,84,77,80,80,81,81,82,82,79,80,Urdaneta I Central School,66.82
+UICS25-227,M,11,Ilocano,Normal,78,79,81,82,82,84,84,83,84.91689751,84,80,79,80,80,80,76,77,77,76,76,76,76,76,Urdaneta I Central School,66.82
+UICS25-228,M,11,Tagalog,Overweight,85,85,85,85,85,89,89,89,84.91689751,89,89,86,87,88,89,86,86,85,86,86,85,83,83,Urdaneta I Central School,66.82
+UICS25-229,F,13,Maranao,Normal,83.90609137,82.97468354,83.60759494,92,92,89,91,91,84.91689751,91,90,88,89,88,91,87,85,87,81,89,87,89,88,Urdaneta I Central School,66.82
+UICS25-230,F,12,Ilocano,Normal,78,76,79,81,81,82,82,82,84.91689751,82,81,80,80,81,81,79,78,79,79,81,78,78,78,Urdaneta I Central School,66.82
+UICS25-231,F,11,Ilocano,Normal,87,88,87,86,86,88,87,88,84.91689751,87,86,84,84,85,86,86,85,85,85,86,86,86,86,Urdaneta I Central School,66.82
+UICS25-232,F,11,Tagalog,Normal,80,79,80,78,78,77,77,79,84.91689751,78,80,79,79,79,80,83,82,82,82,84,82,81,81,Urdaneta I Central School,66.82
+UICS25-233,F,11,Tagalog,Normal,85,85,85,86,86,86,86,86,84.91689751,87,87,86,87,87,87,83,84,85,83,83,85,85,84,Urdaneta I Central School,66.82
+UICS25-234,F,11,Tagalog,Normal,87,88,87,87,87,86,86,86,84.91689751,86,86,85,85,86,85,85,84,86,84,86,89,88,87,Urdaneta I Central School,66.82
+UICS25-235,F,11,Tagalog,Normal,91,88,86,95,95,93,92,92,84.91689751,93,92,91,91,90,92,93,90,91,89,92,92,91,88,Urdaneta I Central School,66.82
+UICS25-236,F,11,Ilocano,Normal,86,85,85,84,84,87,86,86,84.91689751,87,85,85,85,85,86,86,85,85,85,87,87,86,85,Urdaneta I Central School,66.82
+UICS25-237,M,12,Ilocano,Normal,79,76,80,82,82,84,84,84,84.91689751,84,86,85,86,86,85,85,84,84,84,84,87,86,85,Urdaneta I Central School,66.82
+UICS25-238,M,12,Ilocano,Normal,83.90609137,82.97468354,83.60759494,88,88,86,86,86,84.91689751,85,89,90,89,89,91,83,83,82,83,83,86,89,80,Urdaneta I Central School,66.82
+UICS25-239,M,11,Ilocano,Normal,79,79,79,79,86,84,85,86,83,81,83,81,81,81,80,79,78,79,80,80,81,80,81,Urdaneta I Central School,66.82
+UICS25-240,F,11,Tagalog,Normal,79,76,77,82,84,83,83,84,84,83,83,83,84,86,86,87,86,85,87,86,86,87,87,Urdaneta I Central School,66.82
+UICS25-241,F,11,Ilocano,Normal,84,80,82,84,85,86,87,86,87,85,85,86,87,86,85,85,84,86,87,86,85,87,86,Urdaneta I Central School,66.82
+UICS25-242,F,12,Ilocano,Normal,84,81,82,83,88,87,88,86,85,83,82,82,83,85,84,84,84,84,85,83,81,82,84,Urdaneta I Central School,66.82
+UICS25-243,F,11,Tagalog,Normal,81,78,80,83,80,80,81,81,80,80,80,80,81,83,82,82,83,83,81,80,80,80,82,Urdaneta I Central School,66.82
+UICS25-244,F,11,Ilocano,Normal,81,80,81,81,85,85,85,84,85,83,82,83,83,79,78,79,79,80,80,80,80,80,79,Urdaneta I Central School,66.82
+UICS25-245,F,11,Tagalog,Normal,77,77,78,78,79,79,79,82,80,79,79,79,81,82,80,79,80,82,79,78,78,79,81,Urdaneta I Central School,66.82
+UICS25-246,M,11,Tagalog,Normal,85,83,84,84,86,85,84,84,81,80,82,81,82,78,78,78,80,79,80,80,79,80,81,Urdaneta I Central School,66.82
+UICS25-247,M,11,Tagalog,Normal,78,78,79,80,79,78,80,80,82,81,81,82,81,82,80,80,80,80,82,80,80,80,82,Urdaneta I Central School,66.82
+UICS25-248,M,11,Ilocano,Normal,78,76,80,80,85,84,84,85,82,82,82,81,82,79,78,77,77,77,79,79,78,78,80,Urdaneta I Central School,66.82
+UICS25-249,F,12,Maranao,Normal,82,82,81,81,82,82,82,82,81,80,79,79,80,83,83,86,84,86,85,84,85,84,85,Urdaneta I Central School,66.82
+UICS25-250,M,11,Tagalog,Normal,87,87,84,85,87,85,84,85,85,85,86,85,85,84,83,84,84,85,88,87,86,87,88,Urdaneta I Central School,66.82
+UICS25-251,M,11,Ilocano,Normal,82,81,81,80,82,80,80,82,81,80,80,80,80,80,79,79,79,79,80,79,79,79,81,Urdaneta I Central School,66.82
+UICS25-252,F,12,Ilocano,Normal,81,80,81,83,87,84,85,87,85,83,84,86,86,84,83,84,83,85,85,84,83,86,85,Urdaneta I Central School,66.82
+UICS25-253,F,11,Tagalog,Normal,87,88,87,86,88,88,89,89,87,87,87,87,87,83,82,83,83,82,82,81,81,81,81,Urdaneta I Central School,66.82
+UICS25-254,M,11,Tagalog,Normal,85,83,82,82,79,78,78,79,79,79,78,78,78,83,83,83,83,83,81,83,81,81,81,Urdaneta I Central School,66.82
+UICS25-255,F,11,Tagalog,Normal,84,84,84,85,88,87,87,89,87,86,87,87,87,83,80,77,83,84,82,81,81,81,81,Urdaneta I Central School,66.82
+UICS25-256,F,11,Tagalog,Normal,81,79,80,81,82,82,82,83,85,83,85,83,84,84,84,83,84,84,84,84,83,83,84,Urdaneta I Central School,66.82
+UICS25-257,F,11,Tagalog,Normal,81,81,81,86,82,82,82,87,83,82,82,84,83,81,80,77,78,78,79,79,78,78,79,Urdaneta I Central School,66.82
+UICS25-258,F,11,Tagalog,Normal,83,82,83,84,88,87,88,89,86,86,86,86,87,82,81,80,80,80,83,82,80,81,83,Urdaneta I Central School,66.82
+UICS25-259,M,11,Ilocano,Normal,84,82,84,84,82,82,83,83,81,79,81,79,80,81,80,81,80,80,81,79,79,79,81,Urdaneta I Central School,66.82
+UICS25-260,F,11,Tagalog,Normal,82,81,82,82,83,83,83,84,81,81,81,82,82,82,82,83,81,82,81,80,80,80,82,Urdaneta I Central School,66.82
+UICS25-261,F,11,Tagalog,Normal,83.90609137,82.97468354,83.60759494,84.18387909,85.40954774,84.87688442,84.9798995,85.49748744,85,84,85,86,84,80,79,79,79,79,80,80,79,79,81,Urdaneta I Central School,66.82
+UICS25-262,F,11,Tagalog,Normal,75,75,76,76,81,81,79,81,80,78,78,79,80,80,78,79,79,80,81,81,81,81,79,Urdaneta I Central School,66.82
+UICS25-263,F,11,Tagalog,Normal,81,79,81,87,82,81,81,83,82,82,81,81,83,86,85,85,85,86,87,86,85,87,87,Urdaneta I Central School,66.82
+UICS25-264,F,11,Ilocano,Normal,81,79,79,81,86,85,85,84,87,86,86,86,87,78,78,76,76,77,81,80,81,80,81,Urdaneta I Central School,66.82
+UICS25-265,M,11,Tagalog,Normal,76,77,76,77,82,81,81,83,80,79,79,79,80,81,80,80,79,80,81,80,80,80,80,Urdaneta I Central School,66.82
+UICS25-266,F,12,Tagalog,Normal,86,85,86,85,88,88,89,89,87,88,87,87,88,79,78,79,80,80,81,81,80,81,82,Urdaneta I Central School,66.82
+UICS25-267,F,11,Tagalog,Normal,79,78,80,83,82,81,81,83,81,79,79,79,81,82,81,80,81,82,79,78,78,78,80,Urdaneta I Central School,66.82
+UICS25-268,M,11,Ilocano,Normal,79,79,79,79,80,79,79,80,82,82,81,82,80,79,78,76,80,78,79,78,77,78,78,Urdaneta I Central School,66.82
+UICS25-269,M,13,Tagalog,Normal,86,86,87,87,87,87,86,86,84,83,82,82,83,81,80,80,81,81,83,82,82,82,83,Urdaneta I Central School,66.82
+UICS25-270,M,12,Ilocano,Normal,86,85,87,88,87,86,86,87,88,87,86,86,86,84,83,84,83,83,87,85,84,83,86,Urdaneta I Central School,66.82
+UICS25-271,F,11,Tagalog,Normal,91,89,88,89,91,90,93,92,92,92,92,92,92,90,89,89,89,88,88,88,89,90,90,Urdaneta I Central School,66.82
+UICS25-272,F,11,Ilocano,Normal,79,80,79,79,85,84,84,85,83,84,83,83,82,87,85,82,83,85,84,85,82,83,84,Urdaneta I Central School,66.82
+UICS25-273,F,11,Tagalog,Normal,81,82,82,83,85,85,85,86,84,83,83,82,84,83,82,82,82,83,82,81,81,81,82,Urdaneta I Central School,66.82
+UICS25-274,M,12,Pangasinan,Normal,78,77,77,80,79,79,79,79,80,80,80,80,80,86,83,83,83,84,87,86,85,87,87,Urdaneta I Central School,66.82
+UICS25-275,M,11,Tagalog,Wasted,80,79,80,82,84,83,83,84,84,83,84,83,84,80,79,79,79,80,81,81,81,80,81,Urdaneta I Central School,66.82
+UICS25-276,F,11,Tagalog,Severely Wasted,78,75,78,77,80,80,80,80,80,79,79,80,80,81,80,80,81,82,75,75,76,75,76,Urdaneta I Central School,66.82
+UICS25-277,F,12,Tagalog,Normal,80,80,80,85,79,79,79,79,83,82,82,82,83,85,85,86,85,84,87,88,85,85,86,Urdaneta I Central School,66.82
+UICS25-278,M,11,Ilocano,Normal,81,81,83,82,87,85,87,86,87,86,86,86,87,82,82,84,82,82,86,84,84,82,85,Urdaneta I Central School,66.82
+UICS25-279,F,11,Ilocano,Overweight,89,90,88,91,92,91,91,91,88,87,87,87,88,86,84,83,84,85,88,87,86,87,88,Urdaneta I Central School,66.82
+UICS25-280,M,11,Ilocano,Normal,84,84,85,86,89,88,88,88,85,84,84,83,85,84,82,82,83,83,84,85,84,84,83,Urdaneta I Central School,66.82
+UICS25-281,F,12,Ilocano,Normal,91,92,89,89,92,92,92,91,89,88,90,90,88,90,89,88,88,89,87,86,86,87,87,Urdaneta I Central School,66.82
+UICS25-282,M,12,Ilocano,Normal,76,76,76,78,83,82,82,83,82,82,81,82,82,85,85,84,84,85,85,84,83,84,85,Urdaneta I Central School,66.82
+UICS25-283,F,11,Tagalog,Normal,86,86,87,88,89,88,90,89,89,88,88,87,87,89,90,88,90,89,88,88,88,88,89,Urdaneta I Central School,66.82
+UICS25-284,M,11,Tagalog,Normal,78,78,78,79,83,82,83,84,83,81,82,82,82,83,81,80,83,83,82,81,82,81,82,Urdaneta I Central School,66.82
+UICS25-285,F,11,Tagalog,Normal,83,82,84,84,85,83,85,85,84,84,82,82,85,85,85,86,84,85,88,87,86,88,87,Urdaneta I Central School,66.82
+UICS25-286,M,11,Tagalog,Overweight,81,81,82,84,88,86,87,87,86,85,86,86,86,84,83,86,83,83,85,81,81,81,83,Urdaneta I Central School,66.82
+UICS25-287,M,12,Tagalog,Normal,84,83,84,83,88,86,86,87,87,85,85,86,87,91,91,92,91,91,89,87,86,87,91,Urdaneta I Central School,66.82
+UICS25-288,M,11,Tagalog,Normal,83,81,83,83,86,85,85,86,84,84,82,81,83,84,85,88,85,85,84,83,85,84,85,Urdaneta I Central School,66.82
+UICS25-289,F,11,Tagalog,Normal,88,88,88,90,87,89,88,86,89,85,85,85,85,82,81,78,84,86,81,80,80,80,81,Urdaneta I Central School,66.82
+UICS25-290,M,13,Tagalog,Normal,76,77,76,76,81,80,80,81,77,76,76,77,77,81,81,81,81,85,87,86,80,83,86,Urdaneta I Central School,66.82
+UICS25-291,M,12,Ilocano,Normal,76,75,77,79,82,81,80,81,82,82,81,82,82,82,81,80,80,85,83,83,83,83,84,Urdaneta I Central School,66.82
+UICS25-292,F,11,Tagalog,Normal,85,83,84,86,86,88,85,86,88,87,86,87,86,89,83,85,88,85,85,85,84,85,86,Urdaneta I Central School,66.82
+UICS25-293,M,11,Tagalog,Wasted,77,76,78,79,86,84,84,86,86,83,83,83,85,84,83,84,85,86,88,87,86,87,84,Urdaneta I Central School,66.82
+UICS25-294,M,12,Tagalog,Normal,84,84,86,84,86,85,86,87,84,82,83,84,84,85,84,83,83,85,87,86,85,87,89,Urdaneta I Central School,66.82
+UICS25-295,M,12,Tagalog,Normal,85,85,86,85,87,86,86,87,85,84,84,84,86,81,79,79,80,80,83,82,82,82,82,Urdaneta I Central School,66.82
+UICS25-296,M,13,Tagalog,Normal,78,78,78,78,82,80,80,82,82,80,80,80,81,86,86,87,80,85,87,86,88,88,88,Urdaneta I Central School,66.82
+UICS25-297,M,11,Tagalog,Normal,78,75,77,78,75,75,75,75,79,78,78,78,79,81,80,79,79,79,80,80,79,79,81,Urdaneta I Central School,66.82
+UICS25-298,M,12,Tagalog,Normal,87,87,89,89,90,89,89,89,87,86,87,86,86,82,81,80,80,80,84,82,82,82,83,Urdaneta I Central School,66.82
+UICS25-299,M,11,Ilocano,Normal,87,83,82,86,86,84,84,84,84,84,83,83,84,82,81,82,81,82,82,82,81,82,83,Urdaneta I Central School,66.82
+UICS25-300,F,13,Tagalog,Normal,79,79,79,78,75,75,75,75,78,78,78,78,78,82,81,81,81,83,80,80,81,80,82,Urdaneta I Central School,66.82
+UICS25-301,F,12,Tagalog,Wasted,85,86,84,84,86,84,84,87,85,83,83,85,86,84,84,84,84,84,86,84,84,84,84,Urdaneta I Central School,66.82
+UICS25-302,F,12,Tagalog,Normal,86,78,82,80,86,85,84,84,84,84,82,82,83,86,86,87,86,87,86,86,86,86,86,Urdaneta I Central School,66.82
+UICS25-303,F,11,Ilocano,Wasted,84,84,83,84,85,84,84,85,83,82,82,81,82,84,83,83,82,86,86,86,85,85,85,Urdaneta I Central School,66.82
+UICS25-304,F,11,Ilocano,Normal,87,85,84,85,87,86,86,86,83,82,82,83,83,80,79,80,80,81,81,81,81,81,82,Urdaneta I Central School,66.82
+UICS25-305,M,11,Tagalog,Obese,80,77,78,81,83,83,83,84,85,83,83,84,84,86,85,85,85,85,81,81,80,81,81,Urdaneta I Central School,66.82
+UICS25-306,F,12,Tagalog,Normal,91,89,91,90,89,88,89,87,85,85,86,86,87,88,86,86,88,87,87,89,87,88,88,Urdaneta I Central School,66.82
+UICS25-307,F,11,Ilocano,Normal,90,90,90,90,90,89,89,89,87,87,88,86,87,85,83,83,83,84,84,85,83,84,83,Urdaneta I Central School,66.82
+UICS25-308,F,12,Tagalog,Wasted,91,91,94,93,90,89,90,91,87,86,86,86,87,89,90,88,88,89,85,84,83,84,85,Urdaneta I Central School,66.82
+UICS25-309,F,11,Tagalog,Normal,91,91,89,88,89,89,88,87,87,86,86,86,86,91,91,91,92,92,90,90,89,90,90,Urdaneta I Central School,66.82
+UICS25-310,M,12,Ilocano,Normal,88,83,88,88,88,87,86,88,84,84,83,83,85,87,87,88,87,87,87,87,88,87,88,Urdaneta I Central School,66.82
+UICS25-311,M,11,Tagalog,Normal,86,86,87,85,87,86,86,87,87,86,85,86,87,86,86,85,85,86,85,84,83,85,84,Urdaneta I Central School,66.82
+UICS25-312,M,11,Tagalog,Normal,89,86,88,89,83,83,83,83,84,83,83,83,84,83,83,82,83,83,84,82,81,81,83,Urdaneta I Central School,66.82
+UICS25-313,F,11,Tagalog,Normal,85,82,84,87,88,88,89,89,87,88,88,87,87,85,81,85,85,85,88,88,90,89,89,Urdaneta I Central School,66.82
+UICS25-314,F,11,Tagalog,Normal,83,82,82,83,88,87,88,89,87,86,87,87,88,84,83,82,88,85,85,85,84,84,84,Urdaneta I Central School,66.82
+UICS25-315,F,11,Tagalog,Wasted,88,87,88,88,93,91,92,91,86,85,84,84,85,87,90,88,87,88,83,84,83,86,86,Urdaneta I Central School,66.82
+UICS25-316,F,11,Tagalog,Normal,86,86,83,89,92,92,92,92,92,91,92,92,92,93,92,91,91,90,90,92,87,90,91,Urdaneta I Central School,66.82
+UICS25-317,F,11,Tagalog,Severely Wasted,90,90,90,90,91,89,91,90,89,88,88,88,89,90,88,88,88,88,89,89,89,89,90,Urdaneta I Central School,66.82
+UICS25-318,F,11,Tagalog,Normal,88,87,87,86,88,88,86,86,86,87,86,85,85,85,84,86,85,84,87,86,85,87,88,Urdaneta I Central School,66.82
+UICS25-319,F,11,Ilocano,Overweight,88,86,88,88,87,86,86,88,86,85,85,85,86,84,83,84,84,85,84,83,83,82,84,Urdaneta I Central School,66.82
+UICS25-320,F,11,Tagalog,Normal,88,90,89,90,89,89,89,92,91,89,90,88,88,90,89,90,89,88,91,91,91,90,91,Urdaneta I Central School,66.82
+UICS25-321,M,11,Tagalog,Wasted,89,88,88,89,87,86,85,88,84,84,84,83,83,85,85,85,86,85,84,84,84,82,84,Urdaneta I Central School,66.82
+UICS25-322,M,12,Ilocano,Overweight,85,84,86,87,83,83,83,83,84,82,82,81,83,89,89,89,89,90,89,89,88,90,89,Urdaneta I Central School,66.82
+UICS25-323,F,12,Ilocano,Normal,82,83,82,84,85,84,83,85,90,90,90,82,90,91,89,89,89,88,87,86,86,88,89,Urdaneta I Central School,66.82
+UICS25-324,F,11,Tagalog,Normal,89,88,89,90,89,89,89,89,90,87,87,89,89,89,88,87,88,87,92,91,91,91,92,Urdaneta I Central School,66.82
+UICS25-325,M,11,Tagalog,Normal,81,83,83,80,81,81,83,80,82,82,84,84.15075377,83,86,85,86,85,86,84,82,89,85,86,Urdaneta I Central School,66.82
+UICS25-326,F,11,Tagalog,Normal,87,87,87,87,89,88,88,90,89,88,88,87,87,89,88,88,89,89,90,89,88,90,89,Urdaneta I Central School,66.82
+UICS25-327,M,12,Tagalog,Normal,84,84,85,85,83,83,83,83,85,83,82,82,84,88,87,86,87,86,87,87,89,88,89,Urdaneta I Central School,66.82
+UICS25-328,F,12,Ilocano,Normal,87,84,88,88,88,88,88,88,89,88,89,87,87,88,88,89,88,87,92,92,92,91,92,Urdaneta I Central School,66.82
+UICS25-329,M,11,Ilocano,Normal,85,81,82,85,88,86,90,89,87,85,85,86,88,84,83,83,83,84,87,87,88,87,87,Urdaneta I Central School,66.82
+UICS25-330,F,11,Tagalog,Normal,87,89,90,87,86,88,88,86,86,85,85,85,85,91,91,91,91,91,89,87,86,88,91,Urdaneta I Central School,66.82
+UICS25-331,M,11,Tagalog,Normal,87,86,88,87,88,86,87,86,87,86,86,86,86,81,80,81,80,81,84,83,83,83,84,Urdaneta I Central School,66.82
+UICS25-332,F,12,Tagalog,Normal,94,93,88,95,93,92,92,93,93,93,93,93,92,94,92,91,89,93,91,92,91,91,91,Urdaneta I Central School,66.82
+UICS25-333,M,11,Tagalog,Overweight,85,84,84,85,91,91,91,91,90,91,90,90,91,86,91,88,89,89,90,89,88,90,89,Urdaneta I Central School,66.82
+UICS25-334,M,11,Tagalog,Normal,91,86,86,91,92,91,92,92,90,90,90,90,90,87,86,85,85,87,88,88,88,88,90,Urdaneta I Central School,66.82
+UICS25-335,M,11,Tagalog,Normal,83.90609137,94,93,93,94,91,91,90,92,94,94,92,93,90,90,89,88,88,87,88,87,87,86,Urdaneta I Central School,66.82
+UICS25-336,M,11,Tagalog,Normal,88,87,87,86,88,87,87,86,87,86,85,86,85,84,84,86,84,86,86,85,86,85,86,Urdaneta I Central School,66.82
+UICS25-337,F,12,Tagalog,Normal,81,80,84,83,83,83,85,83,83,82,83,82,83,87,87,88,86,86,86,88,88,86,86,Urdaneta I Central School,66.82
+UICS25-338,F,11,Tagalog,Normal,90,87,87,90,90,91,91,90,90,90,90,90,90,89,86,88,88,84,90,90,89,90,91,Urdaneta I Central School,66.82
+UICS25-339,F,11,Ilocano,Normal,85,85,85,85,86,86,87,86,84,84,84,83,84,87,88,88,87,87,88,87,86,88,88,Urdaneta I Central School,66.82
+UICS25-340,F,11,Tagalog,Normal,84,84,84,85,82,82,81,83,87,87,86,86,85,85,85,83,84,84,86,80,86,86,76,Urdaneta I Central School,66.82
+UICS25-341,F,12,Tagalog,Normal,85,81,84,85,90,89,89,89,87,85,86,86,87,87,85,87,88,85,87,87,87,89,88,Urdaneta I Central School,66.82
+UICS25-342,F,12,Ilocano,Normal,91,90,91,88,89,89,89,90,90,88,88,87,87,88,88,89,86,87,92,92,92,91,92,Urdaneta I Central School,66.82
+UICS25-343,F,12,Ilocano,Normal,90,90,90,89,88,88,88,88,81,80,80,80,80,87,88,86,86,86,88,86,86,87,89,Urdaneta I Central School,66.82
+UICS25-344,F,11,Tagalog,Obese,81,80,81,82,84,83,83,84,80,79,79,79,80,81,80,79,79,79,82,81,81,82,83,Urdaneta I Central School,66.82
+UICS25-345,F,11,Ilocano,Normal,88,87,88,88,89,89,89,90,86,85,86,85,86,92,92,92,91,91,91,92,89,90,91,Urdaneta I Central School,66.82
+UICS25-346,F,11,Tagalog,Normal,93,93,93,93,94,96,94,94,93,93,94,93,93,90,91,91,90,88,91,93,91,90,92,Urdaneta I Central School,66.82
+UICS25-347,F,12,Ilocano,Normal,86,84,87,87,84,83,85,84,84,83,83,84,84,86,88,92,85,87,89,89,89,88,89,Urdaneta I Central School,66.82
+UICS25-348,M,12,Ilocano,Normal,89,87,88,88,89,88,87,87,85,85,85,83,85,83,82,81,84,86,83,83,81,82,82,Urdaneta I Central School,66.82
+UICS25-349,F,11,Tagalog,Normal,84,83,83,83,88,87,88,89,87,87,87,87,87,86,86,87,86,86,86,87,86,87,86,Urdaneta I Central School,66.82
+UICS25-350,M,12,Ilocano,Normal,91,92,90,89,87,88,88,88,85,84,84,83,84,84,82,83,85,85,87,83,84,82,87,Urdaneta I Central School,66.82
+UICS25-351,F,11,Tagalog,Normal,91,92,92,91,93,94,93,92,93,92,91,91,92,91,91,91,91,91,90,88,89,87,90,Urdaneta I Central School,66.82
+UICS25-352,F,11,Ilocano,Normal,77,76,76,77,80,79,80,82,80,79,80,79,80,79,78,77,76,77,78,78,78,78,78,Urdaneta I Central School,66.82
+UICS25-353,F,12,Tagalog,Normal,83,83,84,84,85,84,84,84,84,83,83,82,82,85,84,83,82,84,82,81,81,83,83,Urdaneta I Central School,66.82
+UICS25-354,M,11,Tagalog,Normal,77,76,75,77,86,82,84,83,86,86,87,86,85,78,78,78,78,78,79,79,78,78,79,Urdaneta I Central School,66.82
+UICS25-355,M,11,Tagalog,Normal,80,80,79,80,84,84,81,85,81,80,79,81,81,79,78,79,79,80,79,79,78,79,80,Urdaneta I Central School,66.82
+UICS25-356,F,11,Ilocano,Normal,80,76,79,82,84,82,82,84,82,80,80,80,81,80,78,77,77,78,79,79,78,79,79,Urdaneta I Central School,66.82
+UICS25-357,F,11,Tagalog,Normal,75,75,76,76,75,75,75,75,78,78,78,78,78,77,76,77,76,76,77,77,77,77,76,Urdaneta I Central School,66.82
+UICS25-358,M,11,Tagalog,Normal,81,80,81,81,87,87,87,88,86,86,86,86,86,81,80,79,79,80,82,81,81,80,82,Urdaneta I Central School,66.82
+UICS25-359,M,12,Ilocano,Overweight,78,77,79,79,80,80,81,82,81,81,79,79,81,81,79,79,80,79,81,79,79,79,81,Urdaneta I Central School,66.82
+UICS25-360,M,11,Tagalog,Overweight,79,79,79,79,85,85,84,85,81,81,82,82,81,82,80,80,81,82,80,80,79,79,80,Urdaneta I Central School,66.82
+UICS25-361,M,11,Tagalog,Normal,79,80,79,79,85,85,84,85,82,82,83,82,81,82,80,80,81,82,84,84,84,84,84,Urdaneta I Central School,66.82
+UICS25-362,M,11,Tagalog,Normal,78,79,78,78,78,78,78,78,78,78,78,79,79,79,78,77,78,79,80,79,79,79,80,Urdaneta I Central School,66.82
+UICS25-363,M,12,Ilocano,Normal,86,80,86,90,88,84,85,88,86,85,85,85,86,80,79,79,80,80,83,82,82,82,82,Urdaneta I Central School,66.82
+UICS25-364,F,12,Tagalog,Normal,90,90,90,89,87,87,90,87,85,85,86,84,86,86,87,85,84,86,87,86,85,86,85,Urdaneta I Central School,66.82
+UICS25-365,F,12,Tagalog,Normal,78,79,78,79,81,81,81,81,84,85,85,84,84,80,79,77,77,77,78,77,77,77,78,Urdaneta I Central School,66.82
+UICS25-366,M,12,Cebuano / Sinugbuanong Binisay,Normal,76,76,76,80,82,80,82,83,85,85,86,85,86,79,79,78,79,80,82,82,82,82,83,Urdaneta I Central School,66.82
+UICS25-367,M,11,Tagalog,Normal,77,77,77,78,78,78,78,79,79,79,79,78,79,78,77,77,77,79,76,76,76,76,78,Urdaneta I Central School,66.82
+UICS25-368,M,11,Tagalog,Severely Wasted,81,78,82,85,85,85,85,86,83,82,81,83,83,81,79,80,80,82,80,79,79,79,80,Urdaneta I Central School,66.82
+UICS25-369,F,11,Ilocano,Normal,78,76,78,78,75,75,75,75,78,78,78,78,78,80,78,78,79,80,78,78,78,78,79,Urdaneta I Central School,66.82
+UICS25-370,M,11,Tagalog,Overweight,82,80,85,84,86,84,84,85,84,82,82,82,84,78,77,77,77,77,78,78,78,78,78,Urdaneta I Central School,66.82
+UICS25-371,F,11,Tagalog,Normal,87,86,86,86,87,87,87,88,87,87,87,86,87,83,82,82,83,83,84,83,82,82,84,Urdaneta I Central School,66.82
+UICS25-372,F,11,Tagalog,Normal,79,77,80,81,80,80,80,81,82,80,80,80,81,78,77,77,76,77,78,79,79,79,78,Urdaneta I Central School,66.82
+UICS25-373,M,11,Tagalog,Normal,78,77,77,79,83,81,82,82,83,84,80,80,85,81,80,80,80,82,82,82,83,83,83,Urdaneta I Central School,66.82
+UICS25-374,M,11,Pangasinan,Normal,80,75,80,80,75,75,75,75,80,77,80,81,80,81,78,78,82,81,82,81,82,80,81,Urdaneta I Central School,66.82
+UICS25-375,M,12,Tagalog,Normal,76,76,76,76,76,76,76,77,78,78,78,78,78,85,84,84,84,84,86,85,84,87,85,Urdaneta I Central School,66.82
+UICS25-376,M,11,Tagalog,Normal,81,81,81,83,84,83,83,84,81,80,80,82,81,81,81,83,81,81,82,82,82,82,82,Urdaneta I Central School,66.82
+UICS25-377,M,11,Tagalog,Normal,75,75,76,78,80,80,80,81,80,79,80,81,81,79,78,78,78,80,81,80,80,80,81,Urdaneta I Central School,66.82
+UICS25-378,M,12,Pangasinan,Normal,83,84,85,85,86,84,84,84,86,86,87,85,87,85,83,83,83,84,82,82,79,80,82,Urdaneta I Central School,66.82
+UICS25-379,M,11,Tagalog,Normal,80,79,80,79,84,81,81,81,81,80,80,79,80,81,80,79,79,79,80,79,79,79,80,Urdaneta I Central School,66.82
+UICS25-380,M,11,Tagalog,Normal,79,77,82,84,80,80,81,82,80,80,80,80,80,80,79,78,79,81,80,79,79,79,80,Urdaneta I Central School,66.82
+UICS25-381,M,12,Tagalog,Severely Wasted,77,77,78,77,77,77,75,75,78,77,77,78,78,79,77,77,77,78,79,78,78,78,78,Urdaneta I Central School,66.82
+UICS25-382,M,11,Ilocano,Normal,85,85,85,85,84,83,83,85,83,82,82,83,82,86,85,86,85,86,80,79,79,79,79,Urdaneta I Central School,66.82
+UICS25-383,F,11,Ilocano,Overweight,81,80,81,82,85,84,84,85,84,84,84,84,84,80,80,79,79,81,83,82,83,82,83,Urdaneta I Central School,66.82
+UICS25-384,F,11,Tagalog,Normal,85,84,84,85,88,87,88,89,87,87,87,87,88,84,83,84,84,83,87,86,85,85,85,Urdaneta I Central School,66.82
+UICS25-385,F,11,Ilocano,Normal,90,86,84,88,90,90,90,91,90,89,89,90,91,89,88,89,86,88,90,90,92,90,91,Urdaneta I Central School,66.82
+UICS25-386,F,11,Ilocano,Normal,86,84,87,85,90,91,89,89,84,82,82,82,84,87,84,85,85,87,79,80,79,79,79,Urdaneta I Central School,66.82
+UICS25-387,F,11,Ilocano,Normal,87,87,86,86,87,87,86,87,86,86,85,85,86,85,84,84,84,84,87,86,85,85,85,Urdaneta I Central School,66.82
+UICS25-388,M,11,Ilocano,Wasted,82,81,77,82,86,85,84,85,86,84,84,85,85,83,81,80,79,80,80,80,80,82,80,Urdaneta I Central School,66.82
+UICS25-389,F,12,Ilocano,Normal,82,80,84,83,80,80,80,81,80,80,80,79,79,85,84,83,83,84,83,83,83,83,83,Urdaneta I Central School,66.82
+UICS25-390,M,11,Tagalog,Normal,87,87,86,86,89,87,87,88,86,86,85,85,85,82,81,80,80,81,89,88,89,87,87,Urdaneta I Central School,66.82
+UICS25-391,F,11,Ilocano,Normal,89,90,90,91,92,92,93,92,93,92,92,91,92,89,89,88,88,87,91,90,90,90,91,Urdaneta I Central School,66.82
+UICS25-392,F,11,Ilocano,Normal,88,87,89,86,88,88,88,89,89,88,89,87,87,91,91,90,91,90,88,88,87,86,88,Urdaneta I Central School,66.82
+UICS25-393,F,11,Ilocano,Normal,82,79,81,83,85,82,82,85,82,80,80,80,81,85,84,85,84,85,84,83,81,81,84,Urdaneta I Central School,66.82
+UICS25-394,F,11,Ilocano,Normal,85,83,84,86,88,87,88,89,87,86,87,87,87,87,86,87,85,84,86,86,86,87,86,Urdaneta I Central School,66.82
+UICS25-395,F,11,Tagalog,Normal,91,87,89,90,88,87,86,86,83,85,83,84,82,84,84,86,84,84,85,83,84,83,84,Urdaneta I Central School,66.82
+UICS25-396,M,11,Ilocano,Wasted,79,78,79,80,81,81,81,83,82,81,81,81,81,81,80,79,81,82,82,81,81,81,81,Urdaneta I Central School,66.82
+UICS25-397,F,11,Ilocano,Normal,88,85,89,90,88,88,88,88,82,82,82,82,82,83,84,82,83,83,84,83,82,83,83,Urdaneta I Central School,66.82
+UICS25-398,F,11,Tagalog,Overweight,77,77,77,78,81,80,80,81,81,79,79,79,79,76,76,76,76,76,80,80,79,80,81,Urdaneta I Central School,66.82
+UICS25-399,M,12,Ilocano,Normal,78,78,78,79,85,84,83,84,82,81,81,81,83,84,84,86,84,84,84,84,82,84,84,Urdaneta I Central School,66.82

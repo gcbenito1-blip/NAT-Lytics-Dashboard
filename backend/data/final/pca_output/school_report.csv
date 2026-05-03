@@ -1,0 +1,9 @@
+School,Student_Count,Avg_Actual_MPS,Avg_Predicted_MPS,Avg_Bias,MAE,Actual_Not Proficient,Actual_Low Proficient,Actual_Nearly Proficient,Actual_Proficient,Actual_Highly Proficient,Pred_Not Proficient,Pred_Low Proficient,Pred_Nearly Proficient,Pred_Proficient,Pred_Highly Proficient
+Badipa Elementary School,80,79.935,70.2132,-9.7218,9.7218,0.0,0.0,0.0,100.0,0.0,0.0,0.0,100.0,0.0,0.0
+Don Alipio Fernandez Sr. Integrated School,20,73.635,70.0115,-3.6235,3.6235,0.0,0.0,100.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0
+Don Amadeo Perez Sr. Memorial Elementary School - East,11,75.9336,70.8166,-5.117,5.1171,0.0,0.0,0.0,100.0,0.0,0.0,0.0,100.0,0.0,0.0
+Don Clemente Blanco Memorial Elementary School,4,36.62,70.0599,33.4399,33.4399,0.0,100.0,0.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0
+Lananpin Elementary School,50,65.8794,69.8865,4.0071,7.3249,0.0,0.0,80.0,20.0,0.0,0.0,0.0,100.0,0.0,0.0
+Nancayasan Elementary School,27,60.18,69.9529,9.7729,9.7729,0.0,0.0,100.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0
+Urdaneta City SPED Center,51,73.4114,68.7617,-4.6497,4.6497,0.0,0.0,72.55,27.45,0.0,0.0,0.0,100.0,0.0,0.0
+Urdaneta I Central School,143,67.7276,69.4547,1.7271,2.8543,0.0,0.0,100.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0

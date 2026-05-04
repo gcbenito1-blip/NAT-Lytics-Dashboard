@@ -84,12 +84,12 @@
 
   Feature                 Cramér_V_MPS   Chi2_sig
   ---------------------- ------------- ----------
-  Sex                           0.0000         no
+  Gender                        0.0000         no
   Mother Tongue                 0.2282        YES
-  Nutritional Status(BMI)        0.0952        YES
+  Nutritional Status            0.0952        YES
 
 
-  [Sex]
+  [Gender]
     Frequency (%) [train]:
       M: 50.89%
       F: 49.11%
@@ -121,7 +121,7 @@
       Tagalog: 68.682
     Chi-square [train]: chi2=109.5051  p=0.0  significant=YES
 
-  [Nutritional Status(BMI)]
+  [Nutritional Status]
     Frequency (%) [train]:
       Normal: 88.33%
       Overweight: 6.44%

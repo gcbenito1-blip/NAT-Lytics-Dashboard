@@ -1069,29 +1069,29 @@ export function Results() {
                             <div className="mb-8">
                                 <h3 className="text-md font-medium text-gray-700 mb-4">Top Contributing Features</h3>
                                 <div className="space-y-3">
-                                     {aggregatedFeatureImportance.slice(0, 10).map((item, idx) => {
-                                         const maxAbs = Math.max(...aggregatedFeatureImportance.map(f => Math.abs(f.avgAbsShap)), 0.01);
-                                         const width = maxAbs > 0 ? (Math.abs(item.avgAbsShap) / maxAbs) * 100 : 0;
-                                         const isPositive = item.avgShap > 0;
+                                    {aggregatedFeatureImportance.slice(0, 10).map((item, idx) => {
+                                        const maxAbs = Math.max(...aggregatedFeatureImportance.map(f => Math.abs(f.avgAbsShap)), 0.01);
+                                        const width = maxAbs > 0 ? (Math.abs(item.avgAbsShap) / maxAbs) * 100 : 0;
+                                        const isPositive = item.avgShap > 0;
 
-                                         return (
-                                             <div key={idx} className="relative">
-                                                 <div className="flex items-center justify-between mb-1">
-                                                     <span className="text-sm font-medium text-gray-700">
-                                                         {getFriendlyFeatureName(item.feature)}
-                                                     </span>
-                                                     <span className="text-sm text-gray-500">
-                                                         Avg |SHAP|: {item.avgAbsShap.toFixed(3)}
-                                                     </span>
-                                                 </div>
-                                                 <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                                                     <div
-                                                         className={`h-3 rounded-full transition-all duration-500 ${isPositive ? 'bg-green-500' : 'bg-red-500'}`}
-                                                         style={{ width: `${width}%` }}
-                                                     />
-                                                 </div>
-                                             </div>
-                                         );
+                                        return (
+                                            <div key={idx} className="relative">
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className="text-sm font-medium text-gray-700">
+                                                        {getFriendlyFeatureName(item.feature)}
+                                                    </span>
+                                                    <span className="text-sm text-gray-500">
+                                                        Avg |SHAP|: {item.avgAbsShap.toFixed(3)}
+                                                    </span>
+                                                </div>
+                                                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                                    <div
+                                                        className={`h-3 rounded-full transition-all duration-500 ${isPositive ? 'bg-green-500' : 'bg-red-500'}`}
+                                                        style={{ width: `${width}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        );
                                     })}
                                 </div>
                             </div>
@@ -1663,8 +1663,8 @@ export function Results() {
                                                                     .filter((f: { direction: string }) => f.direction === 'negative')
                                                                     .slice(0, 3)
                                                                     .map((feat: { feature: string; shap_value: number }, idx: number) => {
-                                                                         const category = getFeatureCategory(feat.feature);
-                                                                         const isAcademicHistory = category === 'Academic History';
+                                                                        const category = getFeatureCategory(feat.feature);
+                                                                        const isAcademicHistory = category === 'Academic History';
                                                                         return (
                                                                             <li key={idx} className="flex items-start">
                                                                                 <span className="mr-2">•</span>
@@ -1722,7 +1722,7 @@ export function Results() {
             {/* Back to Dashboard Button */}
             <div className="flex justify-center">
                 <button
-                    onClick={() => navigate('/home')}
+                    onClick={() => navigate('/dashboard')}
                     className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center space-x-2"
                 >
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

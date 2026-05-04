@@ -1,4 +1,4 @@
-learnerID,Sex,Age,Mother Tongue,Nutritional Status(BMI),Filipino 1,English 1,Math 1,Aral Pan 1,Filipino 2,English 2,Math 2,Aral Pan 2,Filipino 3,English 3,Math 3,Science 3,Aral Pan 3,Filipino 4,English 4,Math 4,Science 4,Aral Pan 4,Filipino 5,English 5,Math 5,Science 5,Aral Pan 5,School,MPS
+learnerID,Gender,Age,Mother Tongue,Nutritional Status,Filipino 1,English 1,Math 1,Aral Pan 1,Filipino 2,English 2,Math 2,Aral Pan 2,Filipino 3,English 3,Math 3,Science 3,Aral Pan 3,Filipino 4,English 4,Math 4,Science 4,Aral Pan 4,Filipino 5,English 5,Math 5,Science 5,Aral Pan 5,School,MPS
 BES24-001,M,11,Ilocano,Normal,81,79,80,86,83,81,81.0,83,82,82,82,81,81,84,83,83,82,82,86,82,85,84,86,Badipa Elementary School,75.7
 BES24-002,M,12,Ilocano,Normal,89,86,91,87,84,82,83.0,84,83,82,83,81,83,82,81,83,81,82,87,84,86,85,87,Badipa Elementary School,75.7
 BES24-003,M,11,Ilocano,Normal,81,80,80,82,81,81,81.0,80,82,82,83,81,82,84,82,84,82,83,85,81,82,83,85,Badipa Elementary School,75.7

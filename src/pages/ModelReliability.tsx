@@ -73,7 +73,7 @@ export function ModelReliability() {
       case 5: return 'Excellent reliability for high-stakes decisions';
       case 4: return 'Good reliability for educational planning';
       case 3: return 'Fair reliability - use with caution';
-      case 2: return 'Needs improvement - predictions unreliable';
+      case 2: return 'Needs improvement - double check feature importance';
       default: return 'Reliability rating unavailable';
     }
   };
@@ -171,7 +171,7 @@ export function ModelReliability() {
               <div className="bg-blue-50 p-4 rounded-lg">
                 <p className="font-semibold text-blue-900 mb-2">Prediction Accuracy</p>
                 <p className="text-sm text-blue-800">
-                  Predictions are typically within <span className="font-bold">±{bestMetrics.MAE?.toFixed(1) || 'N/A'} MPS points</span> of actual NAT scores.
+                  Predictions are typically within <span className="font-bold">±{bestMetrics.MAE?.toFixed(4) || 'N/A'} MPS points</span> of actual NAT scores.
                   This means if a learner is predicted 72, their actual score is likely between{' '}
                   {bestMetrics.MAE !== undefined
                     ? `${(72 - bestMetrics.MAE).toFixed(0)} and ${(72 + bestMetrics.MAE).toFixed(0)}`

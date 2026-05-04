@@ -24,7 +24,19 @@ export function AppLayout() {
   const isResearcher = role === 'researcher';
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [researcherMode, setResearcherMode] = useState<ResearcherMode>('prediction');
+  const [researcherMode, setResearcherModeInternal] = useState<ResearcherMode>(() => {
+    if (isResearcher) {
+      const saved = localStorage.getItem('researcherMode');
+      return (saved as ResearcherMode) || 'prediction';
+    }
+    return 'prediction';
+  });
+
+  const setResearcherMode = (mode: ResearcherMode) => {
+    setResearcherModeInternal(mode);
+    localStorage.setItem('researcherMode', mode);
+  };
+
   const [viewMode, setViewMode] = useState<ViewMode>('teacher');
 
   // Upload guard — only applies when predictions are expected (non-evaluation modes)

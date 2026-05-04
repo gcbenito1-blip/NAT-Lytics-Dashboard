@@ -63,6 +63,15 @@ SUBJECT_AGGREGATE_MAP = {
 
 SUBJECT_AVG_COLS = list(SUBJECT_AGGREGATE_MAP.keys())
 
+# Grades 1-3 average (early grades composite)
+EARLY_GRADES_SUBJECTS = {
+    "Grades1-3_Avg": ["Filipino 1", "Filipino 2", "Filipino 3",
+                       "English 1",  "English 2",  "English 3",
+                       "Math 1",      "Math 2",      "Math 3",
+                       "Aral Pan 1",  "Aral Pan 2",  "Aral Pan 3",
+                       "Science 3"],
+}
+
 YEAR_LABELS = {0: "23-24", 1: "24-25"}
 
 # ============================================================
@@ -136,6 +145,17 @@ def aggregate_subject_grades(df):
     return df.drop(columns=to_drop, errors="ignore")
 
 
+def add_grades1_3_average(df):
+    """Compute average of all Grade 1-3 subject scores as early-grades composite."""
+    df = df.copy()
+    for new_col, src_cols in EARLY_GRADES_SUBJECTS.items():
+        present = [c for c in src_cols if c in df.columns]
+        if not present:
+            continue
+        df[new_col] = df[present].apply(pd.to_numeric, errors="coerce").mean(axis=1)
+    return df
+
+
 def load_and_prep(csv1, csv2):
     datasets = {}
     for label, path in [("23-24", csv1), ("24-25", csv2)]:
@@ -156,9 +176,9 @@ def load_and_prep(csv1, csv2):
         df = df.drop(columns=DROP_COLS, errors="ignore")
         df = normalize_dtypes(df)
         df = apply_mother_tongue_map(df)
+        df = add_grades1_3_average(df)
         df = aggregate_subject_grades(df)
         frames.append(df)
-
     combined = pd.concat(frames, ignore_index=True)
     print(f"  Combined: {len(combined)} rows x {combined.shape[1]} cols")
     return combined, datasets, frames
@@ -370,7 +390,7 @@ def plot_histograms(df, out_path):
 # ============================================================
 
 def plot_correlation(df, out_path):
-    num_df = df.select_dtypes(include=np.number).drop(columns=["school_year"], errors="ignore")
+    num_df = df.select_dtypes(include=np.number).drop(columns=["school_year", "MPS"], errors="ignore")
     corr   = num_df.corr()
     n      = len(corr)
 
@@ -450,7 +470,7 @@ def plot_pairplot(df, out_path):
 # ============================================================
 
 def plot_by_gender(df, out_path, threshold):
-    if "Sex" not in df.columns or TARGET not in df.columns:
+    if "Gender" not in df.columns or TARGET not in df.columns:
         print("  No Gender or MPS col - skipping plot 07.")
         return
 
@@ -458,13 +478,13 @@ def plot_by_gender(df, out_path, threshold):
     fig.patch.set_facecolor(BG)
     fig.suptitle("MPS Score by Gender", color=TEXT, fontsize=13)
 
-    genders = sorted(df["Sex"].dropna().unique())
+    genders = sorted(df["Gender"].dropna().unique())
     years   = sorted(df["school_year"].unique())
     g_colors = [ACCENT, "#4cd964", "#f5a623", ACCENT2]
 
     # Violin per gender
     ax = axes[0]
-    data   = [df[df["Sex"] == g][TARGET].dropna().values for g in genders]
+    data   = [df[df["Gender"] == g][TARGET].dropna().values for g in genders]
     colors = g_colors[:len(genders)]
     vp = ax.violinplot(data, positions=range(len(genders)),
                        showmedians=True, showextrema=False)
@@ -484,7 +504,7 @@ def plot_by_gender(df, out_path, threshold):
     for i, (yr, color) in enumerate(zip(years, YEAR_COLORS)):
         rates = []
         for g in genders:
-            sub = df[(df["Sex"] == g) & (df["school_year"] == yr)][TARGET].dropna()
+            sub = df[(df["Gender"] == g) & (df["school_year"] == yr)][TARGET].dropna()
             rates.append((sub >= threshold).mean() * 100 if len(sub) else 0)
         bars = ax2.bar(x + (i - 0.5) * w, rates, width=w, color=color,
                        alpha=0.8, label=YEAR_LABELS.get(yr, str(yr)),
@@ -752,8 +772,145 @@ def plot_age_vs_mps(df, out_path):
 
 
 # ============================================================
-# SUMMARY REPORT
+# PLOT 13 - GRADES 1-3 AVERAGE EFFECT ON MPS
 # ============================================================
+
+def plot_grades1_3_influence(df, out_path, threshold):
+    col = "Grades1-3_Avg"
+    if col not in df.columns or TARGET not in df.columns:
+        print(f"  No {col} or MPS - skipping plot 13.")
+        return
+
+    fig = plt.figure(figsize=(16, 10))
+    fig.patch.set_facecolor(BG)
+    gs = gridspec.GridSpec(3, 3, figure=fig, hspace=0.35, wspace=0.3)
+    fig.suptitle("Early Grades (1-3) Average vs MPS - Influence Analysis",
+                 color=TEXT, fontsize=14, fontweight="bold")
+
+    years = sorted(df["school_year"].unique())
+
+    # --- Row 0: Scatter / Regression by year ---
+    ax0 = fig.add_subplot(gs[0, :])
+    for yr, color in zip(years, YEAR_COLORS):
+        sub = df[df["school_year"] == yr][[col, TARGET]].dropna()
+        ax0.scatter(sub[col], sub[TARGET], color=color, alpha=0.35, s=18,
+                    edgecolor="none", label=YEAR_LABELS.get(yr, str(yr)))
+
+    # Combined linear fit
+    valid = df[[col, TARGET]].dropna()
+    if len(valid) > 1:
+        z = np.polyfit(valid[col], valid[TARGET], 1)
+        p = np.poly1d(z)
+        xs = np.linspace(valid[col].min(), valid[col].max(), 100)
+        ax0.plot(xs, p(xs), color="#e84a27", linewidth=2, linestyle="--",
+                 alpha=0.8, label=f"Linear fit (r={valid.corr().iloc[0,1]:.3f})")
+
+
+
+    # --- Row 1: Boxplot by MPS outcome ---
+    ax1 = fig.add_subplot(gs[1, 0])
+    dfc = df[[col, TARGET]].dropna().copy()
+    dfc["Outcome"] = np.where(dfc[TARGET] >= threshold, "Pass", "Fail")
+    order = ["Fail", "Pass"]
+    bp1 = ax1.boxplot([dfc[dfc["Outcome"]==o][col].values for o in order if o in dfc["Outcome"].values],
+                      patch_artist=True, widths=0.5,
+                      medianprops=dict(color="white", linewidth=1.5),
+                      whiskerprops=dict(color=SUBTEXT),
+                      capprops=dict(color=SUBTEXT),
+                      flierprops=dict(marker="o", markersize=4,
+                                      markerfacecolor=ACCENT2, alpha=0.6,
+                                      linestyle="none"),
+                      labels=order)
+    for patch, c in zip(bp1["boxes"], [FAIL_C, PASS_C]):
+        patch.set_facecolor(c)
+        patch.set_alpha(0.75)
+    ax_style(ax1, title=f"{col} by Pass/Fail", ylabel=f"{col}")
+
+    # T-test annotate
+    vals_pass = dfc[dfc["Outcome"]=="Pass"][col].values
+    vals_fail = dfc[dfc["Outcome"]=="Fail"][col].values
+    if len(vals_pass) > 0 and len(vals_fail) > 0:
+        tstat, pval = ttest_ind(vals_pass, vals_fail, equal_var=False)
+        ax1.text(0.98, 0.96,
+                 f"t-test: t={tstat:.2f}\np={pval:.1e}",
+                 transform=ax1.transAxes, va="top", ha="right",
+                 fontsize=7, color=TEXT,
+                 bbox=dict(boxstyle="round,pad=0.3", facecolor=PANEL, edgecolor=GRID, alpha=0.9))
+
+    # --- Row 1: Histogram by outcome ---
+    ax2 = fig.add_subplot(gs[1, 1])
+    for o, c, lbl in [("Pass", PASS_C, "Pass"), ("Fail", FAIL_C, "Fail")]:
+        vals = dfc[dfc["Outcome"]==o][col].values
+        if len(vals):
+            ax2.hist(vals, bins=20, alpha=0.5, color=c, label=lbl,
+                     edgecolor="none")
+    ax_style(ax2, title=f"{col} Distribution by Outcome", xlabel=f"{col}", ylabel="Count")
+    ax2.legend(labelcolor=TEXT, fontsize=8)
+
+    # --- Row 1: MPS vs early grades residual scatter ---
+    ax3 = fig.add_subplot(gs[1, 2])
+    residual = valid[TARGET] - (z[0] * valid[col] + z[1])
+    ax3.scatter(valid[col], residual, color=ACCENT, alpha=0.3, s=12, edgecolor="none")
+    ax3.axhline(0, color="#e84a27", linewidth=1.5, linestyle="--", alpha=0.7)
+    ax_style(ax3, title="Residuals (MPS - predicted)",
+             xlabel=f"{col}", ylabel="Residual")
+
+    # --- Row 2: Year-specific effect ---
+    ax4 = fig.add_subplot(gs[2, 0])
+    positions = np.arange(len(years))
+    bar_w = 0.35
+    means_by_year = []
+    for i, yr in enumerate(years):
+        suby = df[df["school_year"]==yr]
+        pass_mean = suby[suby[TARGET]>=threshold][col].mean()
+        fail_mean = suby[suby[TARGET]<threshold][col].mean()
+        means_by_year.append((pass_mean, fail_mean))
+        ax4.bar(i - bar_w/2, pass_mean, bar_w, color=PASS_C, alpha=0.7, label="Pass" if i==0 else "")
+        ax4.bar(i + bar_w/2, fail_mean, bar_w, color=FAIL_C, alpha=0.7, label="Fail" if i==0 else "")
+        ax4.text(i - bar_w/2, pass_mean + 0.3, f"{pass_mean:.1f}", ha="center", fontsize=7, color=TEXT)
+        ax4.text(i + bar_w/2, fail_mean + 0.3, f"{fail_mean:.1f}", ha="center", fontsize=7, color=TEXT)
+    ax4.set_xticks(positions)
+    ax4.set_xticklabels([YEAR_LABELS.get(yr,str(yr)) for yr in years], color=SUBTEXT)
+    ax_style(ax4, title="Mean early-avg by outcome per year", ylabel=f"{col}")
+    ax4.legend(labelcolor=TEXT, fontsize=8)
+
+    # --- Row 2: Scatter colored by outcome ---
+    ax5 = fig.add_subplot(gs[2, 1])
+    for yr, color in zip(years, YEAR_COLORS):
+        sub = df[df["school_year"] == yr]
+        ax5.scatter(sub[col], sub[TARGET], color=color, alpha=0.2, s=12, edgecolor="none")
+        # highlight pass/fail
+        pass_sub = sub[sub[TARGET] >= threshold]
+        fail_sub = sub[sub[TARGET] < threshold]
+        ax5.scatter(pass_sub[col], pass_sub[TARGET], color=PASS_C, alpha=0.3, s=10, edgecolor="none", marker="o")
+        ax5.scatter(fail_sub[col], fail_sub[TARGET], color=FAIL_C, alpha=0.35, s=10, edgecolor="none", marker="x")
+    ax5.axhline(threshold, color="#666", linewidth=1, linestyle="--", alpha=0.5)
+    ax_style(ax5, title="MPS vs early-avg (pass=o, fail=x)", xlabel=f"{col}", ylabel="MPS")
+
+    # --- Row 2: Correlation bar ---
+    ax6 = fig.add_subplot(gs[2, 2])
+    corrs = []
+    labels_corr = []
+    # Overall
+    r_all = valid.corr().iloc[0,1]
+    corrs.append(abs(r_all))
+    labels_corr.append("Overall")
+    # Per year
+    for yr in years:
+        sub = df[df["school_year"]==yr][[col, TARGET]].dropna()
+        if len(sub) > 1:
+            corrs.append(abs(sub.corr().iloc[0,1]))
+            labels_corr.append(YEAR_LABELS.get(yr, str(yr)))
+    bars = ax6.bar(labels_corr, corrs, color=[ACCENT]+YEAR_COLORS[:len(years)], alpha=0.75, edgecolor="none")
+    for bar, val in zip(bars, corrs):
+        ax6.text(bar.get_x()+bar.get_width()/2, bar.get_height()+0.02, f"{val:.3f}",
+                 ha="center", fontsize=8, color=TEXT)
+    ax6.set_ylim(0, max(corrs)*1.2 if corrs else 1)
+    ax6.axhline(0.5, color="#f5a623", linewidth=1, linestyle=":", alpha=0.6)
+    ax_style(ax6, title=f"|Correlation| with MPS", ylabel="|r|")
+
+    save(fig, out_path)
+
 
 def write_summary(df, frames, corr, miss, threshold, out_path):
     W = 65
@@ -812,6 +969,44 @@ def write_summary(df, frames, corr, miss, threshold, out_path):
                 f"  {col:<18} {s.mean():>7.2f} {s.std():>7.2f} "
                 f"{s.min():>7.2f} {s.max():>7.2f} {skew(s):>7.3f} {pass_r:>6.1f}%"
             )
+    # Early grades (1-3) composite analysis
+    eg_col = "Grades1-3_Avg"
+    if eg_col in df.columns:
+        eg = df[eg_col].dropna()
+        if len(eg) > 0:
+            lines += [f"\nEARLY GRADES (1-3) COMPOSITE", "-" * W,
+                      f"  Count               : {len(eg)}",
+                      f"  Mean                : {eg.mean():.3f}",
+                      f"  Median              : {eg.median():.3f}",
+                      f"  Std                 : {eg.std():.3f}",
+                      f"  Range               : {eg.min():.2f} - {eg.max():.2f}",
+                      f"  Skew                : {skew(eg):.3f}"]
+            if TARGET in df.columns:
+                tt = df[[eg_col, TARGET]].dropna()
+                if len(tt) > 1:
+                    r_val = tt.corr().iloc[0,1]
+                    lines.append(f"  Correlation with MPS: {r_val:.3f}")
+                    r_abs = abs(r_val)
+                    if r_abs >= 0.7:
+                        strength = "STRONG"
+                    elif r_abs >= 0.4:
+                        strength = "MODERATE"
+                    elif r_abs >= 0.2:
+                        strength = "WEAK"
+                    else:
+                        strength = "VERY WEAK"
+                    lines.append(f"  Influence on MPS    : {strength}")
+                pass_sub = df[df[TARGET]>=threshold]
+                fail_sub = df[df[TARGET]<threshold]
+                mean_pass = pass_sub[eg_col].mean() if len(pass_sub)>0 else float('nan')
+                mean_fail = fail_sub[eg_col].mean() if len(fail_sub)>0 else float('nan')
+                if not pd.isna(mean_pass) and not pd.isna(mean_fail):
+                    lines.append(f"  Mean early-avg (pass): {mean_pass:.2f}")
+                    lines.append(f"  Mean early-avg (fail): {mean_fail:.2f}")
+                    diff = mean_pass - mean_fail
+                    lines.append(f"  Difference (pass-fail): {diff:.2f}")
+                    lines.append(f"  -> Higher early grades correlate with passing MPS")
+
 
     # Normality test
     if subj_present:
@@ -912,6 +1107,8 @@ def main():
     plot_year_comparison(combined, out("10_year_comparison.png"))
     plot_pass_fail(combined, out("11_pass_fail_breakdown.png"), args.threshold)
     plot_age_vs_mps(combined, out("12_age_vs_mps.png"))
+    plot_grades1_3_influence(combined, out("13_grades1_3_influence.png"), args.threshold)
+
 
     # Summary report
     section("WRITING SUMMARY REPORT")

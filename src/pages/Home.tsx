@@ -16,7 +16,7 @@ export function Home() {
     const isResearcher = user?.role === 'researcher';
     const isTeacher = user?.role === 'teacher';
     const isAdmin = user?.role === 'admin';
-    const [researcherMode] = useState<'evaluation' | 'prediction' | null>(null);
+    const [researcherMode, setResearcherMode] = useState<'evaluation' | 'prediction' | null>(null);
 
     useEffect(() => {
         if (user) {
@@ -87,7 +87,11 @@ export function Home() {
                                 </div>
                             </div>
                             <button
-                                onClick={() => navigate('/evaluation/metrics')}
+                                onClick={() => {
+                                  localStorage.setItem('researcherMode', 'evaluation');
+                                  setResearcherMode('evaluation');
+                                  navigate('/evaluation/metrics');
+                                }}
                                 className="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition cursor-pointer"
                             >
                                 Enter Evaluation Mode
@@ -115,7 +119,11 @@ export function Home() {
                                 </div>
                             </div>
                             <button
-                                onClick={() => navigate('/dashboard')}
+                                onClick={() => {
+                                  localStorage.setItem('researcherMode', 'prediction');
+                                  setResearcherMode('prediction');
+                                  navigate('/dashboard');
+                                }}
                                 className="mt-6 w-full px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition cursor-pointer"
                             >
                                 Enter Prediction Mode
@@ -125,6 +133,91 @@ export function Home() {
                 </div>
             </div>
         );
+     }
+
+    // Researcher has selected a mode - show the appropriate content
+    if (isResearcher && researcherMode === 'evaluation') {
+        navigate('/evaluation/metrics');
+        return null;
     }
 
+    if (isResearcher && researcherMode === 'prediction') {
+        navigate('/dashboard');
+        return null;
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="max-w-4xl w-full">
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome, Researcher</h1>
+                    <p className="text-xl text-gray-600">Select your working mode to get started</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-transparent hover:border-blue-200 transition-all flex flex-col h-full">
+                        <div className="flex-1 flex flex-col">
+                            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                                <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">Evaluation Mode</h2>
+                            <p className="text-gray-600 mb-6 leading-relaxed text-center flex-shrink-0">Analyze model performance, review metrics, and understand prediction accuracy. Access detailed model evaluation reports and comparative analysis.</p>
+                            <div className="bg-blue-50 rounded-lg p-4 flex-1">
+                                <h3 className="font-semibold text-blue-900 mb-2">What you can do:</h3>
+                                <ul className="text-sm text-blue-800 space-y-1">
+                                    <li>• View model performance metrics (R², MAE, RMSE)</li>
+                                    <li>• Compare different model algorithms</li>
+                                    <li>• Analyze feature importance</li>
+                                    <li>• Review prediction accuracy</li>
+                                </ul>
+                            </div>
+                        </div>
+                         <button
+                            onClick={() => {
+                              localStorage.setItem('researcherMode', 'evaluation');
+                              setResearcherMode('evaluation');
+                              navigate('/evaluation/metrics');
+                            }}
+                            className="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition cursor-pointer"
+                        >
+                            Enter Evaluation Mode
+                        </button>
+                    </div>
+
+                    <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-transparent hover:border-green-200 transition-all flex flex-col h-full">
+                        <div className="flex-1 flex flex-col">
+                            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                                <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">Prediction Mode</h2>
+                            <p className="text-gray-600 mb-6 leading-relaxed text-center flex-shrink-0">Run predictions on student data, generate forecasts, and export results. Create sessions and analyze prediction outcomes with detailed explanations.</p>
+                            <div className="bg-green-50 rounded-lg p-4 flex-1">
+                                <h3 className="font-semibold text-green-900 mb-2">What you can do:</h3>
+                                <ul className="text-sm text-green-800 space-y-1">
+                                    <li>• Upload datasets for prediction</li>
+                                    <li>• Generate student performance forecasts</li>
+                                    <li>• View prediction results with explanations</li>
+                                    <li>• Export results to CSV/PDF</li>
+                                </ul>
+                            </div>
+                        </div>
+                         <button
+                            onClick={() => {
+                              localStorage.setItem('researcherMode', 'prediction');
+                              setResearcherMode('prediction');
+                              navigate('/dashboard');
+                            }}
+                            className="mt-6 w-full px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition cursor-pointer"
+                        >
+                            Enter Prediction Mode
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }

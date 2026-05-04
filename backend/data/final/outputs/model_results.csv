@@ -1,6 +1,6 @@
 model,MAE,RMSE,R2
-Linear,5.9877,7.4002,0.0059
-Lasso,5.9826,7.3883,0.0091
-DecisionTree,7.7383,11.9099,-1.5749
-RandomForest,5.3471,7.3466,0.0202
-GradientBoosting,5.4979,7.3063,0.031
+Linear,5.9468,7.4028,0.0009
+Lasso,5.9436,7.3998,0.0018
+DecisionTree,5.668,7.4517,-0.0123
+RandomForest,5.3977,7.3218,0.0227
+GradientBoosting,5.5186,7.1459,0.0691

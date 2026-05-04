@@ -689,7 +689,7 @@ def get_school_mae():
 def get_test_results():
     """
     Return individual student test set predictions with columns:
-    learnerID, School, Actual_MPS, Predicted_MPS, Difference, Proficiency, Error_Magnitude
+    learnerID, School, Actual_MPS, Predicted_MPS, Difference, Proficiency(actual and predicted), Error_Magnitude
 
     Query params:
       model: (optional) model key (e.g., 'linear', 'randomForest'). If omitted, uses best model.

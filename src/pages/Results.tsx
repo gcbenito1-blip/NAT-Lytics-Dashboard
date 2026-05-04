@@ -428,6 +428,42 @@ export const featureExplanations: Record<string, {
         description: 'Final Araling Panlipunan grade from Grade 5 (Most Recent Performance)',
         canChange: false,
         insight: 'This is the most recent academic record (Grade 5). This is typically the strongest predictor as it reflects the student\'s current academic level.'
+    },
+    // Averaged subject columns (new format)
+    'Math_avg': {
+        friendlyName: 'Math (Average across Grades 1-5)',
+        category: 'Academic History',
+        description: 'Average Math grade across all grade levels (Grades 1-5)',
+        canChange: false,
+        insight: 'This represents the student\'s consistent performance in Math across all grades. It provides a comprehensive view of math ability over time.'
+    },
+    'English_avg': {
+        friendlyName: 'English (Average across Grades 1-5)',
+        category: 'Academic History',
+        description: 'Average English grade across all grade levels (Grades 1-5)',
+        canChange: false,
+        insight: 'This represents the student\'s consistent performance in English across all grades. It provides a comprehensive view of English ability over time.'
+    },
+    'Filipino_avg': {
+        friendlyName: 'Filipino (Average across Grades 1-5)',
+        category: 'Academic History',
+        description: 'Average Filipino grade across all grade levels (Grades 1-5)',
+        canChange: false,
+        insight: 'This represents the student\'s consistent performance in Filipino across all grades. It provides a comprehensive view of Filipino ability over time.'
+    },
+    'Science_avg': {
+        friendlyName: 'Science (Average across Grades 3-5)',
+        category: 'Academic History',
+        description: 'Average Science grade (Science is taught from Grade 3 onwards)',
+        canChange: false,
+        insight: 'This represents the student\'s performance in Science across Grades 3-5. Science is introduced in Grade 3, so this average covers all available science grades.'
+    },
+    'Aral Pan_avg': {
+        friendlyName: 'Araling Panlipunan (Average across Grades 1-5)',
+        category: 'Academic History',
+        description: 'Average Araling Panlipunan grade across all grade levels (Grades 1-5)',
+        canChange: false,
+        insight: 'This represents the student\'s consistent performance in Araling Panlipunan across all grades. It provides a comprehensive view of social studies ability over time.'
     }
 };
 
@@ -440,123 +476,37 @@ export const getFriendlyFeatureName = (featureName: string): string => {
 export const getCategoryColor = (category: string): string => {
     // All categories now use Student Profile color
     const colors: Record<string, string> = {
-        'Student Profile': '#8b5cf6'
+        'Student Profile': '#8b5cf6',
+        'Academic History': '#8b5cf6',
+        'Other': '#8b5cf6'
     };
-    return colors['Student Profile'] || '#8b5cf6';
+    return colors[category] || '#8b5cf6';
 };
 
-// ============================================================
-// FEATURE IMPORTANCE HELPER FOR NON-TECHNICAL USERS
-// ============================================================
+// Fallback category detection based on feature name patterns
+export function getFeatureCategory(featureName: string): string {
+    const info = featureExplanations[featureName];
+    if (info) return info.category;
 
-interface FeatureActionableInsight {
-    feature: string;
-    direction: 'positive' | 'negative';
-    actionMessage: string;
-    studyPlanTip: string;
-    relatedGrade: string;
-    studyFocus?: string;
+    const lower = featureName.toLowerCase();
+
+    // Academic subjects and grades
+    if (lower.includes('math') || lower.includes('english') || lower.includes('filipino') || lower.includes('science') || lower.includes('aral')) {
+        return 'Academic History';
+    }
+
+    // Student profile fields
+    if (lower.includes('age') || lower.includes('sex') || lower.includes('gender') || lower.includes('mother tongue') || lower.includes('nutrition') || lower.includes('bmi')) {
+        return 'Student Profile';
+    }
+
+    // One-hot encoded variants
+    if (lower.startsWith('sex_') || lower.startsWith('mother tongue_') || lower.startsWith('nutritional status(bmi)_')) {
+        return 'Student Profile';
+    }
+
+    return 'Other';
 }
-
-// Generate actionable insights based on feature direction and category
-export const getFeatureInsight = (featureName: string, avgShap: number, isPositive: boolean): FeatureActionableInsight => {
-    const featureInfo = featureExplanations[featureName];
-    const category = featureInfo?.category || 'Other';
-
-    // Use avgShap magnitude to provide more specific recommendations
-    const impactLevel = Math.abs(avgShap) > 0.5 ? 'significantly' : Math.abs(avgShap) > 0.2 ? 'moderately' : 'slightly';
-
-    // Determine related grade level from feature name
-    let relatedGrade = '';
-    let studyFocus = '';
-
-    if (featureName.includes('1')) {
-        relatedGrade = 'Grade 1';
-        studyFocus = 'Foundational skills and basic concepts';
-    } else if (featureName.includes('2')) {
-        relatedGrade = 'Grade 2';
-        studyFocus = 'Building on foundational knowledge';
-    } else if (featureName.includes('3')) {
-        relatedGrade = 'Grade 3';
-        studyFocus = 'Introduction to new subjects like Science';
-    } else if (featureName.includes('4')) {
-        relatedGrade = 'Grade 4';
-        studyFocus = 'Deepening understanding of core subjects';
-    } else if (featureName.includes('5')) {
-        relatedGrade = 'Grade 5';
-        studyFocus = 'Preparing for advanced middle school concepts';
-    }
-
-    // Get subject from feature name
-    let subject = '';
-    if (featureName.includes('Math')) subject = 'Math';
-    else if (featureName.includes('English')) subject = 'English';
-    else if (featureName.includes('Filipino')) subject = 'Filipino';
-    else if (featureName.includes('Science')) subject = 'Science';
-    else if (featureName.includes('Aral Pan')) subject = 'Araling Panlipunan';
-
-    // Generate action message based on direction and category
-    let actionMessage = '';
-    let studyPlanTip = '';
-
-    if (category === 'Academic History') {
-        if (isPositive) {
-            actionMessage = `Strong ${subject} performance in ${relatedGrade || 'past grades'} is ${impactLevel} associated with higher prediction scores.`;
-            studyPlanTip = `Continue building on ${relatedGrade ? `${relatedGrade} ${subject}` : subject} strengths. Consider advanced practice to maintain momentum.`;
-        } else {
-            actionMessage = `Lower ${subject} grades in ${relatedGrade || 'past grades'} tend to ${impactLevel} lower prediction outcomes.`;
-            studyPlanTip = `Focus on improving ${subject}. Review ${relatedGrade || 'grade'} material and consider tutoring or extra practice in ${subject}.`;
-        }
-    } else if (category === 'Student Profile') {
-        if (featureName.toLowerCase().includes('age')) {
-            if (isPositive) {
-                actionMessage = 'Older students at this grade level show higher prediction scores.';
-                studyPlanTip = 'Age-appropriate learning strategies can be applied. Focus on maturity-based learning goals.';
-            } else {
-                actionMessage = 'Younger students at this grade level show different patterns.';
-                studyPlanTip = 'Consider age-appropriate pacing and developmental learning approaches.';
-            }
-        } else if (featureName.toLowerCase().includes('gender')) {
-            actionMessage = 'Gender patterns are detected in prediction outcomes.';
-            studyPlanTip = 'Ensure personalized learning approaches that cater to individual learning styles regardless of gender.';
-        } else if (featureName.toLowerCase().includes('mother tongue')) {
-            if (isPositive) {
-                actionMessage = 'Students with this language background tend to perform better.';
-                studyPlanTip = 'Leverage language strengths. Consider additional language support if needed.';
-            } else {
-                actionMessage = 'Language background may be a factor in prediction outcomes.';
-                studyPlanTip = 'Provide additional language support and bilingual resources.';
-            }
-        }
-    } else if (category === 'Health') {
-        if (featureName.toLowerCase().includes('bmi') || featureName.toLowerCase().includes('nutrition')) {
-            if (isPositive) {
-                actionMessage = 'Better nutritional status is associated with higher prediction scores.';
-                studyPlanTip = 'Maintain healthy habits. Proper nutrition supports better concentration and learning.';
-            } else {
-                actionMessage = 'Nutritional status may be affecting academic performance.';
-                studyPlanTip = 'Consider nutritional counseling. Healthy eating habits can improve focus and academic outcomes.';
-            }
-        }
-    }
-
-    // Default fallback
-    if (!actionMessage) {
-        actionMessage = isPositive
-            ? `Higher ${getFriendlyFeatureName(featureName)} is associated with better prediction outcomes.`
-            : `Lower ${getFriendlyFeatureName(featureName)} is associated with lower prediction outcomes.`;
-        studyPlanTip = `Review and ${isPositive ? 'maintain' : 'improve'} this factor for better academic outcomes.`;
-    }
-
-    return {
-        feature: featureName,
-        direction: isPositive ? 'positive' : 'negative',
-        actionMessage,
-        studyPlanTip,
-        relatedGrade: relatedGrade || 'All grades',
-        studyFocus: studyFocus || undefined
-    };
-};
 
 interface ResultsState {
     predictions: ApiPredictionResult[];
@@ -671,8 +621,7 @@ export function Results() {
         const categoryMap = new Map<string, CategoryBreakdownItem>();
 
         aggregatedFeatureImportance.forEach(item => {
-            const categoryInfo = featureExplanations[item.feature];
-            // Map all categories to Student Profile (including Health, Academic History, Other, unknown)
+            // All features are categorized as Student Profile for consistent display
             const category = 'Student Profile';
             const color = getCategoryColor('Student Profile');
 
@@ -1120,70 +1069,29 @@ export function Results() {
                             <div className="mb-8">
                                 <h3 className="text-md font-medium text-gray-700 mb-4">Top Contributing Features</h3>
                                 <div className="space-y-3">
-                                    {aggregatedFeatureImportance.slice(0, 10).map((item, idx) => {
-                                        const maxAbs = Math.max(...aggregatedFeatureImportance.map(f => Math.abs(f.avgAbsShap)), 0.01);
-                                        const width = maxAbs > 0 ? (Math.abs(item.avgAbsShap) / maxAbs) * 100 : 0;
-                                        const isPositive = item.avgShap > 0;
-                                        const categoryInfo = featureExplanations[item.feature];
-                                        // All features now use Student Profile color
-                                        const categoryColor = getCategoryColor('Student Profile');
+                                     {aggregatedFeatureImportance.slice(0, 10).map((item, idx) => {
+                                         const maxAbs = Math.max(...aggregatedFeatureImportance.map(f => Math.abs(f.avgAbsShap)), 0.01);
+                                         const width = maxAbs > 0 ? (Math.abs(item.avgAbsShap) / maxAbs) * 100 : 0;
+                                         const isPositive = item.avgShap > 0;
 
-                                        return (
-                                            <div key={idx} className="relative">
-                                                <div className="flex items-center justify-between mb-1">
-                                                    <span className="text-sm font-medium text-gray-700">
-                                                        {getFriendlyFeatureName(item.feature)}
-                                                    </span>
-                                                    <span className="text-sm text-gray-500">
-                                                        Avg |SHAP|: {item.avgAbsShap.toFixed(3)}
-                                                    </span>
-                                                </div>
-                                                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                                                    <div
-                                                        className={`h-3 rounded-full transition-all duration-500 ${isPositive ? 'bg-green-500' : 'bg-red-500'}`}
-                                                        style={{ width: `${width}%` }}
-                                                    />
-                                                </div>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                    <span
-                                                        className="inline-block px-2 py-0.5 text-xs rounded-full text-white"
-                                                        style={{ backgroundColor: categoryColor }}
-                                                    >
-                                                        {categoryInfo?.category || 'Unknown'}
-                                                    </span>
-                                                    <span className={`text-xs ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                                                        {isPositive ? '↑ Increases prediction' : '↓ Decreases prediction'}
-                                                    </span>
-                                                </div>
-                                                {/* Actionable Insight for Non-Technical Users */}
-                                                {(() => {
-                                                    const insight = getFeatureInsight(item.feature, item.avgShap, isPositive);
-                                                    return (
-                                                        <div className="mt-2 p-3 rounded-lg bg-gray-50 border border-gray-200 text-sm">
-                                                            <div className="flex items-start gap-2">
-                                                                <span className={`mt-0.5 ${isPositive ? 'text-green-600' : 'text-orange-500'}`}>
-                                                                    {isPositive ? '✓' : '⚡'}
-                                                                </span>
-                                                                <div>
-                                                                    <p className="text-gray-700 font-medium">{insight.actionMessage}</p>
-                                                                    <div className="mt-2 flex items-center gap-2 text-xs">
-                                                                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded">
-                                                                            📚 {insight.relatedGrade}
-                                                                        </span>
-                                                                        <span className="text-blue-600 font-medium">
-                                                                            📋 Study Plan:
-                                                                        </span>
-                                                                        <span className="text-gray-600">
-                                                                            {insight.studyPlanTip}
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })()}
-                                            </div>
-                                        );
+                                         return (
+                                             <div key={idx} className="relative">
+                                                 <div className="flex items-center justify-between mb-1">
+                                                     <span className="text-sm font-medium text-gray-700">
+                                                         {getFriendlyFeatureName(item.feature)}
+                                                     </span>
+                                                     <span className="text-sm text-gray-500">
+                                                         Avg |SHAP|: {item.avgAbsShap.toFixed(3)}
+                                                     </span>
+                                                 </div>
+                                                 <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                                     <div
+                                                         className={`h-3 rounded-full transition-all duration-500 ${isPositive ? 'bg-green-500' : 'bg-red-500'}`}
+                                                         style={{ width: `${width}%` }}
+                                                     />
+                                                 </div>
+                                             </div>
+                                         );
                                     })}
                                 </div>
                             </div>
@@ -1755,8 +1663,8 @@ export function Results() {
                                                                     .filter((f: { direction: string }) => f.direction === 'negative')
                                                                     .slice(0, 3)
                                                                     .map((feat: { feature: string; shap_value: number }, idx: number) => {
-                                                                        const info = featureExplanations[feat.feature];
-                                                                        const isAcademicHistory = info?.category === 'Academic History';
+                                                                         const category = getFeatureCategory(feat.feature);
+                                                                         const isAcademicHistory = category === 'Academic History';
                                                                         return (
                                                                             <li key={idx} className="flex items-start">
                                                                                 <span className="mr-2">•</span>

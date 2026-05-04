@@ -211,12 +211,13 @@ export function AppLayout() {
               {isResearcher ? (
                 <button
                   onClick={toggleResearcherMode}
-                  className={`cursor-pointer px-3 py-1 rounded-full text-xs font-medium transition hover:opacity-80 ${badge.className}`}
+                  className={`cursor-pointer px-3 py-1 rounded-full text-xs font-medium transition hover:opacity-80 flex items-center justify-center gap-1 ${badge.className}`}
                 >
                   {badge.label}
+                  <span className="material-icons-round text-xs">cached</span>
                 </button>
               ) : (
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${badge.className}`}>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center justify-center ${badge.className}`}>
                   {badge.label}
                 </span>
               )}

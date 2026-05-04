@@ -1,9 +1,9 @@
 School,Student_Count,Avg_Actual_MPS,Avg_Predicted_MPS,Avg_Bias,MAE,Actual_Not Proficient,Actual_Low Proficient,Actual_Nearly Proficient,Actual_Proficient,Actual_Highly Proficient,Pred_Not Proficient,Pred_Low Proficient,Pred_Nearly Proficient,Pred_Proficient,Pred_Highly Proficient
-Badipa Elementary School,80,79.935,71.0043,-8.9307,9.1145,0.0,0.0,0.0,100.0,0.0,0.0,0.0,92.5,7.5,0.0
-Don Alipio Fernandez Sr. Integrated School,20,73.635,70.4747,-3.1603,3.6266,0.0,0.0,100.0,0.0,0.0,0.0,0.0,95.0,5.0,0.0
-Don Amadeo Perez Sr. Memorial Elementary School - East,11,75.9336,72.0787,-3.8549,5.5525,0.0,0.0,0.0,100.0,0.0,0.0,0.0,81.82,18.18,0.0
-Don Clemente Blanco Memorial Elementary School,4,36.62,69.173,32.553,32.553,0.0,100.0,0.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0
-Lananpin Elementary School,50,65.8794,69.942,4.0626,7.1475,0.0,0.0,80.0,20.0,0.0,0.0,0.0,92.0,8.0,0.0
-Nancayasan Elementary School,27,60.18,68.1035,7.9235,7.997,0.0,0.0,100.0,0.0,0.0,0.0,0.0,96.3,3.7,0.0
-Urdaneta City SPED Center,51,73.4114,70.6816,-2.7298,3.0565,0.0,0.0,72.55,27.45,0.0,0.0,0.0,100.0,0.0,0.0
-Urdaneta I Central School,143,67.7276,68.8571,1.1295,2.7973,0.0,0.0,100.0,0.0,0.0,0.0,0.0,98.6,1.4,0.0
+Badipa Elementary School,80,79.935,70.6127,-9.3223,9.4123,0.0,0.0,0.0,100.0,0.0,0.0,0.0,95.0,5.0,0.0
+Don Alipio Fernandez Sr. Integrated School,20,73.635,70.2105,-3.4245,3.7286,0.0,0.0,100.0,0.0,0.0,0.0,0.0,95.0,5.0,0.0
+Don Amadeo Perez Sr. Memorial Elementary School - East,11,75.9336,71.0356,-4.898,5.2848,0.0,0.0,0.0,100.0,0.0,0.0,0.0,81.82,18.18,0.0
+Don Clemente Blanco Memorial Elementary School,4,36.62,68.9114,32.2914,32.2914,0.0,100.0,0.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0
+Lananpin Elementary School,51,65.8171,69.9139,4.0968,7.1599,0.0,0.0,80.39,19.61,0.0,0.0,0.0,98.04,1.96,0.0
+Nancayasan Elementary School,26,60.2392,68.9406,8.7014,8.71,0.0,0.0,100.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0
+Urdaneta City SPED Center,52,73.3858,70.0559,-3.3299,3.3458,0.0,0.0,73.08,26.92,0.0,0.0,0.0,100.0,0.0,0.0
+Urdaneta I Central School,142,67.7339,69.1486,1.4147,2.463,0.0,0.0,100.0,0.0,0.0,0.0,0.0,100.0,0.0,0.0

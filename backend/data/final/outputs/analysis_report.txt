@@ -2,55 +2,63 @@
   MPS PREDICTION PIPELINE - FULL ANALYSIS REPORT
 ===================================================================
 
+-------------------------------------------------------------------
+  DUPLICATE CHECK SUMMARY
+-------------------------------------------------------------------
+  [23-24]  within-cohort removed : 0
+  [24-25]  within-cohort removed : 0
+  Cross-cohort removed : 0
+
   Best Model : GradientBoosting
-  Metrics    : MAE=5.4979  RMSE=7.3063  R^2=0.031
+  Metrics    : MAE=5.5186  RMSE=7.1459  R^2=0.0691
 
   All models:
   Model                    MAE    RMSE      R2
   -------------------- ------- ------- -------
-  Linear                5.9877  7.4002  0.0059
-  Lasso                 5.9826  7.3883  0.0091
-  DecisionTree          7.7383 11.9099 -1.5749
-  RandomForest          5.3471  7.3466  0.0202
-  GradientBoosting      5.4979  7.3063   0.031 <- best
+  Linear                5.9468  7.4028  0.0009
+  Lasso                 5.9436  7.3998  0.0018
+  DecisionTree           5.668  7.4517 -0.0123
+  RandomForest          5.3977  7.3218  0.0227
+  GradientBoosting      5.5186  7.1459  0.0691 <- best
 
 -------------------------------------------------------------------
   DISTRIBUTION SHIFT TEST (Welch t-test, alpha=0.05)
+  NOTE: Diagnostic only — computed on pre-split data.
 -------------------------------------------------------------------
   Column             Cohort0 mean Cohort1 mean   Dmean   p-value Shift?
   ------------------ ---------- ---------- ------- --------- ------
-  Filipino_avg           85.058      85.28   0.222    0.4855 no
-  English_avg            84.396     84.693   0.296    0.3702 no
-  Math_avg               84.558     84.709   0.151    0.6397 no
-  AralPan_avg            84.865     85.122   0.257    0.4145 no
-  Science_avg             84.68     84.819   0.139    0.6729 no
+  Filipino_avg           85.058     85.275   0.216    0.4964 no
+  English_avg            84.396     84.687    0.29    0.3799 no
+  Math_avg               84.558     84.703   0.144    0.6541 no
+  AralPan_avg            84.865     85.117   0.251    0.4239 no
+  Science_avg             84.68     84.812   0.132    0.6892 no
 
 -------------------------------------------------------------------
-  [NUMERIC] HIGH CORRELATION PAIRS  (|Pearson r| >= 0.80)  - 10 found
+  [NUMERIC] HIGH CORRELATION PAIRS  (|Pearson r| >= 0.80)  [train set] — 10 found
 -------------------------------------------------------------------
   Feature A              Feature B                   r
   ---------------------- ---------------------- ------
-  AralPan_avg            Math_avg               +0.976
-  AralPan_avg            Filipino_avg           +0.974
-  Math_avg               English_avg            +0.974
-  Math_avg               Filipino_avg           +0.973
-  English_avg            Filipino_avg           +0.972
-  AralPan_avg            English_avg            +0.968
-  Science_avg            Filipino_avg           +0.949
-  Science_avg            English_avg            +0.947
-  Science_avg            Math_avg               +0.946
-  Science_avg            AralPan_avg            +0.946
+  AralPan_avg            Math_avg               +0.975
+  Math_avg               Filipino_avg           +0.972
+  Math_avg               English_avg            +0.972
+  AralPan_avg            Filipino_avg           +0.971
+  English_avg            Filipino_avg           +0.969
+  AralPan_avg            English_avg            +0.966
+  Science_avg            Filipino_avg           +0.946
+  Science_avg            Math_avg               +0.944
+  Science_avg            English_avg            +0.944
+  Science_avg            AralPan_avg            +0.941
 
 -------------------------------------------------------------------
-  [NUMERIC] VARIANCE INFLATION FACTORS  (sorted descending)
+  [NUMERIC] VARIANCE INFLATION FACTORS  (sorted descending, train set)
 -------------------------------------------------------------------
   Feature                             VIF  Status
   ---------------------------- ----------  ------
-  Math_avg                          31.59  HIGH
-  Filipino_avg                      29.49  HIGH
-  AralPan_avg                       29.05  HIGH
-  English_avg                       26.30  HIGH
-  Science_avg                       11.88  HIGH
+  Math_avg                          30.49  HIGH
+  Filipino_avg                      26.92  HIGH
+  AralPan_avg                       26.47  HIGH
+  English_avg                       24.05  HIGH
+  Science_avg                       11.24  HIGH
   Age                                1.00  OK
 
 -------------------------------------------------------------------
@@ -60,15 +68,16 @@
   VIF 5-10   MEDIUM   - moderate; consider review
   VIF > 10   HIGH     - strong; consider PCA or feature removal
   |r| > 0.8  High pairwise Pearson correlation (verify with VIF)
-  Shift?=YES - cohort means differ; within-cohort z-scoring used
+  Shift?=YES - cohort means differ; z-score params from train only
   school_year stripped from model features (z-score only)
+  All collinearity charts use TRAIN SET only (no test leakage)
   [Numeric charts]  correlation_heatmap_numeric.png
                     vif_chart_numeric.png
   [Categorical charts]  cramers_v_heatmap_categorical.png
                         cramers_v_mps_chart_categorical.png
 ===================================================================
 -------------------------------------------------------------------
-  CATEGORICAL FEATURE ANALYSIS
+  CATEGORICAL FEATURE ANALYSIS  (train set only)
 -------------------------------------------------------------------
 
   No categorical feature pairs exceed V=0.50
@@ -76,56 +85,56 @@
   Feature                 Cramér_V_MPS   Chi2_sig
   ---------------------- ------------- ----------
   Sex                           0.0000         no
-  Mother Tongue                 0.2393        YES
-  Nutritional Status(BMI)        0.0933        YES
+  Mother Tongue                 0.2282        YES
+  Nutritional Status(BMI)        0.0952        YES
 
 
   [Sex]
-    Frequency (%):
-      M: 51.13%
-      F: 48.87%
-    Avg MPS per category:
-      F: 70.018
-      M: 69.812
-    Chi-square: chi2=0.0721  p=0.9646  significant=no
+    Frequency (%) [train]:
+      M: 50.89%
+      F: 49.11%
+    Avg MPS per category [train]:
+      F: 69.813
+      M: 69.449
+    Chi-square [train]: chi2=0.0184  p=0.9908  significant=no
 
   [Mother Tongue]
-    Frequency (%):
-      Ilocano: 64.05%
-      Tagalog: 34.32%
-      Pangasinan: 0.86%
-      Maranao: 0.31%
-      English: 0.16%
-      Kamayo: 0.08%
-      Cebuano / Sinugbuanong Binisay: 0.08%
-      Kapampangan: 0.08%
-      Hiligaynon: 0.08%
-    Avg MPS per category:
+    Frequency (%) [train]:
+      Ilocano: 64.67%
+      Tagalog: 33.56%
+      Pangasinan: 0.89%
+      Maranao: 0.22%
+      English: 0.22%
+      Kamayo: 0.11%
+      Kapampangan: 0.11%
+      Hiligaynon: 0.11%
+      Cebuano / Sinugbuanong Binisay: 0.11%
+    Avg MPS per category [train]:
       Cebuano / Sinugbuanong Binisay: 66.82
       English: 72.08
       Hiligaynon: 66.82
-      Ilocano: 70.56
+      Ilocano: 70.149
       Kamayo: 75.7
       Kapampangan: 66.82
-      Maranao: 68.622
-      Pangasinan: 68.018
-      Tagalog: 68.762
-    Chi-square: chi2=162.9761  p=0.0  significant=YES
+      Maranao: 66.82
+      Pangasinan: 67.81
+      Tagalog: 68.682
+    Chi-square [train]: chi2=109.5051  p=0.0  significant=YES
 
   [Nutritional Status(BMI)]
-    Frequency (%):
-      Normal: 89.18%
-      Overweight: 5.76%
-      Wasted: 2.96%
-      Obese: 1.25%
-      Severely Wasted: 0.86%
-    Avg MPS per category:
-      Normal: 70.124
-      Obese: 68.541
-      Overweight: 68.854
-      Severely Wasted: 68.318
-      Wasted: 66.637
-    Chi-square: chi2=30.3534  p=0.0002  significant=YES
+    Frequency (%) [train]:
+      Normal: 88.33%
+      Overweight: 6.44%
+      Wasted: 3.11%
+      Obese: 1.11%
+      Severely Wasted: 1.0%
+    Avg MPS per category [train]:
+      Normal: 69.878
+      Obese: 66.854
+      Overweight: 68.287
+      Severely Wasted: 68.651
+      Wasted: 66.592
+    Chi-square [train]: chi2=24.2956  p=0.002  significant=YES
 
 -------------------------------------------------------------------
   CATEGORICAL INTERPRETATION GUIDE
@@ -138,6 +147,7 @@
   Cramér's V (MPS chart): feature-vs-target association
     Higher V = stronger predictive relationship with MPS
   * in MPS chart = chi-square significant at p < 0.05
+  All categorical stats computed on TRAIN SET only
   [Categorical charts]
     cramers_v_heatmap_categorical.png
     cramers_v_mps_chart_categorical.png

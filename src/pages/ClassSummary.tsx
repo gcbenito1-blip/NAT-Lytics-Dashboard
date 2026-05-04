@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PredictionResult as ApiPredictionResult } from '../services/api';
-import { getFriendlyFeatureName, getCategoryColor, getFeatureInsight, featureExplanations } from './Results';
+import { getFriendlyFeatureName, getCategoryColor, featureExplanations } from './Results';
 
 interface ClassSummaryState {
     predictions: ApiPredictionResult[];
@@ -328,33 +328,7 @@ export function ClassSummary() {
                                                             {isPositive ? '↑ Increases prediction' : '↓ Decreases prediction'}
                                                         </span>
                                                     </div>
-                                                    {/* Actionable Insight for Non-Technical Users */}
-                                                    {(() => {
-                                                        const insight = getFeatureInsight(item.feature, item.avgShap, isPositive);
-                                                        return (
-                                                            <div className="mt-2 p-3 rounded-lg bg-gray-50 border border-gray-200 text-sm">
-                                                                <div className="flex items-start gap-2">
-                                                                    <span className={`mt-0.5 ${isPositive ? 'text-green-600' : 'text-orange-500'}`}>
-                                                                        {isPositive ? '✓' : '⚡'}
-                                                                    </span>
-                                                                    <div>
-                                                                        <p className="text-gray-700 font-medium">{insight.actionMessage}</p>
-                                                                        <div className="mt-2 flex items-center gap-2 text-xs">
-                                                                            <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded">
-                                                                                📚 {insight.relatedGrade}
-                                                                            </span>
-                                                                            <span className="text-blue-600 font-medium">
-                                                                                📋 Study Plan:
-                                                                            </span>
-                                                                            <span className="text-gray-600">
-                                                                                {insight.studyPlanTip}
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        );
-                                                    })()}
+
                                                 </div>
                                             );
                                         })}
@@ -368,13 +342,13 @@ export function ClassSummary() {
                 {/* Back to Dashboard Button */}
                 <div className="flex justify-center">
                     <button
-                        onClick={() => navigate('/home')}
+                        onClick={() => navigate('/dashboard')}
                         className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center space-x-2"
                     >
                         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
-                        <span>Analyze Another Dataset</span>
+                        <span>Analyze Different Dataset</span>
                     </button>
                 </div>
             </div>

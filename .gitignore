@@ -1,4 +1,2 @@
 .env
-backend/.venv
-node_modules
 src/components/ui.zip

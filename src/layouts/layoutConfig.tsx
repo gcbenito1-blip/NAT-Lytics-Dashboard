@@ -17,33 +17,33 @@ const icon = (name: string) => <span className="material-icons-round text-base">
 
 // ── Menu item sets ────────────────────────────────────────────────────────────
 export const teacherMenuItems: MenuItem[] = [
-  { name: 'Upload',           path: '/dashboard',           icon: icon('upload_file') },
-  { name: 'Class Summary',    path: '/class-summary',       icon: icon('analytics') },
-  { name: 'Prediction Table', path: '/prediction-table',    icon: icon('table_chart') },
-  { name: 'Model Reliability',path: '/model-reliability',   icon: icon('monitor_heart') },
+  { name: 'Upload', path: '/dashboard', icon: icon('upload_file') },
+  { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
+  { name: 'Prediction Table', path: '/prediction-table', icon: icon('table_chart') },
+  { name: 'Model Reliability', path: '/model-reliability', icon: icon('monitor_heart') },
 ];
 
 export const adminMenuItems: MenuItem[] = [
-  { name: 'Upload',             path: '/dashboard',           icon: icon('upload_file') },
-  { name: 'School Summary',     path: '/school-summary',      icon: icon('school') },
-  { name: 'Section Comparison', path: '/section-comparison',  icon: icon('compare') },
-  { name: 'Prediction Table',   path: '/prediction-table',    icon: icon('table_chart') },
-  { name: 'Model Reliability',  path: '/model-reliability',   icon: icon('monitor_heart') },
+  { name: 'Upload', path: '/dashboard', icon: icon('upload_file') },
+  { name: 'School Summary', path: '/school-summary', icon: icon('school') },
+  { name: 'Section Comparison', path: '/section-comparison', icon: icon('compare') },
+  { name: 'Prediction Table', path: '/prediction-table', icon: icon('table_chart') },
+  { name: 'Model Reliability', path: '/model-reliability', icon: icon('monitor_heart') },
 ];
 
 export const evaluationMenuItems: MenuItem[] = [
-  { name: 'Metrics',            path: '/evaluation/metrics',            icon: icon('show_chart') },
-  { name: 'Charts',             path: '/evaluation/charts',             icon: icon('bar_chart') },
+  { name: 'Metrics', path: '/evaluation/metrics', icon: icon('show_chart') },
+  { name: 'Charts', path: '/evaluation/charts', icon: icon('bar_chart') },
   { name: 'Feature Importance', path: '/evaluation/feature-importance', icon: icon('query_stats') },
-  { name: 'School Comparison',  path: '/evaluation/school-comparison',  icon: icon('balance') },
-  { name: 'Student Table',      path: '/evaluation/student-table',      icon: icon('table_chart') },
+  { name: 'School Comparison', path: '/evaluation/school-comparison', icon: icon('balance') },
+  { name: 'Student Table', path: '/evaluation/student-table', icon: icon('table_chart') },
 ];
 
 // ── Badge configs ─────────────────────────────────────────────────────────────
 export const badgeConfig = {
-  teacher:    { label: 'TEACHER MODE',    className: 'bg-green-100  text-green-700'  },
-  admin:      { label: 'ADMIN MODE',      className: 'bg-purple-100 text-purple-700' },
-  researcher: { label: 'RESEARCHER MODE', className: 'bg-blue-100   text-blue-700'   },
+  teacher: { label: 'TEACHER MODE', className: 'bg-green-100  text-green-700' },
+  admin: { label: 'ADMIN MODE', className: 'bg-purple-100 text-purple-700' },
+  researcher: { label: 'RESEARCHER MODE', className: 'bg-blue-100   text-blue-700' },
 };
 
 // ── Sample dataset URLs ───────────────────────────────────────────────────────

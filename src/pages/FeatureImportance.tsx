@@ -99,7 +99,7 @@ export function FeatureImportance() {
                                     tickLine={false}
                                 />
                                 <Tooltip
-                                    formatter={(value: any) => [Number(value).toFixed(4), 'Importance']}
+                                    formatter={(value: any) => [Number(value).toFixed(8), 'Importance']}
                                     contentStyle={{ fontSize: 12, borderRadius: 6 }}
                                 />
                                 <Bar

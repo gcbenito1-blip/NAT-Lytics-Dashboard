@@ -415,12 +415,20 @@ const MetricExplanation = ({ metric }: { metric: 'R2' | 'MAE' | 'RMSE' }) => {
   );
 };
 
+// Tooltip content for each metric
+const metricTooltips = {
+  MAE: 'MAE (Mean Absolute Error) - This is the average number of MPS points the model\'s predictions differ from actual scores. An MAE of 4 means predictions are typically within 4 points of the actual NAT score. Lower is better.',
+  RMSE: 'RMSE (Root Mean Square Error) - Similar to MAE but penalizes large errors more heavily. An RMSE of 7 means the model\'s larger errors can reach up to around 7 MPS points from actual scores. Lower is better.',
+  R2: 'R² Score - Measures how well the model explains the variation in actual NAT scores. A score of 0.07 means the model accounts for about 7% of score variation. Values closer to 1.0 indicate a stronger fit; low values suggest academic and demographic data alone explain only a portion of NAT outcomes.'
+};
+
 // Metric cards component
 const MetricCard = ({
   label,
   value,
   color,
   description,
+  metricKey,
 }: {
   label: string;
   value: string | number;
@@ -428,11 +436,28 @@ const MetricCard = ({
   description?: string;
   metricKey?: 'R2' | 'MAE' | 'RMSE';
 }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <div className="metric-card">
       <div className="metric-header" style={{ borderLeftColor: color }}>
         <span className="metric-label">{label}</span>
+        {metricKey && metricTooltips[metricKey] && (
+          <div className="tooltip-container">
+            <span
+              className="material-icons-round text-base text-gray-400"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              help_outline
+            </span>
+            {showTooltip && (
+              <div className="metric-tooltip">
+                {metricTooltips[metricKey]}
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <div className="metric-value-container">
         <div className="metric-value" style={{ color }}>
@@ -441,48 +466,77 @@ const MetricCard = ({
       </div>
       {description && <div className="metric-description">{description}</div>}
       <style>{`
-      .metric-card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-      .metric-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-      }
-      .metric-header {
-        border-left: 4px solid;
-        padding-left: 12px;
-        margin-bottom: 12px;
-      }
-      .metric-label {
-        font-size: 14px;
-        color: #666;
-        font-weight: 500;
-      }
-      .metric-value-container {
-        display: flex;
-        align-items: baseline;
-        gap: 12px;
-      }
-      .metric-value {
-        font-size: 32px;
-        font-weight: 700;
-        line-height: 1.2;
-      }
-      .metric-rating {
-        font-size: 14px;
-        color: #666;
-        font-weight: 500;
-      }
-      .metric-description {
-        font-size: 12px;
-        color: #999;
-        margin-top: 8px;
-      }
-    `}</style>
+        .metric-card {
+          background: #fff;
+          border-radius: 12px;
+          padding: 20px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .metric-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+        .metric-header {
+          border-left: 4px solid;
+          padding-left: 12px;
+          margin-bottom: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .metric-label {
+          font-size: 14px;
+          color: #666;
+          font-weight: 500;
+        }
+        .tooltip-container {
+          position: relative;
+        }
+        .metric-tooltip {
+          position: absolute;
+          top: -8px;
+          right: 28px;
+          background: #1f2937;
+          color: #fff;
+          padding: 12px 16px;
+          border-radius: 8px;
+          font-size: 12px;
+          line-height: 1.5;
+          width: 280px;
+          z-index: 1000;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .metric-tooltip:before {
+          content: '';
+          position: absolute;
+          top: 12px;
+          right: -6px;
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          border-left: 6px solid #1f2937;
+        }
+        .metric-value-container {
+          display: flex;
+          align-items: baseline;
+          gap: 12px;
+        }
+        .metric-value {
+          font-size: 32px;
+          font-weight: 700;
+          line-height: 1.2;
+        }
+        .metric-rating {
+          font-size: 14px;
+          color: #666;
+          font-weight: 500;
+        }
+        .metric-description {
+          font-size: 12px;
+          color: #999;
+          margin-top: 8px;
+        }
+      `}</style>
     </div>
   );
 };

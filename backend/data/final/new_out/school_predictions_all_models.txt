@@ -1,0 +1,22 @@
+======================================================================
+  SCHOOL-LEVEL PREDICTIONS — ALL MODELS
+======================================================================
+  Total schools: 8
+  Models evaluated: Linear, Lasso, DecisionTree, RandomForest, GradientBoosting
+  Best model: GradientBoosting  (R^2 = 0.0691)
+======================================================================
+
+  School                        N Actual_MPS        Linear         Lasso  DecisionTree  RandomForest  GradientBoosting
+--------------------------------------------------------------------------------
+  Badipa Elementary School     80      79.94         70.26         70.25         70.55         71.33         70.61
+  Don Alipio Fernandez Sr.     20      73.64         69.92         69.92         70.77         70.97         70.21
+  Don Amadeo Perez Sr. Memo    11      75.93         70.50         70.51         71.35         71.89         71.04
+  Don Clemente Blanco Memor     4      36.62         70.36         70.35         71.68         68.68         68.91
+  Lananpin Elementary Schoo    51      65.82         70.02         70.02         69.99         69.66         69.91
+  Nancayasan Elementary Sch    26      60.24         70.08         70.07         69.26         68.30         68.94
+  Urdaneta City SPED Center    52      73.39         69.11         69.10         70.54         69.69         70.06
+  Urdaneta I Central School   142      67.73         69.27         69.28         68.89         69.35         69.15
+
+  Legend: model suffix '_pred' indicates predicted MPS for that model.
+  ======================================================================
+

@@ -51,8 +51,13 @@ export function AppLayout() {
       navigate(UPLOAD_PATH, { replace: true });
     }
   }, [location.pathname]);
+  const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
 
   const handleSignOut = async () => {
+    setShowSignOutConfirm(true);
+  };
+
+  const confirmSignOut = async () => {
     await signOut();
     navigate('/login');
   };
@@ -195,6 +200,33 @@ export function AppLayout() {
           </button>
         </div>
       </aside>
+
+      {/* Sign Out Confirmation Modal */}
+      {
+        showSignOutConfirm && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={() => setShowSignOutConfirm(false)}>
+            <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+              <div className="text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4">
+                  <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900 mb-2">Sign Out</h2>
+                <p className="text-sm text-gray-500 mb-6">Are you sure you want to sign out? Your session data will be cleared.</p>
+                <div className="flex justify-center space-x-3">
+                  <button onClick={() => setShowSignOutConfirm(false)} className="px-6 py-3 rounded-lg font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                    Cancel
+                  </button>
+                  <button onClick={confirmSignOut} className="px-6 py-3 rounded-lg font-medium bg-red-600 text-white hover:bg-red-700 transition">
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
 
       {/* ── Main content ── */}
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>

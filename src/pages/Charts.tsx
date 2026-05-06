@@ -28,6 +28,30 @@ const PROFICIENCY_BANDS = [
     'Nearly Proficient', 'Proficient', 'Highly Proficient'
 ] as const;
 
+const TooltipIcon = ({ text }: { text: string }) => {
+    const [show, setShow] = useState(false);
+
+    return (
+        <span className="relative inline-block ml-2">
+            <span
+                className="material-icons-round text-gray-400 text-xs text-base cursor-help"
+                onMouseEnter={() => setShow(true)}
+                onMouseLeave={() => setShow(false)}
+                role="button"
+                tabIndex={0}
+                aria-label="Information"
+            >
+                help_outline
+            </span>
+            {show && (
+                <div className="absolute z-50 w-72 p-3 mt-2 text-sm bg-white border border-gray-200 rounded-lg shadow-lg -left-20">
+                    {text}
+                </div>
+            )}
+        </span>
+    );
+};
+
 const getBandLabel = (score: number) => {
     if (score >= 90) return 'Highly Proficient';
     if (score >= 75) return 'Proficient';
@@ -177,7 +201,10 @@ export function Charts() {
             {/* Scatter Plot */}
             <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                 <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-gray-900">Actual vs. Predicted Scatter Plot</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 inline-flex items-center">
+                        Actual vs. Predicted Scatter Plot
+                        <TooltipIcon text="Each dot represents one learner. The red line shows where perfect predictions would fall. Dots far from the line indicate cases where the model's prediction differed significantly from the actual NAT score." />
+                    </h2>
                     <p className="text-sm text-gray-600">Comparison of actual NAT scores against predicted scores</p>
                 </div>
                 <div className="w-full h-[640px]">
@@ -225,7 +252,10 @@ export function Charts() {
             {/* Proficiency Distribution */}
             <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                 <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-gray-900">Proficiency Distribution</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 inline-flex items-center">
+                        Proficiency Distribution
+                        <TooltipIcon text="Compares how many learners actually fell into each proficiency level versus how many the model predicted. A tall red bar next to a shorter blue bar in the same category means the model over-predicted that level." />
+                    </h2>
                     <p className="text-sm text-gray-600">Actual vs. predicted proficiency level distribution</p>
                 </div>
                 <div className="w-full h-[640px]">

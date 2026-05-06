@@ -2,24 +2,24 @@
 Full MPS Prediction Pipeline
 =====================================================================
 Covers:
-  1. Load & merge 23-24 and 24-25 CSVs
-  2. Preprocessing  (dtype normalisation, mother-tongue unification,
-                     quarterly -> subject avg aggregation,
-                     school_year flag, within-year z-score option,
-                     PCA on subject avgs for linear models)
-  3. Stratified train/test split (balanced across school years)
-  4. Model training  (Linear, Lasso, DecisionTree, RandomForest,
-                      GradientBoosting)
-  5. Evaluation      (MAE, RMSE, R^2)
-  6. Collinearity analysis  (DUAL: numeric + categorical, fully separated)
-       Numeric  : Pearson correlation heatmap + VIF bar chart
-       Categorical: Cramér's V association heatmap +
+1. Load & merge 23-24 and 24-25 CSVs
+2. Preprocessing  (dtype normalisation, mother-tongue unification,
+                    grades 1-5 -> subject avg aggregation,
+                    school_year flag, within-year z-score option,
+                    PCA on subject avgs for linear models)
+3. Stratified train/test split (balanced across school years)
+4. Model training  (Linear, Lasso, DecisionTree, RandomForest,
+                    GradientBoosting)
+5. Evaluation      (MAE, RMSE, R^2)
+6. Collinearity analysis  (DUAL: numeric + categorical, fully separated)     
+    Numeric  : Pearson correlation heatmap + VIF bar chart
+    Categorical: Cramér's V association heatmap +
                     Cramér's V vs MPS bar chart (chi-square significance)
-     NOTE: Numeric and categorical analyses are kept completely separate.
-           No one-hot encoding is used for collinearity charts.
-  7. Feature importance + SHAP explainer
-  8. Pass-probability helper  P(MPS >= 75)
-  9. Save artifact -> best_model.joblib
+    NOTE: Numeric and categorical analyses are kept completely separate.
+        No one-hot encoding is used for collinearity charts.
+7. Feature importance + SHAP explainer
+8. Pass-probability helper  P(MPS >= 75)
+9. Save artifact -> best_model.joblib
 
 LEAKAGE-FREE DESIGN (split-first approach):
   - Train/test split is performed IMMEDIATELY after raw cleaning/aggregation,
@@ -722,8 +722,8 @@ def cramers_v(x: pd.Series, y: pd.Series) -> float:
     Compute Cramér's V association between two categorical series.
     Returns a value in [0, 1]. Uses bias-corrected formula.
     """
-    x = x.astype(str).fillna("__NA__")
-    y = y.astype(str).fillna("__NA__")
+    x = pd.Series(x).astype(str).fillna("__NA__")
+    y = pd.Series(y).astype(str).fillna("__NA__")
     contingency = pd.crosstab(x, y)
     n = contingency.values.sum()
     if n == 0:
@@ -1261,6 +1261,52 @@ def main():
             print("  No subject avg columns found - PCA skipped.")
     else:
         print(f"\n  STEP 6 - PCA skipped (--no-pca flag set)")
+
+    # =========================================================================
+    # STEP 6b - SAVE TRAIN DATA WITH ENCODED VALUES
+    # =========================================================================
+    print(f"\n{sep}\n  STEP 6b - SAVE TRAIN DATA (encoded)\n{sep}")
+    # We need to apply the preprocessor to X_train to get one-hot encoded values.
+    # Build the preprocessor first (same as used in Step 7), then transform.
+    temp_num_cols = X_train.select_dtypes(include=np.number).columns.tolist()
+    temp_cat_cols = X_train.select_dtypes(exclude=np.number).columns.tolist()
+    temp_preprocessor = build_preprocessor(temp_num_cols, temp_cat_cols)
+    # Fit and transform on X_train
+    X_train_transformed = temp_preprocessor.fit_transform(X_train)
+    # Get the transformed feature names
+    transformed_feature_names = get_transformed_feature_names(temp_preprocessor, temp_num_cols, temp_cat_cols)
+    
+    # Build the dataframe with encoded features
+    train_encoded_df = pd.DataFrame(X_train_transformed, columns=transformed_feature_names)
+    # Add target
+    train_encoded_df[TARGET] = y_train.values
+    # Add display columns (learnerID, School, etc.) if available
+    for col in display_train.columns:
+        if col not in train_encoded_df.columns and col not in transformed_feature_names:
+            train_encoded_df[col] = display_train[col].values
+    # Drop the School column from the output as requested
+    if 'School' in train_encoded_df.columns:
+        train_encoded_df = train_encoded_df.drop(columns=['School'])
+    # Also drop any remaining DROP_COLS that might be present
+    for dc in DROP_COLS:
+        if dc in train_encoded_df.columns and dc != TARGET:
+            train_encoded_df = train_encoded_df.drop(columns=[dc])
+    # Reorder: display cols (except School) first, then features, then target last
+    display_col_names = [c for c in display_train.columns if c in train_encoded_df.columns and c != 'School']
+    feature_col_names = [c for c in train_encoded_df.columns if c not in display_col_names and c != TARGET]
+    ordered_cols = display_col_names + feature_col_names + [TARGET]
+    train_encoded_df = train_encoded_df[ordered_cols]
+    train_encoded_path = os.path.join(args.out, "train_encoded.csv")
+    train_encoded_df.to_csv(train_encoded_path, index=False)
+    print(f"  OK train_encoded.csv  ({len(train_encoded_df)} rows x {len(train_encoded_df.columns)} cols)")
+    print(f"  Display columns (excl. School): {display_col_names}")
+    print(f"  Feature columns: {len(feature_col_names)}")
+    if temp_cat_cols:
+        print(f"  Categorical features encoded: {len(transformed_feature_names) - len(temp_num_cols)}")
+    if apply_zscore:
+        print(f"  Note: Numeric subject columns are z-scored (train stats).")
+    if not args.no_pca and pca_evr:
+        print(f"  Note: Subject avg columns replaced with PCA components.")
 
     # =========================================================================
     # STEP 7: Build sklearn preprocessor (fit inside Pipeline on train only)

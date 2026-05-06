@@ -73,7 +73,7 @@ export function ModelReliability() {
       case 5: return 'Excellent reliability for high-stakes decisions';
       case 4: return 'Good reliability for educational planning';
       case 3: return 'Fair reliability - use with caution';
-      case 2: return 'Needs improvement - double check feature importance';
+      case 2: return 'Needs improvement - review feature importance alongside prediction results';
       default: return 'Reliability rating unavailable';
     }
   };
@@ -171,7 +171,7 @@ export function ModelReliability() {
               <div className="bg-blue-50 p-4 rounded-lg">
                 <p className="font-semibold text-blue-900 mb-2">Prediction Accuracy</p>
                 <p className="text-sm text-blue-800">
-                  Predictions are typically within <span className="font-bold">±{bestMetrics.MAE?.toFixed(4) || 'N/A'} MPS points</span> of actual NAT scores.
+                  Predictions are typically within <span className="font-bold">±{bestMetrics.MAE?.toFixed(4) || 'N/A'} MPS points</span> of actual NAT scores, based from the model's Mean Absolute Error (MAE) metrics.
                   This means if a learner is predicted 72, their actual score is likely between{' '}
                   {bestMetrics.MAE !== undefined
                     ? `${(72 - bestMetrics.MAE).toFixed(0)} and ${(72 + bestMetrics.MAE).toFixed(0)}`
@@ -191,12 +191,18 @@ export function ModelReliability() {
             <div className="alert amber">
               <div className="alert-icon">ⓘ</div>
               <div className="alert-content">
-                <p className="font-semibold mb-2">What ±{bestMetrics.MAE?.toFixed(1) || 'N/A'} MPS Points Means in Practice:</p>
+                <p className="font-semibold mb-2">What ±{bestMetrics.MAE?.toFixed(4) || 'N/A'} MPS Points Means in Practice:</p>
                 <p className="text-sm">
-                  If a learner is predicted at 73 (Nearly Proficient), their actual score could range from{' '}
-                  {bestMetrics.MAE !== undefined
-                    ? `${(73 - bestMetrics.MAE).toFixed(0)} to ${(73 + bestMetrics.MAE).toFixed(0)}`
-                    : 'N/A'}
+                  If a learner is predicted at <b>73 (Nearly Proficient)</b>, their actual score could range from{' '}
+                  {bestMetrics.MAE !== undefined ? (
+                    <>
+                      <strong>{(73 - bestMetrics.MAE).toFixed(2)}</strong>
+                      {" to "}
+                      <strong>{(73 + bestMetrics.MAE).toFixed(2)}</strong>
+                    </>
+                  ) : (
+                    'N/A'
+                  )}
                   .
                   This means they might perform slightly below or slightly above the prediction.
                   {viewMode === 'teacher'

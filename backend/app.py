@@ -8,6 +8,7 @@ import os
 import math
 import warnings
 import joblib
+import shap as _shap
 
 warnings.filterwarnings('ignore')
 
@@ -19,6 +20,7 @@ if os.environ.get('FLASK_ENV') == 'development':
 # LOAD ARTIFACT
 # ===========================================================================
 ARTIFACT_PATH = "best_model.joblib"
+artifact = joblib.load(ARTIFACT_PATH)
 @app.route("/debug/model-status", methods=["GET"])
 def debug_model_status():
     return jsonify({
@@ -62,79 +64,77 @@ def _fallback_bands():
         (0,  25,           0, "Not Proficient",      "0–24",   "#ef4444"),
     ]
 
-try:
-    try:
-        import shap as _shap
-        artifact = joblib.load(ARTIFACT_PATH)
-    except ImportError:
-        import pickle
+# try:
+#     try:
+#     except ImportError:
+#         import pickle
 
-        class _ShapStub(pickle.Unpickler):
-            def find_class(self, module, name):
-                if module.startswith("shap"):
-                    return type(f"_Shap_{name}", (), {})
-                return super().find_class(module, name)
+#         class _ShapStub(pickle.Unpickler):
+#             def find_class(self, module, name):
+#                 if module.startswith("shap"):
+#                     return type(f"_Shap_{name}", (), {})
+#                 return super().find_class(module, name)
 
-        with open(ARTIFACT_PATH, "rb") as f:
-            artifact = _ShapStub(f).load()
+#         with open(ARTIFACT_PATH, "rb") as f:
+#             artifact = _ShapStub(f).load()
 
-    if not isinstance(artifact, dict):
-        raise ValueError("Artifact is not a dict — retrain with the updated pipeline.")
+#     if not isinstance(artifact, dict):
+#         raise ValueError("Artifact is not a dict — retrain with the updated pipeline.")
 
-    model                = artifact["model"]
-    model_name           = artifact.get("model_name", "Unknown")
-    residual_std         = artifact.get("residual_std")
-    metrics              = artifact.get("metrics", [])
-    features             = artifact.get("features", [])
-    transformed_features = artifact.get("transformed_features", [])
-    feature_importance   = artifact.get("feature_importance", {})
-    shap_explainer       = artifact.get("shap_explainer")
-    per_model_outputs    = artifact.get("per_model_outputs", {})
-    school_report_df     = artifact.get("school_report")
-    test_results_df      = artifact.get("test_results")
-    school_test          = artifact.get("school_test")
-    learner_test         = artifact.get("learner_test")
-    y_test               = artifact.get("y_test")
+model                = artifact["model"]
+model_name           = artifact.get("model_name", "Unknown")
+residual_std         = artifact.get("residual_std")
+metrics              = artifact.get("metrics", [])
+features             = artifact.get("features", [])
+transformed_features = artifact.get("transformed_features", [])
+feature_importance   = artifact.get("feature_importance", {})
+shap_explainer       = artifact.get("shap_explainer")
+per_model_outputs    = artifact.get("per_model_outputs", {})
+school_report_df     = artifact.get("school_report")
+test_results_df      = artifact.get("test_results")
+school_test          = artifact.get("school_test")
+learner_test         = artifact.get("learner_test")
+y_test               = artifact.get("y_test")
 
-    # Z-score params from training
-    zscore_params        = artifact.get("zscore_params", {})
-    zscore_applied       = artifact.get("zscore_applied", False)
+# Z-score params from training
+zscore_params        = artifact.get("zscore_params", {})
+zscore_applied       = artifact.get("zscore_applied", False)
 
-    PROFICIENCY_BANDS  = artifact.get("proficiency_bands") or _fallback_bands()
-    PROFICIENCY_LABELS = artifact.get("proficiency_labels") or {b[2]: b[3] for b in PROFICIENCY_BANDS}
-    PROFICIENCY_RANGES = artifact.get("proficiency_ranges") or {b[2]: b[4] for b in PROFICIENCY_BANDS}
-    PROFICIENCY_COLORS = artifact.get("proficiency_colors") or {b[2]: b[5] for b in PROFICIENCY_BANDS}
+PROFICIENCY_BANDS  = artifact.get("proficiency_bands") or _fallback_bands()
+PROFICIENCY_LABELS = artifact.get("proficiency_labels") or {b[2]: b[3] for b in PROFICIENCY_BANDS}
+PROFICIENCY_RANGES = artifact.get("proficiency_ranges") or {b[2]: b[4] for b in PROFICIENCY_BANDS}
+PROFICIENCY_COLORS = artifact.get("proficiency_colors") or {b[2]: b[5] for b in PROFICIENCY_BANDS}
 
-    print(f"[OK] Model loaded: {model_name}")
-    print(f"[OK] Z-score applied during training: {zscore_applied}")
-    if zscore_applied and zscore_params:
-        print(f"[OK] Z-score params loaded: {len(zscore_params)} cohort-column entries")
-    if school_report_df is not None:
-        print(f"[OK] School report available: {len(school_report_df)} schools")
-    if test_results_df is not None:
-        if "Pass_Probability" not in test_results_df.columns:
-            test_results_df["Pass_Probability"] = test_results_df["Predicted_MPS"].apply(
-                lambda s: get_pass_probability(s, residual_std))
+print(f"[OK] Model loaded: {model_name}")
+print(f"[OK] Z-score applied during training: {zscore_applied}")
+if zscore_applied and zscore_params:
+    print(f"[OK] Z-score params loaded: {len(zscore_params)} cohort-column entries")
+if school_report_df is not None:
+    print(f"[OK] School report available: {len(school_report_df)} schools")
+if test_results_df is not None:
+    if "Pass_Probability" not in test_results_df.columns:
+        test_results_df["Pass_Probability"] = test_results_df["Predicted_MPS"].apply(
+            lambda s: get_pass_probability(s, residual_std))
 
-except Exception as e:
-    print(f"[WARN] Could not load artifact: {e} — running in degraded mode")
-    model = shap_explainer = residual_std = None
-    model_name           = "Unavailable"
-    metrics              = []
-    features             = []
-    transformed_features = []
-    feature_importance   = {}
-    school_report_df     = None
-    test_results_df      = None
-    school_test          = None
-    learner_test         = None
-    y_test               = None
-    zscore_params        = {}
-    zscore_applied       = False
-    PROFICIENCY_BANDS    = _fallback_bands()
-    PROFICIENCY_LABELS   = {b[2]: b[3] for b in PROFICIENCY_BANDS}
-    PROFICIENCY_RANGES   = {b[2]: b[4] for b in PROFICIENCY_BANDS}
-    PROFICIENCY_COLORS   = {b[2]: b[5] for b in PROFICIENCY_BANDS}
+# except Exception as e:
+#     print(f"[WARN] Could not load artifact: {e} — running in degraded mode")
+#     model = shap_explainer = residual_std = None
+#     model_name           = "Unavailable"
+#     metrics              = []
+#     features             = []
+#     transformed_features = []
+#     feature_importance   = {}
+#     school_report_df     = None
+#     test_results_df      = None
+#     school_test          = None
+#     learner_test         = None
+#     y_test               = None
+#     zscore_params        = {}
+#     zscore_applied       = False
+#     PROFICIENCY_BANDS    = _fallback_bands()
+#     PROFICIENCY_LABELS   = {b[2]: b[3] for b in PROFICIENCY_BANDS}
+#     PROFICIENCY_RANGES   = {b[2]: b[4] for b in PROFICIENCY_BANDS}
+#     PROFICIENCY_COLORS   = {b[2]: b[5] for b in PROFICIENCY_BANDS}
 
 
 # ===========================================================================

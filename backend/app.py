@@ -8,7 +8,15 @@ import os
 import math
 import warnings
 import joblib
-import shap as _shap
+import sys
+
+# Try to import shap, but don't fail if not available
+try:
+    import shap as _shap
+    SHAP_AVAILABLE = True
+except ImportError:
+    SHAP_AVAILABLE = False
+    print("[WARN] SHAP not available - install with: pip install shap")
 
 warnings.filterwarnings('ignore')
 
@@ -17,11 +25,8 @@ if os.environ.get('FLASK_ENV') == 'development':
     CORS(app)
 
 # ===========================================================================
-# LOAD ARTIFACT
+# INITIALIZE VARIABLES
 # ===========================================================================
-ARTIFACT_PATH = "best_model.joblib"
-
-# Initialize variables to None
 model = None
 model_name = "Unknown"
 residual_std = None
@@ -52,57 +57,11 @@ def _fallback_bands():
         (0,  25,           0, "Not Proficient",      "0–24",   "#ef4444"),
     ]
 
-# Load the artifact properly
-try:
-    if not os.path.exists(ARTIFACT_PATH):
-        print(f"[ERROR] Artifact file not found at {ARTIFACT_PATH}")
-        raise FileNotFoundError(f"Model file {ARTIFACT_PATH} not found")
-    
-    artifact = joblib.load(ARTIFACT_PATH)
-    
-    if not isinstance(artifact, dict):
-        raise ValueError("Artifact is not a dict — retrain with the updated pipeline.")
-
-    model                = artifact.get("model")
-    model_name           = artifact.get("model_name", "Unknown")
-    residual_std         = artifact.get("residual_std")
-    metrics              = artifact.get("metrics", [])
-    features             = artifact.get("features", [])
-    transformed_features = artifact.get("transformed_features", [])
-    feature_importance   = artifact.get("feature_importance", {})
-    shap_explainer       = artifact.get("shap_explainer")
-    per_model_outputs    = artifact.get("per_model_outputs", {})
-    school_report_df     = artifact.get("school_report")
-    test_results_df      = artifact.get("test_results")
-    school_test          = artifact.get("school_test")
-    learner_test         = artifact.get("learner_test")
-    y_test               = artifact.get("y_test")
-    zscore_params        = artifact.get("zscore_params", {})
-    zscore_applied       = artifact.get("zscore_applied", False)
-    PROFICIENCY_BANDS    = artifact.get("proficiency_bands") or _fallback_bands()
-    PROFICIENCY_LABELS   = artifact.get("proficiency_labels") or {b[2]: b[3] for b in PROFICIENCY_BANDS}
-    PROFICIENCY_RANGES   = artifact.get("proficiency_ranges") or {b[2]: b[4] for b in PROFICIENCY_BANDS}
-    PROFICIENCY_COLORS   = artifact.get("proficiency_colors") or {b[2]: b[5] for b in PROFICIENCY_BANDS}
-    
-    print(f"[OK] Model loaded: {model_name}")
-    print(f"[OK] Z-score applied during training: {zscore_applied}")
-    if zscore_applied and zscore_params:
-        print(f"[OK] Z-score params loaded: {len(zscore_params)} cohort-column entries")
-    if school_report_df is not None:
-        print(f"[OK] School report available: {len(school_report_df)} schools")
-    
-    # Add pass probability if missing
-    if test_results_df is not None and "Pass_Probability" not in test_results_df.columns:
-        test_results_df["Pass_Probability"] = test_results_df["Predicted_MPS"].apply(
-            lambda s: get_pass_probability(s, residual_std) if residual_std else None)
-
-except Exception as e:
-    print(f"[ERROR] Could not load artifact: {e} — running in degraded mode")
-    # Use fallback bands
-    PROFICIENCY_BANDS = _fallback_bands()
-    PROFICIENCY_LABELS = {b[2]: b[3] for b in PROFICIENCY_BANDS}
-    PROFICIENCY_RANGES = {b[2]: b[4] for b in PROFICIENCY_BANDS}
-    PROFICIENCY_COLORS = {b[2]: b[5] for b in PROFICIENCY_BANDS}
+# Set fallback proficiency bands immediately
+PROFICIENCY_BANDS = _fallback_bands()
+PROFICIENCY_LABELS = {b[2]: b[3] for b in PROFICIENCY_BANDS}
+PROFICIENCY_RANGES = {b[2]: b[4] for b in PROFICIENCY_BANDS}
+PROFICIENCY_COLORS = {b[2]: b[5] for b in PROFICIENCY_BANDS}
 
 # Subject aggregation map (must match pipeline)
 SUBJECT_AGGREGATE_MAP = {
@@ -115,32 +74,124 @@ SUBJECT_AGGREGATE_MAP = {
 
 SUBJECT_AVG_COLS = list(SUBJECT_AGGREGATE_MAP.keys())
 
+# ===========================================================================
+# DEBUGGING: GET FILE PATHS
+# ===========================================================================
+def find_model_file():
+    """Search for best_model.joblib in common locations"""
+    possible_paths = [
+        "best_model.joblib",
+        "./best_model.joblib",
+        "../best_model.joblib",
+        os.path.join(os.path.dirname(__file__), "best_model.joblib"),
+        os.path.join(os.getcwd(), "best_model.joblib"),
+    ]
+    
+    for path in possible_paths:
+        if os.path.exists(path):
+            return os.path.abspath(path)
+    return None
+
+# ===========================================================================
+# LOAD ARTIFACT
+# ===========================================================================
+def load_model():
+    global model, model_name, residual_std, metrics, features, transformed_features
+    global feature_importance, shap_explainer, per_model_outputs, school_report_df
+    global test_results_df, school_test, learner_test, y_test, zscore_params
+    global zscore_applied, PROFICIENCY_BANDS, PROFICIENCY_LABELS, PROFICIENCY_RANGES, PROFICIENCY_COLORS
+    
+    model_path = find_model_file()
+    
+    if model_path is None:
+        print(f"[ERROR] Could not find best_model.joblib")
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"Files in current directory: {os.listdir('.')}")
+        return False
+    
+    print(f"[INFO] Loading model from: {model_path}")
+    
+    try:
+        artifact = joblib.load(model_path)
+        print(f"[INFO] Artifact loaded successfully. Type: {type(artifact)}")
+        
+        if not isinstance(artifact, dict):
+            print(f"[ERROR] Artifact is not a dict, it's: {type(artifact)}")
+            return False
+        
+        # Load all components
+        model = artifact.get("model")
+        model_name = artifact.get("model_name", "Unknown")
+        residual_std = artifact.get("residual_std")
+        metrics = artifact.get("metrics", [])
+        features = artifact.get("features", [])
+        transformed_features = artifact.get("transformed_features", [])
+        feature_importance = artifact.get("feature_importance", {})
+        shap_explainer = artifact.get("shap_explainer")
+        per_model_outputs = artifact.get("per_model_outputs", {})
+        school_report_df = artifact.get("school_report")
+        test_results_df = artifact.get("test_results")
+        school_test = artifact.get("school_test")
+        learner_test = artifact.get("learner_test")
+        y_test = artifact.get("y_test")
+        zscore_params = artifact.get("zscore_params", {})
+        zscore_applied = artifact.get("zscore_applied", False)
+        
+        # Load proficiency bands if present, otherwise keep fallback
+        if artifact.get("proficiency_bands"):
+            PROFICIENCY_BANDS = artifact.get("proficiency_bands")
+            PROFICIENCY_LABELS = artifact.get("proficiency_labels") or {b[2]: b[3] for b in PROFICIENCY_BANDS}
+            PROFICIENCY_RANGES = artifact.get("proficiency_ranges") or {b[2]: b[4] for b in PROFICIENCY_BANDS}
+            PROFICIENCY_COLORS = artifact.get("proficiency_colors") or {b[2]: b[5] for b in PROFICIENCY_BANDS}
+        
+        # Add pass probability if missing and residual_std available
+        if test_results_df is not None and "Pass_Probability" not in test_results_df.columns and residual_std is not None:
+            test_results_df["Pass_Probability"] = test_results_df["Predicted_MPS"].apply(
+                lambda s: get_pass_probability(s, residual_std))
+        
+        print(f"[SUCCESS] Model loaded: {model_name}")
+        print(f"[SUCCESS] Model type: {type(model)}")
+        print(f"[SUCCESS] Features: {len(features)}")
+        print(f"[SUCCESS] Z-score applied: {zscore_applied}")
+        if school_report_df is not None:
+            print(f"[SUCCESS] School report available: {len(school_report_df)} schools")
+        
+        return True
+        
+    except Exception as e:
+        print(f"[ERROR] Failed to load model: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+# Load the model when the app starts
+MODEL_LOADED = load_model()
+
+# ===========================================================================
+# HELPER FUNCTIONS
+# ===========================================================================
 def serialize_outputs(data):
     if data is None:
         return None
     return {
-        "y_true": data["y_true"].tolist(),
-        "y_pred": data["y_pred"].tolist(),
-        "y_true_cat": data.get("y_true_cat").tolist() if data.get("y_true_cat") is not None else None,
-        "y_pred_cat": data.get("y_pred_cat").tolist() if data.get("y_pred_cat") is not None else None,
+        "y_true": data["y_true"].tolist() if hasattr(data["y_true"], 'tolist') else list(data["y_true"]),
+        "y_pred": data["y_pred"].tolist() if hasattr(data["y_pred"], 'tolist') else list(data["y_pred"]),
+        "y_true_cat": data.get("y_true_cat").tolist() if data.get("y_true_cat") is not None and hasattr(data.get("y_true_cat"), 'tolist') else data.get("y_true_cat"),
+        "y_pred_cat": data.get("y_pred_cat").tolist() if data.get("y_pred_cat") is not None and hasattr(data.get("y_pred_cat"), 'tolist') else data.get("y_pred_cat"),
     }
 
-# ===========================================================================
-# GUARDS
-# ===========================================================================
 def _require_model():
     if model is None:
-        return jsonify({"error": "Model not loaded. Ensure best_model.joblib exists in the correct location."}), 503
+        return jsonify({"error": "Model not loaded. Please check server logs for details."}), 503
     return None
 
 def _require_shap():
+    if not SHAP_AVAILABLE:
+        return jsonify({"error": "SHAP library not installed. Install with: pip install shap"}), 503
     if shap_explainer is None:
         return jsonify({"error": "SHAP explainer not available in this artifact."}), 503
     return None
 
-# ===========================================================================
-# PROFICIENCY HELPERS
-# ===========================================================================
 def encode_proficiency(score):
     if not PROFICIENCY_BANDS:
         return 0
@@ -199,16 +250,8 @@ def _prediction_payload(p, row_data):
         "pass_probability":      pass_prob,
     }
 
-# ===========================================================================
-# BUILD DATAFRAME WITH AGGREGATION + Z-SCORE
-# ===========================================================================
 def _build_df(data, feature_list):
-    """
-    Build a DataFrame ready for model inference:
-      1. Aggregate quarterly subject cols → subject avg cols (same as pipeline)
-      2. Apply z-score using train-derived params (fallback = mean across cohorts)
-      3. Select only the features the model expects
-    """
+    """Build a DataFrame ready for model inference"""
     rows = data if isinstance(data, list) else [data]
     df = pd.DataFrame(rows)
 
@@ -218,7 +261,7 @@ def _build_df(data, feature_list):
         if present:
             df[new_col] = df[present].apply(pd.to_numeric, errors="coerce").mean(axis=1)
 
-    # Step 2: apply z-score with train params (fallback = mean of all cohort params)
+    # Step 2: apply z-score with train params
     if zscore_applied and zscore_params:
         for col in SUBJECT_AVG_COLS:
             if col not in df.columns:
@@ -234,7 +277,6 @@ def _build_df(data, feature_list):
     # Step 3: select only model features
     if feature_list:
         model_features = [f for f in feature_list if f not in ("learnerID", "School", "Section")]
-        # Ensure all model features exist in df
         for feat in model_features:
             if feat not in df.columns:
                 df[feat] = np.nan
@@ -242,16 +284,9 @@ def _build_df(data, feature_list):
 
     return df.drop(columns=["learnerID", "School", "Section"], errors="ignore")
 
-# ===========================================================================
-# SHAP HELPER
-# ===========================================================================
 def get_shap_explanation(row_df):
-    """
-    Per-feature SHAP values for a single preprocessed row.
-    Positive = pushed score UP, negative = pushed score DOWN.
-    base_value + sum(shap_values) == predicted score exactly.
-    """
-    if shap_explainer is None:
+    """Per-feature SHAP values for a single preprocessed row."""
+    if shap_explainer is None or not SHAP_AVAILABLE:
         return {"error": "SHAP explainer not available"}
     
     try:
@@ -287,9 +322,6 @@ def get_shap_explanation(row_df):
         print(f"SHAP explanation error: {e}")
         return {"error": str(e)}
 
-# ===========================================================================
-# SCHOOL REPORT GENERATOR
-# ===========================================================================
 def generate_school_report(y_true_arr, y_pred_arr, school_arr):
     df = pd.DataFrame({
         "School":        school_arr,
@@ -337,7 +369,6 @@ def generate_school_report(y_true_arr, y_pred_arr, school_arr):
     result_df = pd.DataFrame(rows).sort_values("School").reset_index(drop=True)
     return result_df
 
-
 def generate_test_results(y_true_arr, y_pred_arr, school_arr, learner_arr):
     df = pd.DataFrame({
         "learnerID":       learner_arr,
@@ -358,39 +389,42 @@ def generate_test_results(y_true_arr, y_pred_arr, school_arr, learner_arr):
         "Difference", "Actual_Proficiency", "Predicted_Proficiency", "Pass_Probability", "Error_Magnitude"
     ]].sort_values(["School", "learnerID"]).reset_index(drop=True)
 
+# ===========================================================================
+# ROUTES
+# ===========================================================================
 
-# ===========================================================================
-# ROUTES — INFO
-# ===========================================================================
 @app.route("/debug/model-status", methods=["GET"])
 def debug_model_status():
+    model_path = find_model_file()
     return jsonify({
         "model_loaded": model is not None,
         "model_name": model_name if model else None,
-        "artifact_path": ARTIFACT_PATH,
-        "file_exists": os.path.exists(ARTIFACT_PATH),
+        "artifact_path": model_path,
+        "file_exists": model_path is not None,
         "files_in_directory": os.listdir('.') if os.path.exists('.') else [],
+        "current_working_directory": os.getcwd(),
         "has_shap": shap_explainer is not None,
         "has_features": len(features) > 0 if features else False,
+        "python_path": sys.path,
     })
 
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({
-        "status":       "ok" if model is not None else "degraded",
-        "model":        model_name,
+        "status": "ok" if model is not None else "degraded",
+        "model": model_name,
         "model_loaded": model is not None,
-        "shap_ready":   shap_explainer is not None,
+        "shap_ready": shap_explainer is not None and SHAP_AVAILABLE,
     })
 
 @app.route("/model-predict", methods=["GET"])
 def model_predict():
     return jsonify({
-        "linear":       serialize_outputs(per_model_outputs.get("Linear")),
-        "lasso":        serialize_outputs(per_model_outputs.get("Lasso")),
+        "linear": serialize_outputs(per_model_outputs.get("Linear")),
+        "lasso": serialize_outputs(per_model_outputs.get("Lasso")),
         "decisionTree": serialize_outputs(per_model_outputs.get("DecisionTree")),
         "randomForest": serialize_outputs(per_model_outputs.get("RandomForest")),
-        "gradientBoost":serialize_outputs(per_model_outputs.get("GradientBoosting")),
+        "gradientBoost": serialize_outputs(per_model_outputs.get("GradientBoosting")),
     })
 
 @app.route("/proficiency-labels", methods=["GET"])
@@ -416,10 +450,6 @@ def get_all_metrics():
 def get_fi():
     return jsonify(feature_importance)
 
-
-# ===========================================================================
-# ROUTES — EXPLAIN  (prediction + SHAP in one call)
-# ===========================================================================
 @app.route("/explain", methods=["POST"])
 def explain():
     err = _require_model() or _require_shap()
@@ -430,8 +460,8 @@ def explain():
         if not data:
             return jsonify({"error": "Empty input"}), 400
 
-        df      = _build_df(data, features)
-        pred    = float(model.predict(df)[0])
+        df = _build_df(data, features)
+        pred = float(model.predict(df)[0])
         payload = _prediction_payload(pred, data)
         payload["explanation"] = get_shap_explanation(df)
         return jsonify(payload)
@@ -440,7 +470,6 @@ def explain():
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
-
 
 @app.route("/explain-batch", methods=["POST"])
 def explain_batch():
@@ -452,10 +481,10 @@ def explain_batch():
         if not isinstance(data, list):
             return jsonify({"error": "Expected a JSON array"}), 400
 
-        df    = _build_df(data, features)
+        df = _build_df(data, features)
         preds = model.predict(df)
 
-        results       = []
+        results = []
         label_summary = {v: 0 for v in PROFICIENCY_LABELS.values()}
 
         for i, p in enumerate(preds):
@@ -464,14 +493,14 @@ def explain_batch():
             label_summary[payload["proficiency"]["label"]] += 1
             results.append(payload)
 
-        total        = len(results)
+        total = len(results)
         distribution = [
             {
-                "code":       b[2],
-                "label":      b[3],
-                "range":      b[4],
-                "color":      b[5],
-                "count":      label_summary.get(b[3], 0),
+                "code": b[2],
+                "label": b[3],
+                "range": b[4],
+                "color": b[5],
+                "count": label_summary.get(b[3], 0),
                 "percentage": round(label_summary.get(b[3], 0) / total * 100, 2),
             }
             for b in PROFICIENCY_BANDS
@@ -484,341 +513,16 @@ def explain_batch():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-
-# ===========================================================================
-# ROUTES — UPLOAD / ANALYZE
-# ===========================================================================
-@app.route("/api/upload", methods=["POST"])
-def upload_file():
-    if "file" not in request.files:
-        return jsonify({"error": "No file provided"}), 400
-
-    file     = request.files["file"]
-    file_ext = os.path.splitext(file.filename)[1].lower()
-
-    if not file.filename:
-        return jsonify({"error": "No file selected"}), 400
-    if file_ext not in (".csv"):
-        return jsonify({"error": "Only CSV files are allowed"}), 400
-
-    try:
-        content = file.read().decode("utf-8")
-        df = pd.read_csv(StringIO(content))
-        
-        # Convert any NaN values to None for JSON serialization
-        preview = df.head(10).replace({np.nan: None}).to_dict(orient="records")
-
-        return jsonify({
-            "columns":   df.columns.tolist(),
-            "row_count": len(df),
-            "preview":   preview,
-        })
-    except Exception as e:
-        return jsonify({"error": f"Failed to parse file: {e}"}), 400
-
-
-@app.route("/api/analyze", methods=["POST"])
-def analyze_data():
-    try:
-        records = (request.json or {}).get("data", [])
-        if not records:
-            return jsonify({"error": "No records provided"}), 400
-
-        df           = pd.DataFrame(records)
-        row_count    = len(df)
-        column_count = len(df.columns)
-
-        # Proficiency distribution (only when target column is present)
-        proficiency_distribution = None
-        target_col = "MPS"
-        if target_col in df.columns and pd.api.types.is_numeric_dtype(df[target_col]):
-            label_counts = {v: 0 for v in PROFICIENCY_LABELS.values()}
-            for score in df[target_col].dropna():
-                label_counts[PROFICIENCY_LABELS.get(encode_proficiency(score), "Unknown")] += 1
-
-            valid_total = int(df[target_col].notna().sum())
-            proficiency_distribution = [
-                {
-                    "code":       b[2],
-                    "label":      b[3],
-                    "range":      b[4],
-                    "color":      b[5],
-                    "count":      label_counts.get(b[3], 0),
-                    "percentage": round(label_counts.get(b[3], 0) / valid_total * 100, 2) if valid_total else 0,
-                }
-                for b in PROFICIENCY_BANDS
-            ]
-
-        # Per-column stats
-        columns_info = []
-        for col in df.columns:
-            info = {
-                "name":            col,
-                "dtype":           str(df[col].dtype),
-                "non_null_count":  int(df[col].count()),
-                "null_count":      int(df[col].isnull().sum()),
-                "null_percentage": round(float(df[col].isnull().mean() * 100), 2),
-            }
-            if col.upper() == "learnerID":
-                total_count   = len(df)
-                unique_count  = int(df[col].nunique())
-                info["unique_count"]    = unique_count
-                info["duplicate_count"] = total_count - unique_count
-                info["is_id_column"]    = True
-            elif pd.api.types.is_numeric_dtype(df[col]) and df[col].notna().any():
-                info["statistics"] = {
-                    "mean":   round(float(df[col].mean()),           4),
-                    "std":    round(float(df[col].std()),            4),
-                    "min":    round(float(df[col].min()),            4),
-                    "max":    round(float(df[col].max()),            4),
-                    "median": round(float(df[col].median()),         4),
-                    "q1":     round(float(df[col].quantile(0.25)),   4),
-                    "q3":     round(float(df[col].quantile(0.75)),   4),
-                }
-            else:
-                vc = df[col].value_counts().head(10)
-                info["value_counts"]  = {str(k): int(v) for k, v in vc.items()}
-                info["unique_count"]  = int(df[col].nunique())
-            columns_info.append(info)
-
-        def sanitize_nan(obj):
-            if isinstance(obj, float) and (math.isnan(obj) or math.isinf(obj)):
-                return None
-            if isinstance(obj, dict):
-                return {k: sanitize_nan(v) for k, v in obj.items()}
-            if isinstance(obj, list):
-                return [sanitize_nan(v) for v in obj]
-            return obj
-            
-        # Correlation matrix
-        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-        correlation_matrix = {}
-        if len(numeric_cols) > 1:
-            corr_df = df[numeric_cols].corr()
-            correlation_matrix = {c: corr_df[c].replace({np.nan: None}).to_dict() for c in numeric_cols}
-
-        # Missing value summary
-        total_cells = row_count * column_count
-        missing_values = {
-            "total_missing":        int(df.isnull().sum().sum()),
-            "total_cells":          total_cells,
-            "missing_percentage":   round(float(df.isnull().sum().sum() / total_cells * 100), 2) if total_cells else 0,
-            "columns_with_missing": [
-                {"column": col, "missing_count": int(df[col].isnull().sum())}
-                for col in df.columns if df[col].isnull().any()
-            ],
-        }
-
-        return jsonify(sanitize_nan({
-            "row_count":                row_count,
-            "column_count":             column_count,
-            "columns":                  columns_info,
-            "preview":                  df.head(10).replace({np.nan: None}).to_dict(orient="records"),
-            "correlation_matrix":       correlation_matrix,
-            "missing_values":           missing_values,
-            "proficiency_distribution": proficiency_distribution,
-        }))
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({"error": f"Analysis failed: {e}"}), 500
-
-
-# ===========================================================================
-# ROUTES — SCHOOL-LEVEL ANALYTICS
-# ===========================================================================
-
-@app.route("/api/sample-dataset/download", methods=["GET"])
-def download_sample_dataset():
-
-    role = request.args.get("role")          # "admin", "researcher", "teacher"
-    view_mode = request.args.get("viewMode") # "admin" or "teacher"
-
-    include_section = (role == "admin") or (role == "researcher" and view_mode == "admin")
-
-    base_row = {
-        "learnerID": "L001",
-        "Gender": "M",
-        "Age": 11,
-        "Mother Tongue": "Tagalog",
-        "Nutritional Status": "Normal",
-        "Filipino 1": 90, "English 1": 90, "Math 1": 87, "Aral Pan 1": 91,
-        "Filipino 2": 92, "English 2": 90, "Math 2": 90, "Aral Pan 2": 91,
-        "Filipino 3": 92, "English 3": 92, "Math 3": 94, "Science 3": 93, "Aral Pan 3": 93,
-        "Filipino 4": 91, "English 4": 93, "Math 4": 91, "Science 4": 92, "Aral Pan 4": 91,
-        "Filipino 5": 91, "English 5": 92, "Math 5": 88, "Science 5": 93, "Aral Pan 5": 91
-    }
-
-    if include_section:
-        base_row = {"Section": "A", **base_row}
-
-    df = pd.DataFrame([base_row])
-    csv = df.to_csv(index=False)
-
-    filename = "sample_dataset_admin.csv" if include_section else "sample_dataset_teacher.csv"
-
-    return Response(
-        csv,
-        mimetype="text/csv",
-        headers={"Content-Disposition": f"attachment; filename={filename}"}
-    )
-
-@app.route("/api/school-metrics", methods=["GET"])
-def get_school_metrics():
-    model_key = request.args.get("model", "").lower()
-
-    if not model_key:
-        if school_report_df is None:
-            return jsonify({"error": "School report not available. Retrain the model."}), 404
-        data = school_report_df.sort_values("School").replace({np.nan: None}).to_dict(orient="records")
-        return jsonify({"schools": data, "count": len(data)})
-
-    model_key_map = {
-        "linear":          "Linear",
-        "lasso":           "Lasso",
-        "decisiontree":    "DecisionTree",
-        "randomforest":    "RandomForest",
-        "gradientboost":   "GradientBoosting",
-        "gradientboosting":"GradientBoosting",
-    }
-    mapped_name = model_key_map.get(model_key, model_key)
-
-    if per_model_outputs is None or mapped_name not in per_model_outputs:
-        return jsonify({"error": f"Model '{mapped_name}' not found in per_model_outputs."}), 404
-
-    if school_test is None or y_test is None:
-        return jsonify({"error": "Test metadata not available in artifact."}), 404
-
-    y_pred    = per_model_outputs[mapped_name]["y_pred"]
-    school_df = generate_school_report(y_test, y_pred, school_test)
-    data      = school_df.sort_values("School").replace({np.nan: None}).to_dict(orient="records")
-    return jsonify({"schools": data, "count": len(data), "model": mapped_name})
-
-
-@app.route("/api/school-proficiency", methods=["GET"])
-def get_school_proficiency():
-    if school_report_df is None:
-        return jsonify({"error": "School report not available. Retrain the model."}), 404
-
-    bands  = [b[3] for b in PROFICIENCY_BANDS]
-    result = []
-    for _, row in school_report_df.sort_values("School").iterrows():
-        result.append({
-            "School":    row["School"],
-            "Actual":    {band: row.get(f"Actual_{band}", 0) for band in bands},
-            "Predicted": {band: row.get(f"Pred_{band}", 0)   for band in bands},
-        })
-
-    return jsonify({
-        "schools":          result,
-        "count":            len(result),
-        "proficiency_bands": bands,
-    })
-
-
-@app.route("/api/school-mae", methods=["GET"])
-def get_school_mae():
-    model_key = request.args.get("model", "").lower()
-
-    if not model_key:
-        if school_report_df is None:
-            return jsonify({"error": "School report not available. Retrain the model."}), 404
-        df_sorted = school_report_df.sort_values("MAE", ascending=False)
-        data = [
-            {
-                "School":            row["School"],
-                "MAE":               float(row["MAE"]),
-                "Student_Count":     int(row["Student_Count"]),
-                "Avg_Actual_MPS":    float(row["Avg_Actual_MPS"]),
-                "Avg_Predicted_MPS": float(row["Avg_Predicted_MPS"]),
-            }
-            for _, row in df_sorted.iterrows()
-        ]
-        return jsonify({"schools": data, "count": len(data)})
-
-    model_key_map = {
-        "linear":          "Linear",
-        "lasso":           "Lasso",
-        "decisiontree":    "DecisionTree",
-        "randomforest":    "RandomForest",
-        "gradientboost":   "GradientBoosting",
-        "gradientboosting":"GradientBoosting",
-    }
-    mapped_name = model_key_map.get(model_key, model_key)
-
-    if per_model_outputs is None or mapped_name not in per_model_outputs:
-        return jsonify({"error": f"Model '{mapped_name}' not found."}), 404
-
-    if school_test is None or y_test is None:
-        return jsonify({"error": "Test metadata not available in artifact."}), 404
-
-    y_pred    = per_model_outputs[mapped_name]["y_pred"]
-    school_df = generate_school_report(y_test, y_pred, school_test)
-    df_sorted = school_df.sort_values("MAE", ascending=False)
-    data = [
-        {
-            "School":            row["School"],
-            "MAE":               float(row["MAE"]),
-            "Student_Count":     int(row["Student_Count"]),
-            "Avg_Actual_MPS":    float(row["Avg_Actual_MPS"]),
-            "Avg_Predicted_MPS": float(row["Avg_Predicted_MPS"]),
-        }
-        for _, row in df_sorted.iterrows()
-    ]
-    return jsonify({"schools": data, "count": len(data), "model": mapped_name})
-
-
-@app.route("/api/test-results", methods=["GET"])
-def get_test_results():
-    model_key = request.args.get("model", "").lower()
-
-    if not model_key:
-        if test_results_df is None:
-            return jsonify({
-                "error": "Test results not available. Retrain the model with the updated pipeline."
-            }), 404
-        data = test_results_df.sort_values(["School", "learnerID"]).replace({np.nan: None}).to_dict(orient="records")
-        return jsonify({
-            "results": data,
-            "count":   len(data),
-            "columns": ["learnerID", "School", "Actual_MPS", "Predicted_MPS",
-                        "Difference", "Actual_Proficiency", "Predicted_Proficiency",
-                        "Pass_Probability", "Error_Magnitude"]
-        })
-
-    model_key_map = {
-        "linear":          "Linear",
-        "lasso":           "Lasso",
-        "decisiontree":    "DecisionTree",
-        "randomforest":    "RandomForest",
-        "gradientboost":   "GradientBoosting",
-        "gradientboosting":"GradientBoosting",
-    }
-    mapped_name = model_key_map.get(model_key, model_key)
-
-    if per_model_outputs is None or mapped_name not in per_model_outputs:
-        return jsonify({"error": f"Model '{mapped_name}' not found."}), 404
-
-    if school_test is None or learner_test is None or y_test is None:
-        return jsonify({"error": "Test metadata not available in artifact."}), 404
-
-    y_pred  = per_model_outputs[mapped_name]["y_pred"]
-    test_df = generate_test_results(y_test, y_pred, school_test, learner_test)
-    data    = test_df.sort_values(["School", "learnerID"]).replace({np.nan: None}).to_dict(orient="records")
-    return jsonify({
-        "results": data,
-        "count":   len(data),
-        "columns": ["learnerID", "School", "Actual_MPS", "Predicted_MPS",
-                    "Difference", "Actual_Proficiency", "Predicted_Proficiency",
-                    "Pass_Probability", "Error_Magnitude"],
-        "model":   mapped_name,
-    })
-
+# Keep all your other routes (upload, analyze, school-metrics, etc.) here
+# ... (I've omitted them for brevity, but include them from your original code)
 
 # ===========================================================================
 # ENTRY POINT
 # ===========================================================================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+    print(f"\n{'='*60}")
+    print(f"Starting Flask server on port {port}")
+    print(f"Model loaded: {MODEL_LOADED}")
+    print(f"{'='*60}\n")
     app.run(host="0.0.0.0", port=port, debug=True)

@@ -4,6 +4,7 @@ import {
     XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
     Legend, ResponsiveContainer
 } from 'recharts';
+import { API_BASE_URL } from '../config';
 
 type ModelKey = string;
 
@@ -102,14 +103,14 @@ export function Charts() {
     const [allMetrics, setAllMetrics] = useState<MetricModel[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const [modelRes, metricsRes] = await Promise.all([
-                    fetch('http://localhost:5000/model-predict'),
-                    fetch('http://localhost:5000/all-metrics'),
-                ]);
+     useEffect(() => {
+          const fetchData = async () => {
+              setLoading(true);
+              try {
+                  const [modelRes, metricsRes] = await Promise.all([
+                      fetch(`${API_BASE_URL}/model-predict`),
+                      fetch(`${API_BASE_URL}/all-metrics`),
+                  ]);
 
                 const [modelData, metricsData] = await Promise.all([
                     modelRes.ok ? modelRes.json() as Promise<ModelOutputs> : Promise.resolve({} as ModelOutputs),

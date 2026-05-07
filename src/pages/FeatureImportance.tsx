@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { API_BASE_URL } from '../config';
 
 interface FeatureImportanceItem {
     feature: string;
@@ -10,11 +11,11 @@ export function FeatureImportance() {
     const [featureImportance, setFeatureImportance] = useState<FeatureImportanceItem[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchFeatureImportance = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch('http://localhost:5000/feature-importance');
+     useEffect(() => {
+          const fetchFeatureImportance = async () => {
+              setLoading(true);
+              try {
+                  const response = await fetch(`${API_BASE_URL}/feature-importance`);
                 if (response.ok) {
                     const data = await response.json();
                     let fiArray: FeatureImportanceItem[] = [];

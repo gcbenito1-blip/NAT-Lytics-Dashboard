@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { API_BASE_URL } from '../config';
 
 interface SchoolMAE {
     School: string;
@@ -43,66 +44,66 @@ export function SchoolComparison() {
     const [availableModels, setAvailableModels] = useState<string[]>([]);
     const [selectedModel, setSelectedModel] = useState<string>('');
 
-    useEffect(() => {
-        const fetchModels = async () => {
-            try {
-                const modelRes = await fetch('http://localhost:5000/model-predict');
-                if (modelRes.ok) {
-                    const modelData = await modelRes.json();
-                    const models = Object.keys(modelData);
-                    setAvailableModels(models);
-                    setSelectedModel(models[0] || '');
-                }
-            } catch (error) {
-                console.error('Failed to fetch models:', error);
-            }
-        };
-        fetchModels();
-    }, []);
+      useEffect(() => {
+          const fetchModels = async () => {
+              try {
+                  const modelRes = await fetch(`${API_BASE_URL}/model-predict`);
+                 if (modelRes.ok) {
+                     const modelData = await modelRes.json();
+                     const models = Object.keys(modelData);
+                     setAvailableModels(models);
+                     setSelectedModel(models[0] || '');
+                 }
+             } catch (error) {
+                 console.error('Failed to fetch models:', error);
+             }
+         };
+         fetchModels();
+     }, []);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const metricsRes = await fetch(`http://localhost:5000/api/school-metrics?model=${encodeURIComponent(selectedModel)}`);
-                if (metricsRes.ok) {
-                    const metricsData = await metricsRes.json();
-                    setSchoolMetrics(metricsData.schools || []);
-                }
+      useEffect(() => {
+          const fetchData = async () => {
+              setLoading(true);
+              try {
+                  const metricsRes = await fetch(`${API_BASE_URL}/api/school-metrics?model=${encodeURIComponent(selectedModel)}`);
+                  if (metricsRes.ok) {
+                      const metricsData = await metricsRes.json();
+                      setSchoolMetrics(metricsData.schools || []);
+                  }
 
-                const maeRes = await fetch(`http://localhost:5000/api/school-mae?model=${encodeURIComponent(selectedModel)}`);
-                if (maeRes.ok) {
-                    const maeData = await maeRes.json();
-                    setSchoolMAE(maeData.schools || []);
-                }
+                  const maeRes = await fetch(`${API_BASE_URL}/api/school-mae?model=${encodeURIComponent(selectedModel)}`);
+                  if (maeRes.ok) {
+                      const maeData = await maeRes.json();
+                      setSchoolMAE(maeData.schools || []);
+                  }
 
-                const profDistRes = await fetch(`http://localhost:5000/api/school-proficiency?model=${encodeURIComponent(selectedModel)}`);
-                if (profDistRes.ok) {
-                    const profDistData = await profDistRes.json();
-                    const transformed = (profDistData.schools || []).map((s: any) => ({
-                        School: s.School,
-                        Actual_Not_Proficient: s.Actual["Not Proficient"] || 0,
-                        Actual_Low_Proficient: s.Actual["Low Proficient"] || 0,
-                        Actual_Nearly_Proficient: s.Actual["Nearly Proficient"] || 0,
-                        Actual_Proficient: s.Actual["Proficient"] || 0,
-                        Actual_Highly_Proficient: s.Actual["Highly Proficient"] || 0,
-                        Pred_Not_Proficient: s.Predicted["Not Proficient"] || 0,
-                        Pred_Low_Proficient: s.Predicted["Low Proficient"] || 0,
-                        Pred_Nearly_Proficient: s.Predicted["Nearly Proficient"] || 0,
-                        Pred_Proficient: s.Predicted["Proficient"] || 0,
-                        Pred_Highly_Proficient: s.Predicted["Highly Proficient"] || 0,
-                    }));
-                    setSchoolProficiency(transformed);
-                }
-            } catch (error) {
-                console.error('Failed to fetch school comparison data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+                  const profDistRes = await fetch(`${API_BASE_URL}/api/school-proficiency?model=${encodeURIComponent(selectedModel)}`);
+                 if (profDistRes.ok) {
+                     const profDistData = await profDistRes.json();
+                     const transformed = (profDistData.schools || []).map((s: any) => ({
+                         School: s.School,
+                         Actual_Not_Proficient: s.Actual["Not Proficient"] || 0,
+                         Actual_Low_Proficient: s.Actual["Low Proficient"] || 0,
+                         Actual_Nearly_Proficient: s.Actual["Nearly Proficient"] || 0,
+                         Actual_Proficient: s.Actual["Proficient"] || 0,
+                         Actual_Highly_Proficient: s.Actual["Highly Proficient"] || 0,
+                         Pred_Not_Proficient: s.Predicted["Not Proficient"] || 0,
+                         Pred_Low_Proficient: s.Predicted["Low Proficient"] || 0,
+                         Pred_Nearly_Proficient: s.Predicted["Nearly Proficient"] || 0,
+                         Pred_Proficient: s.Predicted["Proficient"] || 0,
+                         Pred_Highly_Proficient: s.Predicted["Highly Proficient"] || 0,
+                     }));
+                     setSchoolProficiency(transformed);
+                 }
+             } catch (error) {
+                 console.error('Failed to fetch school comparison data:', error);
+             } finally {
+                 setLoading(false);
+             }
+         };
 
-        fetchData();
-    }, [selectedModel]);
+         fetchData();
+     }, [selectedModel]);
 
     return (
         <div className="space-y-6">

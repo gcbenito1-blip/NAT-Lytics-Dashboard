@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '../components/ui/tooltip';
 import { Upload, BarChart3, LineChart, Target, School, Users, LogOut, Menu, UserCog, UserPlus, Shield, Download, Info, HelpCircle } from 'lucide-react';
 import { ScatterChart, Scatter, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { API_BASE_URL } from '../config';
 
 type TabType = 'metrics' | 'charts' | 'feature-importance' | 'school-comparison' | 'student-table' | 'user-management';
 
@@ -91,7 +92,7 @@ export default function ResearcherDashboard() {
     const fetchInitialData = async () => {
       setLoading(true);
       try {
-        const metricsRes = await fetch('http://localhost:5000/metrics');
+        const metricsRes = await fetch(`${API_BASE_URL}/metrics`);
         if (metricsRes.ok) {
           const metricsData = await metricsRes.json();
           setMetrics({
@@ -101,13 +102,13 @@ export default function ResearcherDashboard() {
           });
         }
 
-        const allMetricsRes = await fetch('http://localhost:5000/all-metrics');
+        const allMetricsRes = await fetch(`${API_BASE_URL}/all-metrics`);
         if (allMetricsRes.ok) {
           const allMetricsData = await allMetricsRes.json();
           setAllMetrics(allMetricsData.models || []);
         }
 
-        const fiRes = await fetch('http://localhost:5000/feature-importance');
+        const fiRes = await fetch(`${API_BASE_URL}/feature-importance`);
         if (fiRes.ok) {
           const fiData = await fiRes.json();
           let fiArray: { feature: string; importance: number }[] = [];
@@ -128,7 +129,7 @@ export default function ResearcherDashboard() {
           setFeatureImportance(fiArray);
         }
 
-        const profRes = await fetch('http://localhost:5000/proficiency-labels');
+        const profRes = await fetch(`${API_BASE_URL}/proficiency-labels`);
         if (profRes.ok) {
           const profData = await profRes.json();
           setProficiencyLabels(profData.bands || []);
@@ -136,19 +137,19 @@ export default function ResearcherDashboard() {
 
         setSchoolLoading(true);
         try {
-          const metricsRes = await fetch('http://localhost:5000/api/school-metrics');
+          const metricsRes = await fetch(`${API_BASE_URL}/api/school-metrics`);
           if (metricsRes.ok) {
             const metricsData = await metricsRes.json();
             setSchoolMetrics(metricsData.schools || []);
           }
 
-          const maeRes = await fetch('http://localhost:5000/api/school-mae');
+          const maeRes = await fetch(`${API_BASE_URL}/api/school-mae`);
           if (maeRes.ok) {
             const maeData = await maeRes.json();
             setSchoolMAE(maeData.schools || []);
           }
 
-          const profDistRes = await fetch('http://localhost:5000/api/school-proficiency');
+          const profDistRes = await fetch(`${API_BASE_URL}/api/school-proficiency`);
           if (profDistRes.ok) {
             const profDistData = await profDistRes.json();
             const transformed = (profDistData.schools || []).map((s: any) => ({
@@ -167,7 +168,7 @@ export default function ResearcherDashboard() {
             setSchoolProficiency(transformed);
           }
 
-          const testRes = await fetch('http://localhost:5000/api/test-results');
+          const testRes = await fetch(`${API_BASE_URL}/api/test-results`);
           if (testRes.ok) {
             const testData = await testRes.json();
             const transformed = (testData.results || []).map((r: any) => ({
@@ -187,7 +188,7 @@ export default function ResearcherDashboard() {
           setSchoolLoading(false);
         }
 
-        const modelRes = await fetch('http://localhost:5000/model-predict');
+        const modelRes = await fetch(`${API_BASE_URL}/model-predict`);
         if (modelRes.ok) {
           const modelData = await modelRes.json();
           setModelOutputs(modelData);

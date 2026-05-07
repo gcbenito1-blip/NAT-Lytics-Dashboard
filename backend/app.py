@@ -19,6 +19,17 @@ if os.environ.get('FLASK_ENV') == 'development':
 # LOAD ARTIFACT
 # ===========================================================================
 ARTIFACT_PATH = "best_model.joblib"
+@app.route("/debug/model-status", methods=["GET"])
+def debug_model_status():
+    return jsonify({
+        "model_loaded": model is not None,
+        "model_name": model_name if model else None,
+        "artifact_path": ARTIFACT_PATH,
+        "file_exists": os.path.exists(ARTIFACT_PATH),
+        "files_in_directory": os.listdir('.'),
+        "has_shap": shap_explainer is not None,
+        "has_features": len(features) > 0 if features else False,
+    })
 
 # Subject aggregation map (must match pipeline)
 SUBJECT_AGGREGATE_MAP = {

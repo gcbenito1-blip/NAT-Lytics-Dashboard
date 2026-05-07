@@ -1,10 +1,7 @@
 // Environment configuration
 // Vite exposes environment variables prefixed with VITE_ to the client bundle
-
-// In production (Vercel monorepo), backend is at /_/backend
-// In development, use localhost:5000
 export const API_BASE_URL = import.meta.env.PROD
-    ? '/_/backend'  // Use relative path to backend in monorepo
+    ? 'https://backend-alpha-two-71.vercel.app'
     : (import.meta.env.VITE_API_URL || 'http://localhost:5000');
 
 // Helper to check if we're in production

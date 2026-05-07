@@ -3,11 +3,6 @@
         "frontend": {
             "routePrefix": "/",
             "framework": "vite"
-        },
-        "backend": {
-            "entrypoint": "backend",
-            "routePrefix": "/_/backend",
-            "includeFiles": "backend/**/*.{joblib,pkl,py,csv}"
         }
     }
 }

@@ -773,6 +773,7 @@ def build_train_data_csv(
       - Categorical columns one-hot encoded (no scaling), EXCEPT Nutritional Status
         which is label-encoded with predefined mapping
       - Numeric non-subject columns kept as-is (no scaling)
+      - school_year column included as-is (cohort identifier)
       - NO z-score or StandardScaler applied
       - Target (MPS) appended as the last column
       - Display columns (learnerID, etc., excl. School) prepended
@@ -791,6 +792,12 @@ def build_train_data_csv(
     """
     df = X_train_raw.copy()
 
+    # Preserve school_year column separately (it's numeric but not a feature)
+    school_year_col = None
+    if COHORT_COL in df.columns:
+        school_year_col = df[COHORT_COL].copy()
+        df = df.drop(columns=[COHORT_COL])
+
     # Identify column types
     cat_cols = df.select_dtypes(exclude=np.number).columns.tolist()
     num_cols = df.select_dtypes(include=np.number).columns.tolist()
@@ -804,7 +811,7 @@ def build_train_data_csv(
         ohe_df = pd.DataFrame(ohe_arr, columns=ohe_feature_names, index=df.index)
         ohe_parts.append(ohe_df)
 
-    # Numeric columns: impute mean(no scaling) — keeps raw grade values
+    # Numeric columns: impute mean (no scaling) — keeps raw grade values
     num_df = df[num_cols].copy()
     for col in num_cols:
         num_df[col] = pd.to_numeric(num_df[col], errors="coerce")
@@ -822,6 +829,11 @@ def build_train_data_csv(
     display_col_names = [c for c in disp_reset.columns if c != "School"]
     disp_subset = disp_reset[display_col_names] if display_col_names else pd.DataFrame()
 
+    # Prepend school_year column if it exists (after display cols, before features)
+    if school_year_col is not None:
+        school_year_reset = school_year_col.reset_index(drop=True)
+        feature_df = pd.concat([school_year_reset, feature_df], axis=1)
+
     # Append target
     target_series = y_train.reset_index(drop=True)
 
@@ -830,6 +842,7 @@ def build_train_data_csv(
     result.to_csv(out_path, index=False)
     print(f"  OK train_data.csv  ({len(result)} rows x {len(result.columns)} cols)")
     print(f"  Display cols (excl. School): {display_col_names}")
+    print(f"  school_year column          : included")
     print(f"  Numeric feature cols       : {len(num_cols)}")
     print(f"  OHE feature cols           : {sum(len(p.columns) for p in ohe_parts)}")
     print(f"  Note: Raw quarterly subject grades included, no scaling applied.")
@@ -1131,8 +1144,7 @@ def main():
 
     # Align raw training rows using the same split indices
     X_train_raw_aligned = X_full_raw.iloc[idx_train].reset_index(drop=True)
-    # Strip cohort col from raw (not needed for train_data.csv)
-    X_train_raw_aligned = X_train_raw_aligned.drop(columns=[COHORT_COL], errors="ignore")
+    # Keep school_year column for train_data.csv inclusion
 
     print(f"  Total  : {len(combined)} rows")
     print(f"  Train  : {len(X_train_wc)} rows")
@@ -1192,8 +1204,162 @@ def main():
 
     # Align raw test rows using the same split indices (use non-encoded version to preserve string Nutritional Status)
     X_test_raw_aligned = X_full_raw_no_encode.iloc[idx_test].reset_index(drop=True)
-    # Strip cohort col from raw
-    X_test_raw_aligned = X_test_raw_aligned.drop(columns=[COHORT_COL], errors="ignore")
+    # Keep school_year column for test_data.csv inclusion
+
+    # Drop subject avg cols — keep only original quarterly cols + other raw features
+    raw_test_for_csv = X_test_raw_aligned.drop(columns=SUBJECT_AVG_COLS, errors="ignore")
+
+    # Build test data: raw features + display columns (excl. School), WITH target
+    df_test = raw_test_for_csv.copy()
+
+    # Prepend display columns (exclude School per convention, but include target)
+    disp_test_reset = display_test.reset_index(drop=True)
+    display_col_names_test = [c for c in disp_test_reset.columns if c != "School"]
+    disp_test_subset = disp_test_reset[display_col_names_test] if display_col_names_test else pd.DataFrame()
+
+    # Append target (MPS)
+    target_series_test = y_test.reset_index(drop=True)
+
+    result_test = pd.concat([disp_test_subset.reset_index(drop=True), df_test.reset_index(drop=True), target_series_test.rename(TARGET)], axis=1)
+
+    test_data_path = os.path.join(args.out, "test_data.csv")
+    result_test.to_csv(test_data_path, index=False)
+    print(f"  OK test_data.csv  ({len(result_test)} rows x {len(result_test.columns)} cols)")
+    print(f"  Display cols (excl. School): {display_col_names_test}")
+    print(f"  Feature cols (raw, no encoding): {len(df_test.columns)}")
+    print(f"  Target column (MPS): included")
+    print(f"  Note: Raw quarterly subject grades included, no scaling, no OHE.")
+
+    # =========================================================================
+    # STEP 5d: Save train_data_aggregated.csv (aggregated subject avgs, no scaling)
+    # =========================================================================
+    print(f"\n{sep}\n  STEP 5d - SAVE TRAIN DATA (aggregated subject avgs, no scaling)\n{sep}")
+
+    # Use the same X_train_raw_aligned but keep ONLY aggregated subject avg columns
+    # Remove quarterly grade columns, keep aggregated avgs
+    train_aggregated = X_train_raw_aligned.copy()
+    
+    # Keep only subject avg columns + other numeric/categorical columns
+    keep_cols = SUBJECT_AVG_COLS.copy()
+    # Also keep any other columns that are NOT quarterly grades
+    for col in train_aggregated.columns:
+        if col not in ALL_SUBJECT_COLS and col not in SUBJECT_AVG_COLS:
+            keep_cols.append(col)
+    
+    # Remove duplicates while preserving order
+    keep_cols = list(dict.fromkeys(keep_cols))
+    train_aggregated = train_aggregated[keep_cols]
+    
+    # Also ensure Nutritional Status is preserved (it's in keep_cols if present)
+    train_data_agg_path = os.path.join(args.out, "train_data_aggregated.csv")
+    build_train_data_aggregated_csv(
+        X_train_aggregated=train_aggregated,
+        y_train=y_train,
+        display_train=display_train,
+        out_path=train_data_agg_path,
+    )
+
+    # =========================================================================
+    # STEP 5e: Save train_complete.csv
+    #   Quarterly grades + subject averages + encoded categories + MPS
+    #   (ALL columns retained - School, learnerID, Section included)
+    # =========================================================================
+    print(f"\n{sep}\n  STEP 5e - SAVE TRAIN COMPLETE (grades + avgs + encoded cats + MPS)\n{sep}")
+
+    def build_train_complete_csv(
+        X_train_raw: pd.DataFrame,
+        y_train: pd.Series,
+        display_train: pd.DataFrame,
+        out_path: str,
+    ) -> pd.DataFrame:
+        """
+        Build and save train_complete.csv with:
+          - ALL quarterly subject grades (Filipino 1, English 1, ...)
+          - Subject average columns (Filipino_avg, English_avg, ...)
+          - Categorical columns ONE-HOT ENCODED (including Nutritional Status)
+          - Numeric columns kept as-is (no scaling)
+          - Target (MPS) appended
+          - ALL columns retained (School, learnerID, Section included)
+
+        Parameters
+        ----------
+        X_train_raw : DataFrame
+            Training features with quarterly columns preserved.
+        y_train : Series
+            Training target (MPS).
+        display_train : DataFrame
+            Display columns (unused — all columns retained).
+        out_path : str
+            Full path for the output CSV.
+        """
+        df = X_train_raw.copy()
+
+        # Identify column types
+        cat_cols = df.select_dtypes(exclude=np.number).columns.tolist()
+        num_cols = df.select_dtypes(include=np.number).columns.tolist()
+
+        # Remove target from num_cols if somehow present
+        if TARGET in num_cols:
+            num_cols.remove(TARGET)
+
+        # One-hot encode ALL categorical columns (including Nutritional Status)
+        ohe_parts = []
+        if cat_cols:
+            ohe = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+            ohe_arr = ohe.fit_transform(df[cat_cols].fillna("__NA__").astype(str))
+            ohe_feature_names = ohe.get_feature_names_out(cat_cols).tolist()
+            ohe_df = pd.DataFrame(ohe_arr, columns=ohe_feature_names)
+            ohe_df.index = df.index
+            ohe_parts.append(ohe_df)
+
+        # Numeric columns: impute mean (no scaling) — keeps raw grade values and averages
+        num_df = df[num_cols].copy()
+        for col in num_cols:
+            num_df[col] = pd.to_numeric(num_df[col], errors="coerce")
+            num_df[col] = num_df[col].fillna(num_df[col].mean())
+
+        # Combine: numeric (raw quarterly + averages) + OHE categoricals
+        parts = [num_df.reset_index(drop=True)]
+        for part in ohe_parts:
+            parts.append(part.reset_index(drop=True))
+
+        feature_df = pd.concat(parts, axis=1)
+
+        # Prepend display columns (School, learnerID, Section, etc.)
+        disp_reset = display_train.reset_index(drop=True)
+
+        # Append target (MPS)
+        target_series = y_train.reset_index(drop=True)
+
+        result = pd.concat([disp_reset, feature_df, target_series.rename(TARGET)], axis=1)
+
+        result.to_csv(out_path, index=False)
+        print(f"  OK train_complete.csv  ({len(result)} rows x {len(result.columns)} cols)")
+        print(f"  Quarterly grade cols    : {len([c for c in ALL_SUBJECT_COLS if c in num_cols])}")
+        print(f"  Subject avg cols        : {len([c for c in SUBJECT_AVG_COLS if c in num_cols])}")
+        print(f"  Other numeric cols      : {len([c for c in num_cols if c not in ALL_SUBJECT_COLS and c not in SUBJECT_AVG_COLS])}")
+        print(f"  OHE feature cols (cats) : {sum(len(p.columns) for p in ohe_parts)}")
+        print(f"  Target (MPS)            : included")
+        print(f"  Note: No scaling applied, all subject grades + averages included, ALL columns retained.")
+        return result
+
+    train_complete_path = os.path.join(args.out, "train_complete.csv")
+    build_train_complete_csv(
+        X_train_raw=X_train_raw_aligned,
+        y_train=y_train,
+        display_train=display_train,
+        out_path=train_complete_path,
+    )
+
+    # =========================================================================
+    # STEP 5c: Save test_data.csv (raw, non-aggregated, no scaling, no encoding)
+    # =========================================================================
+    print(f"\n{sep}\n  STEP 5c - SAVE TEST DATA (raw, non-aggregated, no scaling, no encoding)\n{sep}")
+
+    # Align raw test rows using the same split indices (use non-encoded version to preserve string Nutritional Status)
+    X_test_raw_aligned = X_full_raw_no_encode.iloc[idx_test].reset_index(drop=True)
+    # Keep school_year column for test_data.csv inclusion
+
     # Drop subject avg cols — keep only original quarterly cols + other raw features
     raw_test_for_csv = X_test_raw_aligned.drop(columns=SUBJECT_AVG_COLS, errors="ignore")
 
@@ -1502,8 +1668,10 @@ def main():
     print(sep)
     print(f"\n  Outputs:")
     print(f"    best_model.joblib   <- trained model + metadata")
+    print(f"    train_complete.csv  <- quarterly grades + subject avgs + OHE cats + MPS")
     print(f"    train_data.csv      <- raw quarterly grades + OHE cats (except")
     print(f"                            Nutritional Status -> label encoded), no scaling")
+    print(f"    train_data_aggregated.csv <- subject avgs + OHE cats, no scaling")
     print(f"    test_data.csv       <- raw quarterly grades, NO encoding, no scaling")
     print(f"    model_results.csv   <- MAE/RMSE/R2 per model")
     print(f"    test_results.csv    <- per-student predictions on test set")

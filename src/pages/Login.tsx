@@ -49,6 +49,7 @@ export function Login() {
     } else {
       toast.success('Welcome back! Loading Landing Page...');
       // Give the toast a moment to render, then navigate
+      setLoading(false);
       setTimeout(() => navigate('/home'), 1500);
     }
   }

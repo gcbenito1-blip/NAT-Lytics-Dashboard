@@ -9,7 +9,16 @@ import {
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
-import type { UserProfile } from '../lib/sessions';
+
+// Define UserProfile locally since we removed sessions.ts
+export interface UserProfile {
+  id: string;
+  email: string;
+  role: 'teacher' | 'admin' | 'researcher';
+  firstName: string;
+  lastName: string;
+  name: string;
+}
 
 interface AuthContextType {
   user: UserProfile | null;

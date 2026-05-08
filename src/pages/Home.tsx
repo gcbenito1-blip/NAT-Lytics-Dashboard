@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { getSessions, Session } from '../lib/sessions';
 
 type ResearcherMode = 'evaluation' | 'prediction';
 
 export function Home() {
-  const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -15,7 +13,6 @@ export function Home() {
   const isTeacher = user?.role === 'teacher';
   const isAdmin = user?.role === 'admin';
 
-  // Restore persisted mode so a page refresh doesn't reset the researcher back to the picker
   const [researcherMode, setResearcherMode] = useState<ResearcherMode | null>(
     () => (localStorage.getItem('researcherMode') as ResearcherMode | null)
   );
@@ -23,27 +20,14 @@ export function Home() {
   useEffect(() => {
     if (!user) return;
 
-    // Teachers and admins go straight to the dashboard — no session fetch needed
     if (isTeacher || isAdmin) {
       navigate('/dashboard', { replace: true });
       return;
     }
 
-    // Only fetch sessions for researchers in prediction mode (or before mode is chosen)
-    fetchSessions();
+    // Researchers don't need sessions — just stop the loading spinner
+    setLoading(false);
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const fetchSessions = async () => {
-    try {
-      // getSessions() uses auth.uid() internally — no userId argument needed
-      const userSessions = await getSessions();
-      setSessions(userSessions);
-    } catch (error) {
-      console.error('[Home] Error fetching sessions:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const enterMode = (mode: ResearcherMode) => {
     localStorage.setItem('researcherMode', mode);
@@ -57,10 +41,10 @@ export function Home() {
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
       </div>
     );
-   }
+  }
 
-   // Researcher mode picker
-   if (isResearcher) {
+  // Researcher mode picker
+  if (isResearcher) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="max-w-4xl w-full">

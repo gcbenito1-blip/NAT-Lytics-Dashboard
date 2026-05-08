@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PredictionResult as ApiPredictionResult } from '../services/api';
-import { getSession, getSessions } from '../lib/sessions';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -201,55 +200,30 @@ export function Results() {
     return Array.from(set).sort();
   }, [predictions]);
 
-  // ── Check if user has any sessions ──
-  useEffect(() => {
-    if (!user) return;
-    getSessions()
-      .then((s) => setHasAnySession(s.length > 0))
-      .catch(() => setHasAnySession(false));
-  }, [user]);
+   // ── Body scroll lock when modal is open ───────────────────────────────────
+   useEffect(() => {
+     document.body.style.overflow = selectedStudent ? 'hidden' : 'unset';
+     return () => {
+       document.body.style.overflow = 'unset';
+     };
+   }, [selectedStudent]);
 
-  // ── Body scroll lock when modal is open ───────────────────────────────────
-  useEffect(() => {
-    document.body.style.overflow = selectedStudent ? 'hidden' : 'unset';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [selectedStudent]);
+   // ── Load predictions from navigation state ─────────────────────
+   useEffect(() => {
+     const loadResults = async () => {
+       const state = location.state as ResultsState | null;
 
-  // ── Load predictions from navigation state or session ─────────────────────
-  useEffect(() => {
-    const loadResults = async () => {
-      const state = location.state as ResultsState | null;
+       if (state?.predictions) {
+         setPredictions(state.predictions);
+         setFileName(state.fileName ?? 'Dataset');
+         setSessionName(state.sessionName ?? '');
+       } else {
+         navigate('/home');
+       }
+     };
 
-      if (state?.predictions) {
-        setPredictions(state.predictions);
-        setFileName(state.fileName ?? 'Dataset');
-        setSessionName(state.sessionName ?? '');
-      } else if (state?.sessionId) {
-        try {
-          const session = await getSession(state.sessionId);
-          if (!session) {
-            navigate('/home');
-            return;
-          }
-          if (Array.isArray(session.predictions) && session.predictions.length > 0) {
-            setPredictions(session.predictions as ApiPredictionResult[]);
-            setFileName(session.file_name ?? 'Dataset');
-            setSessionName(session.name ?? '');
-          } else {
-            navigate('/home');
-          }
-        } catch {
-          navigate('/home');
-        }
-      } else {
-        navigate('/home');
-      }
-    };
-
-    loadResults();
-  }, [location.state, navigate]);
+     loadResults();
+   }, [location.state, navigate]);
 
   // ── Sort ───────────────────────────────────────────────────────────────────
   const handleSort = (field: keyof ApiPredictionResult) => {

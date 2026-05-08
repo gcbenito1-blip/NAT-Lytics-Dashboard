@@ -4,7 +4,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { uploadFile, analyzeData, explainBatch, AnalysisResult, BatchPredictionResponse } from '../services/api';
-import { updateSession } from '../lib/sessions';
 import { API_BASE_URL } from '../config';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -193,19 +192,20 @@ export function Dashboard() {
       const predictions = response.results;
       const totalPredictions = predictions.length;
       const averageScore = predictions.reduce((sum, p) => sum + p.prediction, 0) / totalPredictions;
-      if (sessionId) {
-        updateSession(sessionId, {
-          file_name: fileName,
-          analysis_summary: analysisResult ? {
-            total_rows: analysisResult.row_count,
-            total_columns: analysisResult.column_count,
-            columns: analysisResult.columns?.map(c => ({ name: c.name, dtype: c.dtype }))
-          } : undefined,
-          predictions,
-          total_predictions: totalPredictions,
-          average_score: averageScore
-        });
-      }
+        if (sessionId) {
+          // Session functionality removed - predictions are handled via navigation state
+          // updateSession(sessionId, {
+          //   file_name: fileName,
+          //   analysis_summary: analysisResult ? {
+          //     total_rows: analysisResult.row_count,
+          //     total_columns: analysisResult.column_count,
+          //     columns: analysisResult.columns?.map(c => ({ name: c.name, dtype: c.dtype }))
+          //   } : undefined,
+          //   predictions,
+          //   total_predictions: totalPredictions,
+          //   average_score: averageScore
+          // }, user!.id);
+        }
       let resultsPath = '/prediction-table';
 
       if (user) {

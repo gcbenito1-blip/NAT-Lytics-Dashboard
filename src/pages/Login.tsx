@@ -47,7 +47,7 @@ export function Login() {
       toast.error(msg);
       setLoading(false);
     } else {
-      toast.success('Welcome back! Redirecting...');
+      toast.success('Welcome back! Loading Landing Page...');
       // Give the toast a moment to render, then navigate
       setTimeout(() => navigate('/home'), 1500);
     }

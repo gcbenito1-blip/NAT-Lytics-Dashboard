@@ -49,7 +49,7 @@ export function Login() {
     } else {
       toast.success('Welcome back! Redirecting...');
       // Give the toast a moment to render, then navigate
-      setTimeout(() => navigate('/home'), 500);
+      setTimeout(() => navigate('/home'), 10000);
     }
   }
 

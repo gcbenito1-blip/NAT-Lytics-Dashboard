@@ -77,7 +77,7 @@ export function Signup() {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Created!</h2>
             <p className="text-gray-600 mb-4">
-              Your account has been created successfully. Redirecting you to sign in…
+              Your account has been created successfully.
             </p>
             <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
               <div
@@ -85,7 +85,7 @@ export function Signup() {
                 style={{ width: '100%', transition: 'width 3s ease-in-out' }}
               />
             </div>
-            <p className="text-sm text-gray-500">Redirecting in 3 seconds…</p>
+            <p className="text-sm text-gray-500">Redirecting to Login Page, Please Wait...</p>
           </div>
         </div>
       )}

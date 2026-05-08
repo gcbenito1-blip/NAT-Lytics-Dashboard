@@ -29,53 +29,53 @@ export function StudentTable() {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(20);
 
-      useEffect(() => {
-          const fetchModels = async () => {
-              try {
-                  const modelRes = await fetch(`${API_BASE_URL}/model-predict`);
-                 if (modelRes.ok) {
-                     const modelData = await modelRes.json();
-                     const models = Object.keys(modelData);
-                     setAvailableModels(models);
-                     setSelectedModel(models[0] || '');
-                 }
-             } catch (error) {
-                 console.error('Failed to fetch models:', error);
-             }
-         };
-         fetchModels();
-     }, []);
+    useEffect(() => {
+        const fetchModels = async () => {
+            try {
+                const modelRes = await fetch(`${API_BASE_URL}/model-predict`);
+                if (modelRes.ok) {
+                    const modelData = await modelRes.json();
+                    const models = Object.keys(modelData);
+                    setAvailableModels(models);
+                    setSelectedModel(models[0] || '');
+                }
+            } catch (error) {
+                console.error('Failed to fetch models:', error);
+            }
+        };
+        fetchModels();
+    }, []);
 
-      useEffect(() => {
-          const fetchData = async () => {
-              setLoading(true);
-              try {
-                  const testRes = await fetch(`${API_BASE_URL}/api/test-results?model=${encodeURIComponent(selectedModel)}`);
-                 if (testRes.ok) {
-                     const testData = await testRes.json();
-                     const transformed = (testData.results || []).map((r: any) => ({
-                         id: r.learnerID,
-                         school: r.School,
-                         actualMPS: r.Actual_MPS,
-                         predictedMPS: r.Predicted_MPS,
-                         difference: r.Difference,
-                         actual_proficiency: r.Actual_Proficiency,
-                         predicted_proficiency: r.Predicted_Proficiency,
-                         errorMagnitude: r.Error_Magnitude,
-                     }));
-                     setTestResults(transformed);
-                     const schools = Array.from(new Set(transformed.map((r: any) => r.school) as string[])).sort() as string[];
-                     setUniqueSchools(schools);
-                 }
-             } catch (error) {
-                 console.error('Failed to fetch test results:', error);
-             } finally {
-                 setLoading(false);
-             }
-         };
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const testRes = await fetch(`${API_BASE_URL}/api/test-results?model=${encodeURIComponent(selectedModel)}`);
+                if (testRes.ok) {
+                    const testData = await testRes.json();
+                    const transformed = (testData.results || []).map((r: any) => ({
+                        id: r.learnerID,
+                        school: r.School,
+                        actualMPS: r.Actual_MPS,
+                        predictedMPS: r.Predicted_MPS,
+                        difference: r.Difference,
+                        actual_proficiency: r.Actual_Proficiency,
+                        predicted_proficiency: r.Predicted_Proficiency,
+                        errorMagnitude: r.Error_Magnitude,
+                    }));
+                    setTestResults(transformed);
+                    const schools = Array.from(new Set(transformed.map((r: any) => r.school) as string[])).sort() as string[];
+                    setUniqueSchools(schools);
+                }
+            } catch (error) {
+                console.error('Failed to fetch test results:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-         fetchData();
-     }, [selectedModel]);
+        fetchData();
+    }, [selectedModel]);
 
     // Filtered results
     let filteredResults = testResults.filter((student) => {

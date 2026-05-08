@@ -334,7 +334,8 @@ export function ClassSummary() {
         </header>
 
         {/* All Statistics in a Single Responsive Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2 mb-8">
           {/* Total Learners */}
           <div className="bg-white rounded-2xl shadow-lg p-4">
             <div className="flex items-center justify-between">

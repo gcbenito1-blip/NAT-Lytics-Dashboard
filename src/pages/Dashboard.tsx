@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
@@ -68,6 +68,7 @@ export function Dashboard() {
   }, [location.state, navigate, location.pathname]);
 
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
+  const datasetSummaryRef = useRef<HTMLDivElement>(null);
 
   const handleSignOut = async () => {
     setShowSignOutConfirm(true);
@@ -109,6 +110,12 @@ export function Dashboard() {
       }
     });
     setAnomalies(newAnomalies);
+  }, [analysisResult]);
+
+  useEffect(() => {
+    if (analysisResult && datasetSummaryRef.current) {
+      datasetSummaryRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [analysisResult]);
 
   const canRunPredictions = useMemo(() => data.length > 0 && anomalies.length === 0 && privacyAccepted, [data.length, anomalies, privacyAccepted]);
@@ -200,14 +207,22 @@ export function Dashboard() {
         });
       }
       let resultsPath = '/prediction-table';
+
       if (user) {
-        if (user.role === 'teacher' || user.role === 'admin' || user.role === 'researcher') {
-          // All roles use the same prediction-table route in the unified structure
-          // The layout will handle showing the appropriate view based on role/mode
-          resultsPath = '/prediction-table';
+        if (user.role === 'teacher') {
+          resultsPath = '/class-summary';
+        } else if (user.role === 'admin') {
+          resultsPath = '/school-summary';
+        } else if (user.role === 'researcher') {
+          if (viewMode === 'teacher') {
+            resultsPath = '/class-summary';
+          } else if (viewMode === 'admin') {
+            resultsPath = '/school-summary';
+          }
         }
       }
       navigate(resultsPath, { state: { predictions, fileName, sessionId, sessionName } });
+      window.scrollTo(0, 0);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to run predictions';
       setPredictionError(errorMessage);
@@ -303,39 +318,39 @@ export function Dashboard() {
 
   const closeModal = () => setModalChart(null);
 
-   const renderPieChart = (data: { name: string; value: number }[], colors: string[], title: string, isModal = false) => {
-     const CustomPie = (props: PieSectorShapeProps) => <Sector {...props} fill={colors[props.index % colors.length]} />;
-     if (isModal) {
-       return (
-         <ResponsiveContainer key={title} width="100%" aspect={1}>
-           <PieChart>
-             <Pie data={data} cx="50%" cy="50%" labelLine={true} label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`} outerRadius={150} dataKey="value" shape={CustomPie} />
-             <Tooltip />
-             <Legend iconType="none" formatter={(value, entry, index) => (
-               <span className="flex items-center">
-                 <span className="w-3 h-3 mr-2 inline-block rounded-sm" style={{ backgroundColor: colors[index % colors.length] }} />
-                 {value}
-               </span>
-             )} />
-           </PieChart>
-         </ResponsiveContainer>
-       );
-     }
-     return (
-       <ResponsiveContainer width="100%" height="100%">
-         <PieChart>
-           <Pie data={data} cx="50%" cy="50%" labelLine={true} label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`} outerRadius={80} dataKey="value" shape={CustomPie} />
-           <Tooltip />
-           <Legend iconType="none" formatter={(value, entry, index) => (
-             <span className="flex items-center">
-               <span className="w-3 h-3 mr-2 inline-block rounded-sm" style={{ backgroundColor: colors[index % colors.length] }} />
-               {value}
-             </span>
-           )} />
-         </PieChart>
-       </ResponsiveContainer>
-     );
-   };
+  const renderPieChart = (data: { name: string; value: number }[], colors: string[], title: string, isModal = false) => {
+    const CustomPie = (props: PieSectorShapeProps) => <Sector {...props} fill={colors[props.index % colors.length]} />;
+    if (isModal) {
+      return (
+        <ResponsiveContainer key={title} width="100%" aspect={1}>
+          <PieChart>
+            <Pie data={data} cx="50%" cy="50%" labelLine={true} label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`} outerRadius={150} dataKey="value" shape={CustomPie} />
+            <Tooltip />
+            <Legend iconType="none" formatter={(value, entry, index) => (
+              <span className="flex items-center">
+                <span className="w-3 h-3 mr-2 inline-block rounded-sm" style={{ backgroundColor: colors[index % colors.length] }} />
+                {value}
+              </span>
+            )} />
+          </PieChart>
+        </ResponsiveContainer>
+      );
+    }
+    return (
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie data={data} cx="50%" cy="50%" labelLine={true} label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`} outerRadius={80} dataKey="value" shape={CustomPie} />
+          <Tooltip />
+          <Legend iconType="none" formatter={(value, entry, index) => (
+            <span className="flex items-center">
+              <span className="w-3 h-3 mr-2 inline-block rounded-sm" style={{ backgroundColor: colors[index % colors.length] }} />
+              {value}
+            </span>
+          )} />
+        </PieChart>
+      </ResponsiveContainer>
+    );
+  };
 
   return (
     <div className="space-y-8">
@@ -527,9 +542,9 @@ export function Dashboard() {
       {
         hasUploadedData && analysisResult && (
           <div className="space-y-6">
-            {/* Dataset Summary */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Dataset Summary</h2>
+{/* Dataset Summary */}
+              <div ref={datasetSummaryRef} className="bg-white rounded-2xl shadow-lg p-6">
+               <h2 className="text-lg font-semibold text-gray-900 mb-4">Dataset Summary</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
                   <p className="text-sm font-medium text-blue-600">Total Rows</p>

@@ -6,21 +6,18 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const getFriendlyError = (error: unknown): string => {
   const message = (error as { message?: string })?.message?.toLowerCase() ?? '';
-  const status = String((error as { status?: number })?.status ?? '');
+  const code = (error as { code?: string })?.code ?? '';
 
-  if (message.includes('user already registered') || message.includes('user already exists'))
-    return 'This email is already registered. Try signing in instead.';
-  if (message.includes('invalid email') || (status === '400' && message.includes('email')))
+  // Firebase Auth error codes
+  if (code === 'auth/invalid-email' || message.includes('invalid email'))
     return 'Please enter a valid email address.';
-  if (
-    message.includes('weak password') ||
-    message.includes('password should be') ||
-    message.includes('password must be')
-  )
+  if (code === 'auth/email-already-in-use' || message.includes('user already') || message.includes('already registered'))
+    return 'This email is already registered. Try signing in instead.';
+  if (code === 'auth/weak-password' || message.includes('weak password'))
     return 'Your password is too weak. Please use at least 6 characters with a mix of letters and numbers.';
-  if (message.includes('network') || message.includes('fetch') || status === '500')
+  if (code === 'auth/network-request-failed' || message.includes('network') || message.includes('fetch'))
     return 'Unable to connect. Please check your internet connection and try again.';
-  if (message.includes('too many requests') || status === '429')
+  if (code === 'auth/too-many-requests' || message.includes('too many requests'))
     return 'Too many attempts. Please wait a few minutes before trying again.';
 
   return 'Something went wrong. Please try again or contact support if the problem persists.';

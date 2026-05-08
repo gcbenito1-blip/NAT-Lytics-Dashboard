@@ -1,6 +1,8 @@
 // components/ProtectedRoute.tsx
+import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { setCurrentUserId } from '../lib/sessions';
 
 interface Props {
   children: React.ReactNode;
@@ -9,6 +11,15 @@ interface Props {
 
 export function ProtectedRoute({ children, allowedRoles }: Props) {
   const { user, loading } = useAuth();
+
+  // Sync user ID with sessions module
+  useEffect(() => {
+    if (user) {
+      setCurrentUserId(user.id);
+    } else {
+      setCurrentUserId(null);
+    }
+  }, [user]);
 
   if (loading) {
     return (

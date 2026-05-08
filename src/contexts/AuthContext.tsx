@@ -1,13 +1,15 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-
-export interface UserProfile {
-  id: string;
-  email: string;
-  role: 'teacher' | 'admin' | 'researcher';
-  firstName: string;
-  lastName: string;
-  name: string;
-}
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut as firebaseSignOut,
+  onAuthStateChanged,
+  User as FirebaseUser,
+  updateProfile,
+} from 'firebase/auth';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
+import type { UserProfile } from '../lib/sessions';
 
 interface AuthContextType {
   user: UserProfile | null;
@@ -24,37 +26,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const USERS_KEY = 'nat-lytics-users';
-const CURRENT_USER_KEY = 'nat-lytics-current-user';
-
-function getUsers(): Record<string, { password: string; profile: UserProfile }> {
-  try {
-    const data = localStorage.getItem(USERS_KEY);
-    return data ? JSON.parse(data) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveUsers(users: Record<string, { password: string; profile: UserProfile }>): void {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-function getCurrentUserId(): string | null {
-  return localStorage.getItem(CURRENT_USER_KEY);
-}
-
-function setCurrentUserId(userId: string | null): void {
-  if (userId) {
-    localStorage.setItem(CURRENT_USER_KEY, userId);
-  } else {
-    localStorage.removeItem(CURRENT_USER_KEY);
-  }
-}
-
-function generateId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
-}
+const USERS_COLLECTION = 'users';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
@@ -62,19 +34,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Listen to Firebase auth state changes
   useEffect(() => {
-    const userId = getCurrentUserId();
-    if (userId) {
-      const users = getUsers();
-      // Find the user entry by profile.id (users is keyed by email)
-      const userEntry = Object.values(users).find(u => u.profile.id === userId);
-      if (userEntry) {
-        setUser(userEntry.profile);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
+      if (firebaseUser) {
+        // Fetch user profile from Firestore
+        const profile = await getUserProfile(firebaseUser.uid);
+        setUser(profile);
       } else {
-        setCurrentUserId(null);
+        setUser(null);
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   async function signUp(
@@ -84,27 +57,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     lastName: string
   ): Promise<{ error: Error | null }> {
     try {
-      const users = getUsers();
-      const normalizedEmail = email.toLowerCase().trim();
+      // Create Firebase Auth user
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
 
-      if (users[normalizedEmail]) {
-        return { error: new Error('User already exists') };
-      }
-
-      const userId = generateId();
+      // Build profile
+      const userId = cred.user.uid;
       const profile: UserProfile = {
         id: userId,
-        email: normalizedEmail,
+        email: email.toLowerCase().trim(),
         role: 'researcher',
         firstName,
         lastName,
         name: `${firstName} ${lastName}`.trim(),
       };
 
-      users[normalizedEmail] = { password, profile };
-      saveUsers(users);
-      setCurrentUserId(userId);
-      setUser(profile);
+      // Update Firebase display name
+      await updateProfile(cred.user, { displayName: profile.name });
+
+      // Save profile to Firestore
+      await setDoc(doc(db, USERS_COLLECTION, userId), {
+        ...profile,
+        createdAt: serverTimestamp(),
+        email: profile.email,
+      });
 
       return { error: null };
     } catch (error) {
@@ -117,17 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string
   ): Promise<{ error: Error | null }> {
     try {
-      const users = getUsers();
-      const normalizedEmail = email.toLowerCase().trim();
-      const stored = users[normalizedEmail];
-
-      if (!stored || stored.password !== password) {
-        return { error: new Error('Invalid email or password') };
-      }
-
-      setCurrentUserId(stored.profile.id);
-      setUser(stored.profile);
-
+      await signInWithEmailAndPassword(auth, email, password);
       return { error: null };
     } catch (error) {
       return { error: error as Error };
@@ -135,8 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signOut(): Promise<void> {
-    setCurrentUserId(null);
-    setUser(null);
+    await firebaseSignOut(auth);
   }
 
   return (
@@ -144,6 +108,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
+}
+
+// ─── Helper: Fetch user profile from Firestore ─────────────────────────────────
+
+async function getUserProfile(uid: string): Promise<UserProfile> {
+  const snap = await getDoc(doc(db, USERS_COLLECTION, uid));
+  if (!snap.exists()) {
+    throw new Error('User profile not found');
+  }
+  const data = snap.data();
+  return {
+    id: data.id,
+    email: data.email,
+    role: data.role,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    name: data.name,
+  } as UserProfile;
 }
 
 export function useAuth(): AuthContextType {

@@ -166,7 +166,7 @@ const ProficiencyDistributionChart = ({ predictions, proficiencyBands }: {
           <div>
             <p className="text-xs text-gray-500">At or Above Proficient</p>
             <p className="text-sm font-semibold text-green-600">
-              {predictions.filter(p => (p.proficiency?.code ?? 0) >= 4).length} students
+              {predictions.filter(p => (p.proficiency?.code ?? 0) >= 3).length} students
             </p>
           </div>
           <div>
@@ -198,7 +198,7 @@ export function SchoolSummary() {
   // Helper: get band for a score
   const getBandForScore = (score: number): ProficiencyBand | null => {
     for (const band of proficiencyBands) {
-      const m = band.range.match(/^(\d+)\u2013(\d+)$/);
+      const m = band.range.match(/^(\d+)[-–](\d+)$/);
       if (m) {
         const lo = parseInt(m[1]);
         const hi = parseInt(m[2]);
@@ -206,7 +206,7 @@ export function SchoolSummary() {
       }
     }
     return null;
-  };
+  };;
 
   // Load predictions from navigation state
   const state = location.state as ClassSummaryState | null;
@@ -216,7 +216,7 @@ export function SchoolSummary() {
 
   // Calculate statistics
   const totalPredictions = predictions.length;
-  const passedCount = predictions.filter((p) => (p.proficiency?.code ?? 0) > 2).length;
+  const passedCount = predictions.filter((p) => (p.proficiency?.code ?? 0) >= 3).length;
   const failedCount = totalPredictions - passedCount;
   const averageScore = totalPredictions > 0
     ? predictions.reduce((sum, p) => sum + p.prediction, 0) / totalPredictions

@@ -16,6 +16,7 @@ import { FeatureImportance } from './pages/FeatureImportance';
 import { SchoolComparison } from './pages/SchoolComparison';
 import { StudentTable } from './pages/StudentTable';
 
+
 export const router = createBrowserRouter([
   // public
   { path: '/login', element: <Login /> },

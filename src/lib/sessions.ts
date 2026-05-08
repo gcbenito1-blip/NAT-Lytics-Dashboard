@@ -1,5 +1,14 @@
 // sessions.ts — localStorage-backed session management
 
+export interface UserProfile {
+  id: string;
+  email: string;
+  role: 'teacher' | 'admin' | 'researcher';
+  firstName: string;
+  lastName: string;
+  name: string;
+}
+
 export interface Session {
   id: string;
   name: string;
@@ -33,15 +42,26 @@ function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-// ─── Auth guard ────────────────────────────────────────────────────────────────
+// ─── Auth helper ────────────────────────────────────────────────────────────────
 
-// Private helper - use getCurrentUserId() instead
-async function requireAuth(): Promise<string> {
-  throw new Error('use getCurrentUserId() instead');
+// Pass current user ID from AuthContext
+function getCurrentUserId(): string | null {
+  try {
+    // Access global auth state if available
+    const authState = (window as any).__CURRENT_USER_ID__;
+    return authState || null;
+  } catch {
+    return null;
+  }
 }
 
-function getCurrentUserId(): string | null {
-  return localStorage.getItem('nat-lytics-current-user');
+// Set global user ID for sessions module (call from App/ProtectedRoute)
+export function setCurrentUserId(userId: string | null): void {
+  if (userId) {
+    (window as any).__CURRENT_USER_ID__ = userId;
+  } else {
+    delete (window as any).__CURRENT_USER_ID__;
+  }
 }
 
 // ─── Read ──────────────────────────────────────────────────────────────────────
@@ -76,7 +96,7 @@ export async function createSession(name: string): Promise<Session> {
     throw new Error('You must be signed in to create sessions.');
   }
 
-  const users = getSessionsStorage();
+  const sessions = getSessionsStorage();
   const newSession: Session = {
     id: generateId(),
     name,
@@ -84,8 +104,8 @@ export async function createSession(name: string): Promise<Session> {
     created_at: new Date().toISOString(),
   };
 
-  users.push(newSession);
-  saveSessionsStorage(users);
+  sessions.push(newSession);
+  saveSessionsStorage(sessions);
 
   return newSession;
 }

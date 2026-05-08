@@ -6,25 +6,21 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const getFriendlyError = (error: unknown): string => {
   const message = (error as { message?: string })?.message?.toLowerCase() ?? '';
-  const status = String((error as { status?: number })?.status ?? '');
+  const code = (error as { code?: string })?.code ?? '';
 
-  if (
-    message.includes('invalid login credentials') ||
-    message.includes('invalid credentials')
-  )
-    return 'Invalid email or password. Please check your credentials and try again.';
-  if (message.includes('email not confirmed') || message.includes('confirm your email'))
-    return 'Please verify your email address before signing in. Check your inbox for the confirmation link.';
-  if (message.includes('invalid email') || (status === '400' && message.includes('email')))
+  // Firebase Auth error codes
+  if (code === 'auth/invalid-email' || message.includes('invalid email'))
     return 'Please enter a valid email address.';
-  if (message.includes('user not found') || message.includes('no user'))
-    return 'No account found with this email. Please sign up first.';
-  if (message.includes('too many requests') || status === '429')
+  if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || message.includes('invalid credentials') || message.includes('invalid login credentials'))
+    return 'Invalid email or password. Please check your credentials and try again.';
+  if (code === 'auth/too-many-requests' || message.includes('too many requests'))
     return 'Too many failed attempts. Please wait a few minutes before trying again.';
-  if (message.includes('network') || message.includes('fetch') || status === '500')
+  if (code === 'auth/network-request-failed' || message.includes('network') || message.includes('fetch'))
     return 'Unable to connect. Please check your internet connection and try again.';
-  if (message.includes('user disabled'))
+  if (code === 'auth/user-disabled')
     return 'This account has been disabled. Please contact support.';
+  if (code === 'auth/operation-not-allowed')
+    return 'This sign-in method is not enabled. Please contact support.';
 
   return 'Something went wrong. Please try again or contact support if the problem persists.';
 };

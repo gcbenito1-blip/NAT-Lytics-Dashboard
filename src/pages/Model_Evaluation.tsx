@@ -285,17 +285,6 @@ const MetricGuideCard = ({ metricKey }: { metricKey: 'R2' | 'MAE' | 'RMSE' }) =>
       <div className="guide-analogy">
         <strong>💭 Think of it this way:</strong> {info.analogy}
       </div>
-      <div className="guide-scale">
-        <div className="scale-title">How to read the score:</div>
-        <div className="scale-items">
-          {Object.entries(info.guide).map(([key, val]) => (
-            <div key={key} className={`scale-item scale-${key}`}>
-              <span className="scale-range">{val.range}</span>
-              <span className="scale-desc">{val.text}</span>
-            </div>
-          ))}
-        </div>
-      </div>
       <style>{`
                 .metric-guide-card {
                     background: #fafbfc;
@@ -390,7 +379,16 @@ const MetricExplanation = ({ metric }: { metric: 'R2' | 'MAE' | 'RMSE' }) => {
         className="explanation-toggle"
         onClick={() => setExpanded(!expanded)}
       >
-        {expanded ? '🔽 Hide explanation' : '🔍 What does this mean?'}
+        {expanded ? (
+          <span className="flex items-center gap-1">
+            <span className='material-icons-round text-base '>arrow_drop_down</span> Hide explanation
+          </span>
+        ) : (
+          <span className="flex items-center gap-1">
+            <span className='material-icons-round text-base '>arrow_right</span>
+            What does this mean?
+          </span>
+        )}
       </button>
       {expanded && <MetricGuideCard metricKey={metric} />}
       <style>{`
@@ -404,11 +402,10 @@ const MetricExplanation = ({ metric }: { metric: 'R2' | 'MAE' | 'RMSE' }) => {
                     font-size: 12px;
                     cursor: pointer;
                     padding: 4px 0;
-                    text-decoration: underline;
                     transition: color 0.2s;
                 }
                 .explanation-toggle:hover {
-                    color: #4f46e5;
+                    color: #0870bb;
                 }
             `}</style>
     </div>
@@ -417,9 +414,17 @@ const MetricExplanation = ({ metric }: { metric: 'R2' | 'MAE' | 'RMSE' }) => {
 
 // Tooltip content for each metric
 const metricTooltips = {
-  MAE: 'MAE (Mean Absolute Error) - This is the average number of MPS points the model\'s predictions differ from actual scores. An MAE of 4 means predictions are typically within 4 points of the actual NAT score. Lower is better.',
-  RMSE: 'RMSE (Root Mean Square Error) - Similar to MAE but penalizes large errors more heavily. An RMSE of 7 means the model\'s larger errors can reach up to around 7 MPS points from actual scores. Lower is better.',
-  R2: 'R² Score - Measures how well the model explains the variation in actual NAT scores. A score of 0.07 means the model accounts for about 7% of score variation. Values closer to 1.0 indicate a stronger fit; low values suggest academic and demographic data alone explain only a portion of NAT outcomes.'
+  MAE:
+    "MAE (Mean Absolute Error): Average absolute difference between predicted and actual MPS scores. " +
+    "\n\nAn MAE of 4 means predictions are typically off by about 4 points. Lower values indicate better accuracy.",
+
+  RMSE:
+    "RMSE (Root Mean Square Error): Similar to MAE but penalizes large errors more heavily. " +
+    "\n\nAn RMSE of 7 indicates some predictions may deviate by up to ~7 MPS points. Lower values indicate better performance.",
+
+  R2:
+    "R² Score: Measures how much variance in NAT scores is explained by the model. " +
+    "\n\nA value of 0.07 means ~7% of variation is captured. Values closer to 1 indicate stronger explanatory power; low values suggest limited predictability from available features."
 };
 
 // Metric cards component
@@ -446,6 +451,7 @@ const MetricCard = ({
           <div className="tooltip-container">
             <span
               className="material-icons-round text-base text-gray-400"
+              style={{ cursor: "pointer" }}
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
             >
@@ -497,13 +503,14 @@ const MetricCard = ({
           position: absolute;
           top: -8px;
           right: 28px;
-          background: #1f2937;
-          color: #fff;
-          padding: 12px 16px;
+          background: #ffffff;
+          color: #2b2b2b;
+          text-align: left;
+          padding: 10px 12px;
           border-radius: 8px;
-          font-size: 12px;
-          line-height: 1.5;
-          width: 280px;
+          font-size: 13px;
+          line-height: 1.35;
+          width: 260px;
           z-index: 1000;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
@@ -514,7 +521,7 @@ const MetricCard = ({
           right: -6px;
           border-top: 6px solid transparent;
           border-bottom: 6px solid transparent;
-          border-left: 6px solid #1f2937;
+          border-left: 6px solid #ffffff;
         }
         .metric-value-container {
           display: flex;

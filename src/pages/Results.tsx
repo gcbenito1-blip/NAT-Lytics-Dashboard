@@ -201,7 +201,7 @@ export function Results() {
     return Array.from(set).sort();
   }, [predictions]);
 
-   // ── Check if user has any sessions ──
+  // ── Check if user has any sessions ──
   useEffect(() => {
     if (!user) return;
     getSessions()
@@ -269,7 +269,7 @@ export function Results() {
       ? predictions.reduce((s, p) => s + p.prediction, 0) / totalPredictions
       : 0;
 
-  const passedCount = predictions.filter((p) => (p.proficiency?.code ?? 0) >= 2).length;
+  const passedCount = predictions.filter((p) => (p.proficiency?.code ?? 0) > 2).length;
 
   // ── Filtered + sorted list ────────────────────────────────────────────────
   const filteredAndSortedPredictions = predictions
@@ -277,8 +277,8 @@ export function Results() {
       if (filterStatus === 'all') return true;
       const bandCode = parseInt(filterStatus);
       if (!isNaN(bandCode)) return pred.top_probable_band?.code === bandCode;
-      if (filterStatus === 'passed') return (pred.proficiency?.code ?? 0) >= 2;
-      if (filterStatus === 'failed') return (pred.proficiency?.code ?? 0) < 2;
+      if (filterStatus === 'passed') return (pred.proficiency?.code ?? 0) > 2;
+      if (filterStatus === 'failed') return (pred.proficiency?.code ?? 0) <= 2;
       return true;
     })
     .filter((pred) =>
@@ -359,7 +359,7 @@ export function Results() {
     <div className="space-y-8" ref={resultsContainerRef}>
 
       {/* Header */}
-      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 bg-gradient-to-r from-blue-500 to-blue-700 rounded-2xl text-white">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 rounded-2xl text-white" style={{ background: 'linear-gradient(135deg, #3da6e2 0%, #1480be 100%)' }}>
         <div>
           <h1 className="text-2xl font-bold mb-1">Prediction Results</h1>
           <p className="text-sm opacity-90">

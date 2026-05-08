@@ -303,27 +303,39 @@ export function Dashboard() {
 
   const closeModal = () => setModalChart(null);
 
-  const renderPieChart = (data: { name: string; value: number }[], colors: string[], title: string, isModal = false) => {
-    const CustomPie = (props: PieSectorShapeProps) => <Sector {...props} fill={colors[props.index % colors.length]} />;
-    if (isModal) {
-      return (
-        <ResponsiveContainer key={title} width="100%" aspect={1}>
-          <PieChart>
-            <Pie data={data} cx="50%" cy="50%" labelLine={true} label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`} outerRadius={150} dataKey="value" shape={CustomPie} />
-            <Tooltip /><Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      );
-    }
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie data={data} cx="50%" cy="50%" labelLine={true} label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`} outerRadius={80} dataKey="value" shape={CustomPie} />
-          <Tooltip />
-        </PieChart>
-      </ResponsiveContainer>
-    );
-  };
+   const renderPieChart = (data: { name: string; value: number }[], colors: string[], title: string, isModal = false) => {
+     const CustomPie = (props: PieSectorShapeProps) => <Sector {...props} fill={colors[props.index % colors.length]} />;
+     if (isModal) {
+       return (
+         <ResponsiveContainer key={title} width="100%" aspect={1}>
+           <PieChart>
+             <Pie data={data} cx="50%" cy="50%" labelLine={true} label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`} outerRadius={150} dataKey="value" shape={CustomPie} />
+             <Tooltip />
+             <Legend iconType="none" formatter={(value, entry, index) => (
+               <span className="flex items-center">
+                 <span className="w-3 h-3 mr-2 inline-block rounded-sm" style={{ backgroundColor: colors[index % colors.length] }} />
+                 {value}
+               </span>
+             )} />
+           </PieChart>
+         </ResponsiveContainer>
+       );
+     }
+     return (
+       <ResponsiveContainer width="100%" height="100%">
+         <PieChart>
+           <Pie data={data} cx="50%" cy="50%" labelLine={true} label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`} outerRadius={80} dataKey="value" shape={CustomPie} />
+           <Tooltip />
+           <Legend iconType="none" formatter={(value, entry, index) => (
+             <span className="flex items-center">
+               <span className="w-3 h-3 mr-2 inline-block rounded-sm" style={{ backgroundColor: colors[index % colors.length] }} />
+               {value}
+             </span>
+           )} />
+         </PieChart>
+       </ResponsiveContainer>
+     );
+   };
 
   return (
     <div className="space-y-8">

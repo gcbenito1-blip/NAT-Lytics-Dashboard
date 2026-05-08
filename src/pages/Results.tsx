@@ -59,7 +59,7 @@ const exportToPDF = (
 
   const doc = new jsPDF();
   doc.setFontSize(18);
-  doc.text(`${sessionName ?? ''} Prediction Results Report`, 14, 22);
+  doc.text(`${sessionName ?? ''}Prediction Results Report for ${fileName}`, 14, 22);
   doc.setFontSize(10);
   doc.setTextColor(100);
   doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);

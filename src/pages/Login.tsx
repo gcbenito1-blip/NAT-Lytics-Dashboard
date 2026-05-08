@@ -46,7 +46,7 @@ export function Login() {
       toast.success('Redirecting to Landing Page...');
       // Give the toast a moment to render, then navigate
       setLoading(false);
-      setTimeout(() => navigate('/home'), 1500);
+      setTimeout(() => navigate('/home'), 1000);
     }
   }
 

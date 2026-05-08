@@ -107,21 +107,27 @@ export function AppLayout() {
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {/* Logo */}
+
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <Link to="/home" className="flex items-center space-x-3 hover:opacity-90 transition">
-            <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg mb-4 overflow-hidden">
-              <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
+
+            <div className="w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="w-full h-full object-cover block"
+              />
             </div>
-            <span className="text-xl font-bold">
-              NAT-Lytics
-              <br />
-              <p className="text-xs font-normal text-gray-500">
+
+            <div className="flex flex-col leading-tight">
+              <span className="text-xl font-bold">NAT-Lytics</span>
+              <span className="text-xs font-normal text-gray-500">
                 National Achievement Test Predictive Analytics Tool
-              </p>
-            </span>
+              </span>
+            </div>
+
           </Link>
         </div>
-
         {/* Researcher prediction: teacher/admin view toggle */}
         {isResearcher && researcherMode === 'prediction' && (
           <div className="px-4 py-2 border-b border-gray-200">
@@ -174,7 +180,7 @@ export function AppLayout() {
         {/* User info + logout */}
         <div className="p-4 border-t border-gray-200 shrink-0">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shrink-0">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-br flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, #3da6e2 0%, #1480be 100%)' }}>
               <span className="text-white font-medium">
                 {user?.firstName?.charAt(0).toUpperCase() ??
                   user?.email?.charAt(0).toUpperCase()}

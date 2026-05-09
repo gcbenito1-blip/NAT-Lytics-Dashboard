@@ -102,7 +102,7 @@
 
 ## Data Pipeline Flow (`backend/data/final/short_pipeline.py`)
 
-`
+```
 STEP 1: Load CSVs (23-24.csv, 24-25.csv, optional extra CSVs)
 |   -> Load year-level data, assign cohort rank (school_year)
 
@@ -163,7 +163,7 @@ STEP 10: Explainability
 
 STEP 11: Save Artifact
 |   -> best_model.joblib with all model, metrics, and metadata
-`
+```
 
 **Key Outputs:**
 - best_model.joblib - Trained model with preprocessor, SHAP explainer

@@ -7,15 +7,23 @@ interface FeatureImportanceItem {
     importance: number;
 }
 
+// Tooltip content explaining feature importance
+const featureImportanceTooltip =
+    "Feature importance score – " +
+    "Indicates how much these variables contributed to the model's predictions relative to all other inputs. " +
+    "A score of 0.21 means this feature accounted for roughly 21% of the model's decision-making. " +
+    "Higher scores identify stronger predictors of NAT performance.";
+
+
 export function FeatureImportance() {
     const [featureImportance, setFeatureImportance] = useState<FeatureImportanceItem[]>([]);
     const [loading, setLoading] = useState(true);
 
-     useEffect(() => {
-          const fetchFeatureImportance = async () => {
-              setLoading(true);
-              try {
-                  const response = await fetch(`${API_BASE_URL}/feature-importance`);
+    useEffect(() => {
+        const fetchFeatureImportance = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/feature-importance`);
                 if (response.ok) {
                     const data = await response.json();
                     let fiArray: FeatureImportanceItem[] = [];
@@ -62,6 +70,7 @@ export function FeatureImportance() {
             <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                 <div className="mb-4">
                     <h2 className="text-lg font-semibold text-gray-900">Feature Importance Analysis</h2>
+
                     <p className="text-sm text-gray-600">
                         All {featureImportance.length} features ranked by their contribution to NAT score predictions (sorted descending)
                     </p>
@@ -120,6 +129,19 @@ export function FeatureImportance() {
                             </BarChart>
                         </ResponsiveContainer>
                     )}
+                </div>
+            </div>
+
+            {/* Feature Importance Info Tooltip */}
+            <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                <div className="mb-4">
+                    <h2 className="text-lg font-semibold text-gray-900">Understanding Feature Importance</h2>
+                </div>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                        <span className="material-icons-round text-blue-500 mt-0.5 text-lg">info_outline</span>
+                        <p className="text-sm text-blue-800 leading-relaxed">{featureImportanceTooltip}</p>
+                    </div>
                 </div>
             </div>
 

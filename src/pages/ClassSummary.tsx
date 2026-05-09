@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PredictionResult as ApiPredictionResult, getProficiencyLabels } from '../services/api';
-import { getFriendlyFeatureName, getCategoryColor, featureExplanations } from './Results';
+import { getFriendlyFeatureName, } from './Results';
 import type { ProficiencyBand } from '../services/api';
 
 interface ClassSummaryState {
@@ -519,8 +519,6 @@ export function ClassSummary() {
                       const maxAbs = Math.max(...aggregatedFeatureImportance.map(f => Math.abs(f.avgAbsShap)), 0.01);
                       const width = maxAbs > 0 ? (Math.abs(item.avgAbsShap) / maxAbs) * 100 : 0;
                       const isPositive = item.avgShap > 0;
-                      const categoryInfo = featureExplanations[item.feature];
-                      const categoryColor = getCategoryColor('Student Profile');
 
                       return (
                         <div key={idx} className="relative">
@@ -539,17 +537,10 @@ export function ClassSummary() {
                             />
                           </div>
                           <div className="flex items-center gap-2 mt-1">
-                            <span
-                              className="inline-block px-2 py-0.5 text-xs rounded-full text-white"
-                              style={{ backgroundColor: categoryColor }}
-                            >
-                              {categoryInfo?.category || 'Unknown'}
-                            </span>
                             <span className={`text-xs ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
                               {isPositive ? '↑ Increases prediction' : '↓ Decreases prediction'}
                             </span>
                           </div>
-
                         </div>
                       );
                     })}

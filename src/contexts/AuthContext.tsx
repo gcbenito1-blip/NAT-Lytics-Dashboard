@@ -124,7 +124,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 async function getUserProfile(uid: string): Promise<UserProfile> {
   const snap = await getDoc(doc(db, USERS_COLLECTION, uid));
   if (!snap.exists()) {
-    throw new Error('User profile not found');
+    // If the profile doesn't exist yet, return a minimal profile
+    // and the caller will redirect to profile setup.
+    const firebaseUser = auth.currentUser;
+    return {
+      id: uid,
+      email: firebaseUser?.email ?? '',
+      role: 'researcher',
+      firstName: firebaseUser?.displayName?.split(' ')[0] ?? '',
+      lastName: firebaseUser?.displayName?.split(' ').slice(1).join(' ') ?? '',
+      name: firebaseUser?.displayName ?? '',
+    };
   }
   const data = snap.data();
   return {

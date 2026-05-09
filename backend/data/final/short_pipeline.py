@@ -274,11 +274,11 @@ def build_train_data_aggregated_csv(
         ohe_df = pd.DataFrame(ohe_arr, columns=ohe_feature_names, index=df.index)
         ohe_parts.append(ohe_df)
     
-    # Numeric columns: impute mean (no scaling) — keeps raw aggregated values
+    # Numeric columns: impute median(no scaling) — keeps raw aggregated values
     num_df = df[num_cols].copy()
     for col in num_cols:
         num_df[col] = pd.to_numeric(num_df[col], errors="coerce")
-        num_df[col] = num_df[col].fillna(num_df[col].mean())
+        num_df[col] = num_df[col].fillna(num_df[col].median())
     
     # Combine: numeric (raw aggregated) + OHE categoricals
     parts = [num_df.reset_index(drop=True)]
@@ -536,7 +536,7 @@ def aggregate_subject_grades(df: pd.DataFrame) -> pd.DataFrame:
         present = [c for c in src_cols if c in df.columns]
         if not present:
             continue
-        df[new_col] = df[present].apply(pd.to_numeric, errors="coerce").mean(axis=1)
+        df[new_col] = df[present].apply(pd.to_numeric, errors="coerce").median(axis=1)
     return df
 
 def check_distribution_shift(df1: pd.DataFrame, df2: pd.DataFrame,
@@ -605,7 +605,7 @@ def apply_zscore_params(df: pd.DataFrame, cols: list,
 
 def build_preprocessor(num_cols: list, cat_cols: list) -> ColumnTransformer:
     num_pipe = Pipeline([
-        ("impute", SimpleImputer(strategy="mean")),
+        ("impute", SimpleImputer(strategy="median")),
         ("scale",  StandardScaler()),
     ])
     cat_pipe = Pipeline([
@@ -640,8 +640,8 @@ def apply_pca_on_subjects(X_train: pd.DataFrame,
     n_components = min(n_components, len(present))
     pca = PCA(n_components=n_components, random_state=RANDOM_SEED)
 
-    train_pcs = pca.fit_transform(X_train[present].fillna(X_train[present].mean()))
-    test_pcs  = pca.transform(X_test[present].fillna(X_train[present].mean()))
+    train_pcs = pca.fit_transform(X_train[present].fillna(X_train[present].median()))
+    test_pcs  = pca.transform(X_test[present].fillna(X_train[present].median()))
 
     pc_cols = [f"academic_PC{i+1}" for i in range(n_components)]
 
@@ -811,11 +811,11 @@ def build_train_data_csv(
         ohe_df = pd.DataFrame(ohe_arr, columns=ohe_feature_names, index=df.index)
         ohe_parts.append(ohe_df)
 
-    # Numeric columns: impute mean (no scaling) — keeps raw grade values
+    # Numeric columns: impute median(no scaling) — keeps raw grade values
     num_df = df[num_cols].copy()
     for col in num_cols:
         num_df[col] = pd.to_numeric(num_df[col], errors="coerce")
-        num_df[col] = num_df[col].fillna(num_df[col].mean())
+        num_df[col] = num_df[col].fillna(num_df[col].median())
 
     # Combine: numeric (raw) + OHE categoricals
     parts = [num_df.reset_index(drop=True)]
@@ -1312,11 +1312,11 @@ def main():
             ohe_df.index = df.index
             ohe_parts.append(ohe_df)
 
-        # Numeric columns: impute mean (no scaling) — keeps raw grade values and averages
+        # Numeric columns: impute (no scaling) — keeps raw grade values and averages
         num_df = df[num_cols].copy()
         for col in num_cols:
             num_df[col] = pd.to_numeric(num_df[col], errors="coerce")
-            num_df[col] = num_df[col].fillna(num_df[col].mean())
+            num_df[col] = num_df[col].fillna(num_df[col].median())
 
         # Combine: numeric (raw quarterly + averages) + OHE categoricals
         parts = [num_df.reset_index(drop=True)]

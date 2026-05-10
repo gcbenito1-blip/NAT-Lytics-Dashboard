@@ -391,11 +391,20 @@ export function StudentTable() {
                                     <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700 cursor-pointer hover:bg-gray-100" onClick={() => handleSort('predicted_proficiency')}>
                                         Predicted Proficiency {getSortIndicator('predicted_proficiency')}
                                     </th>
-                                    <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700 cursor-pointer hover:bg-gray-100" onClick={() => handleSort('difference')}>
+                                    <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700 cursor-pointer hover:bg-gray-100 relative group" onClick={() => handleSort('difference')}>
                                         Difference {getSortIndicator('difference')}
+                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none w-64 z-10">
+                                            <div className="mb-1"><span className="font-semibold">Positive value:</span> Model overestimated — learner performed lower than predicted.</div>
+                                            <div><span className="font-semibold">Negative value:</span> Model underestimated — learner performed better than predicted.</div>
+                                        </div>
                                     </th>
-                                    <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700 cursor-pointer hover:bg-gray-100" onClick={() => handleSort('errorMagnitude')}>
+                                    <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700 cursor-pointer hover:bg-gray-100 relative group" onClick={() => handleSort('errorMagnitude')}>
                                         Error Magnitude {getSortIndicator('errorMagnitude')}
+                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none w-64 z-10">
+                                            <div className="mb-1"><span className="font-semibold">High:</span> Difference &gt; 3 points — flagged for investigation.</div>
+                                            <div className="mb-1"><span className="font-semibold">Medium:</span> Difference 2-3 points — acceptable range.</div>
+                                            <div><span className="font-semibold">Low:</span> Difference &lt; 2 points — high accuracy.</div>
+                                        </div>
                                     </th>
                                 </tr>
                             </thead>
@@ -406,22 +415,48 @@ export function StudentTable() {
                                         <td className="py-3 px-4 text-sm text-gray-600">{student.school}</td>
                                         <td className="py-3 px-4">{student.actualMPS.toFixed(1)}</td>
                                         <td className="py-3 px-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getProficiencyBadgeClass(student.actual_proficiency)}`}>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold relative group ${getProficiencyBadgeClass(student.actual_proficiency)}`}>
                                                 {student.actual_proficiency}
+                                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none w-48 z-10">
+                                                    <div><span className="font-semibold">Highly Proficient:</span> 90-100</div>
+                                                    <div><span className="font-semibold">Proficient:</span> 75-89</div>
+                                                    <div><span className="font-semibold">Nearly Proficient:</span> 50-74</div>
+                                                    <div><span className="font-semibold">Low Proficient:</span> 25-49</div>
+                                                    <div><span className="font-semibold">Not Proficient:</span> 0-24</div>
+                                                </div>
                                             </span>
                                         </td>
                                         <td className="py-3 px-4">{student.predictedMPS.toFixed(1)}</td>
                                         <td className="py-3 px-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getProficiencyBadgeClass(student.predicted_proficiency)}`}>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold relative group ${getProficiencyBadgeClass(student.predicted_proficiency)}`}>
                                                 {student.predicted_proficiency}
+                                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none w-48 z-10">
+                                                    <div><span className="font-semibold">Highly Proficient:</span> 90-100</div>
+                                                    <div><span className="font-semibold">Proficient:</span> 75-89</div>
+                                                    <div><span className="font-semibold">Nearly Proficient:</span> 50-74</div>
+                                                    <div><span className="font-semibold">Low Proficient:</span> 25-49</div>
+                                                    <div><span className="font-semibold">Not Proficient:</span> 0-24</div>
+                                                </div>
                                             </span>
                                         </td>
-                                        <td className={`py-3 px-4 font-medium ${Math.abs(student.difference) > 3 ? 'text-red-600' : ''}`}>
-                                            {student.difference > 0 ? '+' : ''}{student.difference.toFixed(1)}
+                                        <td className={`py-3 px-4 font-medium relative group ${Math.abs(student.difference) > 3 ? 'text-red-600' : ''}`}>
+                                            <span className="cursor-help">{student.difference > 0 ? '+' : ''}{student.difference.toFixed(1)}</span>
+                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none w-64 z-10">
+                                                {student.difference > 0 ? (
+                                                    <div><span className="font-semibold">Positive value:</span> Model overestimated — learner performed lower than predicted.</div>
+                                                ) : (
+                                                    <div><span className="font-semibold">Negative value:</span> Model underestimated — learner performed better than predicted.</div>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="py-3 px-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getErrorBadgeClass(student.difference)}`}>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold relative group ${getErrorBadgeClass(student.difference)}`}>
                                                 {getErrorLabel(student.difference)}
+                                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none w-64 z-10">
+                                                    <div className="mb-1"><span className="font-semibold">High:</span> Difference &gt; 3 points — flagged for investigation.</div>
+                                                    <div className="mb-1"><span className="font-semibold">Medium:</span> Difference 2-3 points — acceptable range.</div>
+                                                    <div><span className="font-semibold">Low:</span> Difference &lt; 2 points — high accuracy.</div>
+                                                </div>
                                             </span>
                                         </td>
                                     </tr>

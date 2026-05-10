@@ -441,10 +441,10 @@ export function Results() {
                 {/* Learner ID */}
                 <SortableHeader label="Learner ID" field="learnerID" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
                 {hasSection && <SortableHeader label="Section" field="Section" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />}
-                <SortableHeader label="Predicted MPS" field="prediction" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                <SortableHeader label="Predicted MPS" field="prediction" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} title="This is the model's estimated Mean Percentage Score for this learner based on their academic grades and demographic profile. It is a forecast, not an official NAT result, and should be used as a guide for planning — not as a final assessment of the learner's ability." />
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Proficiency</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Probability Breakdown</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="The estimated likelihood that this learner will reach the Proficient level (MPS ≥ 75) in the NAT. A probability of 30% means the model estimates a 30-in-100 chance of meeting the proficiency threshold based on current academic records. Use this to prioritize learners who may need early support.">
                   Pass Probability<br />P(MPS ≥ 75)
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -783,17 +783,20 @@ function SortableHeader<T>({
   sortField,
   sortDirection,
   onSort,
+  title,
 }: {
   label: string;
   field: keyof T;
   sortField: keyof T;
   sortDirection: 'asc' | 'desc';
   onSort: (f: keyof T) => void;
+  title?: string;
 }) {
   return (
     <th
       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
       onClick={() => onSort(field)}
+      title={title}
     >
       <div className="flex items-center gap-1">
         {label}

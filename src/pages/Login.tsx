@@ -8,10 +8,9 @@ const getFriendlyError = (error: unknown): string => {
   const message = (error as { message?: string })?.message?.toLowerCase() ?? '';
   const code = (error as { code?: string })?.code ?? '';
 
-  // Firebase Auth error codes
   if (code === 'auth/invalid-email' || message.includes('invalid email'))
     return 'Please enter a valid email address.';
-  if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || message.includes('invalid credentials') || message.includes('invalid login credentials'))
+  if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || message.includes('invalid credentials'))
     return 'Invalid email or password. Please check your credentials and try again.';
   if (code === 'auth/too-many-requests' || message.includes('too many requests'))
     return 'Too many failed attempts. Please wait a few minutes before trying again.';
@@ -19,10 +18,8 @@ const getFriendlyError = (error: unknown): string => {
     return 'Unable to connect. Please check your internet connection and try again.';
   if (code === 'auth/user-disabled')
     return 'This account has been disabled. Please contact support.';
-  if (code === 'auth/operation-not-allowed')
-    return 'This sign-in method is not enabled. Please contact support.';
 
-  return 'Something went wrong. Please try again or contact support if the problem persists.';
+  return 'Something went wrong. Please try again.';
 };
 
 export function Login() {
@@ -34,19 +31,27 @@ export function Login() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (loading) return;
+
     setLoading(true);
 
-    const { error } = await signIn(email, password);
+    try {
+      const { error, user } = await signIn(email, password);
 
-    if (error) {
-      const msg = getFriendlyError(error);
-      toast.error(msg);
+      if (error) {
+        toast.error(getFriendlyError(error));
+        setLoading(false);
+      } else if (user) {
+        // User is successfully logged in and profile is loaded
+        toast.success(`Welcome back, ${user.firstName}!`);
+        // Navigate immediately - no timeout needed because user state is already updated
+        navigate('/home', { replace: true });
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      toast.error('An unexpected error occurred. Please try again.');
       setLoading(false);
-    } else {
-      toast.success('Redirecting to Landing Page...');
-      // Give the toast a moment to render, then navigate
-      setLoading(false);
-      setTimeout(() => navigate('/home'), 1000);
     }
   }
 
@@ -64,7 +69,6 @@ export function Login() {
 
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl p-8">
-          {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg mb-4 overflow-hidden">
               <img
@@ -78,7 +82,6 @@ export function Login() {
             <p className="text-gray-500 mt-2">National Achievement Test Predictive Tool</p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -91,7 +94,8 @@ export function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                disabled={loading}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-100"
                 placeholder="Enter your email"
               />
             </div>
@@ -107,7 +111,8 @@ export function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                disabled={loading}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-100"
                 placeholder="Enter your password"
               />
             </div>

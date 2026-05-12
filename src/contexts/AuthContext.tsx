@@ -28,8 +28,8 @@ interface AuthContextType {
     password: string,
     firstName: string,
     lastName: string
-  ) => Promise<{ error: Error | null }>;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  ) => Promise<{ error: Error | null; user?: UserProfile }>;
+  signIn: (email: string, password: string) => Promise<{ error: Error | null; user?: UserProfile }>;
   signOut: () => Promise<void>;
 }
 
@@ -46,6 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Listen to Firebase auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
+
       if (firebaseUser) {
         // Fetch user profile from Firestore
         const profile = await getUserProfile(firebaseUser.uid);
@@ -56,7 +57,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    // Add session storage to detect tab close
+    const handleTabClose = () => {
+      // Optional: Clear sensitive data from sessionStorage
+      sessionStorage.clear();
+    };
+
+    window.addEventListener('beforeunload', handleTabClose);
+
+    // Check if this is a new session
+    if (!sessionStorage.getItem('session_active')) {
+      sessionStorage.setItem('session_active', 'true');
+      // Optional: Sign out if this is a new session and you want fresh login each time
+      // firebaseSignOut(auth);
+    }
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('beforeunload', handleTabClose);
+    };
   }, []);
 
   async function signUp(
@@ -64,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     firstName: string,
     lastName: string
-  ): Promise<{ error: Error | null }> {
+  ): Promise<{ error: Error | null; user?: UserProfile }> {
     try {
       // Create Firebase Auth user
       const cred = await createUserWithEmailAndPassword(auth, email, password);
@@ -90,8 +109,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: profile.email,
       });
 
-      return { error: null };
+      // Return the user profile so login component can use it immediately
+      return { error: null, user: profile };
     } catch (error) {
+      console.error('Sign up error:', error);
       return { error: error as Error };
     }
   }
@@ -99,17 +120,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signIn(
     email: string,
     password: string
-  ): Promise<{ error: Error | null }> {
+  ): Promise<{ error: Error | null; user?: UserProfile }> {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      return { error: null };
+      // First, sign in with Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+      // Immediately fetch the user profile after successful sign in
+      const profile = await getUserProfile(userCredential.user.uid);
+
+      // Update the context state
+      setUser(profile);
+
+      // Return the profile so the component can use it immediately
+      return { error: null, user: profile };
     } catch (error) {
+      console.error('Sign in error:', error);
       return { error: error as Error };
     }
   }
 
   async function signOut(): Promise<void> {
     await firebaseSignOut(auth);
+    setUser(null); // Clear user state immediately
   }
 
   return (
@@ -122,29 +154,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 // ─── Helper: Fetch user profile from Firestore ─────────────────────────────────
 
 async function getUserProfile(uid: string): Promise<UserProfile> {
-  const snap = await getDoc(doc(db, USERS_COLLECTION, uid));
-  if (!snap.exists()) {
-    // If the profile doesn't exist yet, return a minimal profile
-    // and the caller will redirect to profile setup.
-    const firebaseUser = auth.currentUser;
+  try {
+    const snap = await getDoc(doc(db, USERS_COLLECTION, uid));
+
+    if (!snap.exists()) {
+      console.warn(`No user profile found for UID: ${uid}`);
+      // If the profile doesn't exist yet, return a minimal profile
+      const firebaseUser = auth.currentUser;
+      const displayName = firebaseUser?.displayName || '';
+      const nameParts = displayName.split(' ');
+
+      return {
+        id: uid,
+        email: firebaseUser?.email ?? '',
+        role: 'researcher',
+        firstName: nameParts[0] || '',
+        lastName: nameParts.slice(1).join(' ') || '',
+        name: displayName,
+      };
+    }
+
+    const data = snap.data();
     return {
-      id: uid,
-      email: firebaseUser?.email ?? '',
-      role: 'researcher',
-      firstName: firebaseUser?.displayName?.split(' ')[0] ?? '',
-      lastName: firebaseUser?.displayName?.split(' ').slice(1).join(' ') ?? '',
-      name: firebaseUser?.displayName ?? '',
-    };
+      id: data.id || uid,
+      email: data.email || '',
+      role: data.role || 'researcher',
+      firstName: data.firstName || '',
+      lastName: data.lastName || '',
+      name: data.name || '',
+    } as UserProfile;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
   }
-  const data = snap.data();
-  return {
-    id: data.id,
-    email: data.email,
-    role: data.role,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    name: data.name,
-  } as UserProfile;
 }
 
 export function useAuth(): AuthContextType {

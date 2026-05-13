@@ -8,6 +8,9 @@ import { Dashboard } from './pages/Dashboard';
 import { ClassSummary } from './pages/ClassSummary';
 import { SchoolSummary } from './pages/SchoolSummary';
 import { SectionComparison } from './pages/SectionComparison';
+import { TeacherOverview } from './pages/TeacherOverview';
+import { AdminOverview } from './pages/AdminOverview';
+import { OverviewRouter } from './layouts/OverviewRouter';
 import { Results } from './pages/Results';
 import { ModelReliability } from './pages/ModelReliability';
 import { ModelEvaluation } from './pages/Model_Evaluation';
@@ -42,6 +45,12 @@ export const router = createBrowserRouter([
     ),
     children: [
       // prediction
+      {
+        path: 'overview',
+        element: (
+          <OverviewRouter />
+        ),
+      },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'class-summary', element: <ClassSummary /> },
       { path: 'school-summary', element: <SchoolSummary /> },

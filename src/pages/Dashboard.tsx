@@ -483,7 +483,7 @@ export function Dashboard() {
               {[
                 { label: 'Total Rows', value: analysisResult.row_count, color: 'from-blue-50 to-blue-100', text: 'text-blue-700' },
                 { label: 'Total Columns', value: analysisResult.column_count, color: 'from-green-50 to-green-100', text: 'text-green-700' },
-                { label: 'Missing Values', value: analysisResult.missing_values.total_missing, color: 'from-purple-50 to-purple-100', text: 'text-purple-700' },
+                { label: 'Missing Values', value: analysisResult.missing_values.total_missing, color: 'from-blue-50 to-blue-100', text: 'text-blue-700' },
                 { label: 'Data Quality', value: `${(100 - analysisResult.missing_values.missing_percentage).toFixed(1)}%`, color: 'from-orange-50 to-orange-100', text: 'text-orange-700' },
               ].map((s) => (
                 <div key={s.label} className={`p-4 bg-gradient-to-br ${s.color} rounded-xl`}>

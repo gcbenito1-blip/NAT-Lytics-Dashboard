@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useOutletContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { PredictionResult as ApiPredictionResult, getProficiencyLabels } from '../services/api';
-import { getFriendlyFeatureName, getCategoryColor, featureExplanations } from './Results';
+import { getFriendlyFeatureName, featureExplanations } from './Results';
 import type { ProficiencyBand } from '../services/api';
 
 interface ClassSummaryState {
@@ -184,6 +185,7 @@ const ProficiencyDistributionChart = ({ predictions, proficiencyBands }: {
 export function SchoolSummary() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
   const [isFeatureDashboardOpen, setIsFeatureDashboardOpen] = useState(true);
   const [proficiencyBands, setProficiencyBands] = useState<ProficiencyBand[]>([]);
 
@@ -335,35 +337,6 @@ export function SchoolSummary() {
 
         {/* All Statistics in a Single Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
-          {/* Total Learners */}
-          <div className="bg-white rounded-2xl shadow-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-gray-500">Total Learners</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{totalPredictions}</p>
-              </div>
-              <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* Highest MPS */}
-          <div className="bg-white rounded-2xl shadow-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-gray-500">Highest MPS</p>
-                <p className="text-2xl font-bold text-blue-600 mt-1">{highestScore.toFixed(1)}</p>
-              </div>
-              <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-              </div>
-            </div>
-          </div>
 
           {/* Average MPS */}
           <div className="bg-white rounded-2xl shadow-lg p-4">
@@ -377,21 +350,6 @@ export function SchoolSummary() {
               <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: avgColor + '20' }}>
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: avgColor }}>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* Lowest MPS */}
-          <div className="bg-white rounded-2xl shadow-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-gray-500">Lowest MPS</p>
-                <p className="text-2xl font-bold text-orange-600 mt-1">{lowestScore.toFixed(1)}</p>
-              </div>
-              <div className="h-10 w-10 rounded-xl bg-orange-100 flex items-center justify-center">
-                <svg className="h-5 w-5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
                 </svg>
               </div>
             </div>
@@ -441,9 +399,6 @@ export function SchoolSummary() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900">Feature Importance Dashboard</h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  Aggregated feature importance based on SHAP values from all {totalPredictions} predictions
-                </p>
               </div>
               <button
                 onClick={() => setIsFeatureDashboardOpen(!isFeatureDashboardOpen)}
@@ -461,18 +416,8 @@ export function SchoolSummary() {
               </button>
             </div>
 
-            {/* What is SHAP? Help Section */}
             <div className="mb-4">
-              <details className="group">
-                <summary className="flex items-center gap-2 cursor-pointer text-sm text-blue-600 hover:text-blue-800">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="font-medium">What are SHAP values?</span>
-                  <svg className="h-4 w-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </summary>
+              <div className="group">
                 <div className="mt-3 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
                   <div className="space-y-3 text-sm text-gray-700">
                     <p>
@@ -505,7 +450,7 @@ export function SchoolSummary() {
                     </div>
                   </div>
                 </div>
-              </details>
+              </div>
             </div>
 
             {isFeatureDashboardOpen && (
@@ -519,16 +464,12 @@ export function SchoolSummary() {
                       const width = maxAbs > 0 ? (Math.abs(item.avgAbsShap) / maxAbs) * 100 : 0;
                       const isPositive = item.avgShap > 0;
                       const categoryInfo = featureExplanations[item.feature];
-                      const categoryColor = getCategoryColor('Student Profile');
 
                       return (
                         <div key={idx} className="relative">
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-sm font-medium text-gray-700">
                               {getFriendlyFeatureName(item.feature)}
-                            </span>
-                            <span className="text-sm text-gray-500">
-                              Avg |SHAP|: {item.avgAbsShap.toFixed(3)}
                             </span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -537,18 +478,6 @@ export function SchoolSummary() {
                               style={{ width: `${width}%` }}
                             />
                           </div>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span
-                              className="inline-block px-2 py-0.5 text-xs rounded-full text-white"
-                              style={{ backgroundColor: categoryColor }}
-                            >
-                              {categoryInfo?.category || 'Unknown'}
-                            </span>
-                            <span className={`text-xs ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                              {isPositive ? '↑ Increases prediction' : '↓ Decreases prediction'}
-                            </span>
-                          </div>
-
                         </div>
                       );
                     })}
@@ -561,8 +490,13 @@ export function SchoolSummary() {
 
         {/* Back to Dashboard Button */}
         <div className="flex justify-center">
-          <button
-            onClick={() => navigate('/dashboard')}
+           <button
+             onClick={() => {
+               const { viewMode } = useOutletContext();
+               const isAdminView = user?.role === 'admin' || 
+                 (user?.role === 'researcher' && viewMode === 'admin');
+               navigate(isAdminView ? '/overview' : '/dashboard');
+             }}
             className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center space-x-2"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

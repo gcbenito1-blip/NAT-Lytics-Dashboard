@@ -8,12 +8,14 @@ import {
   UserRole,
   ResearcherMode,
   ViewMode,
+  MenuItem,
   badgeConfig,
   sampleDatasetConfig,
   getMenuItems,
   getSampleDatasetKey,
   UPLOAD_PATH,
   OVERVIEW_PATH,
+  icon,
 } from './layoutConfig';
 
 // ── Proficiency Guide Badge ───────────────────────────────────────────────────
@@ -104,7 +106,29 @@ export function AppLayout() {
   // ── Upload guard (teacher & researcher prediction only) ───────────────────
   const hasPredictions = !!location.state?.predictions;
   const isEvaluation = isResearcher && researcherMode === 'evaluation';
-  const menuItems = getMenuItems(role, researcherMode, viewMode);
+
+   // Determine menu items - for admins and researcher admin viewing session results, use a special menu
+   let menuItems: MenuItem[];
+   const isAdminOrResearcherAdmin = isAdmin || (isResearcher && researcherMode === 'prediction' && viewMode === 'admin');
+   if (isAdminOrResearcherAdmin) {
+     // Check if we're viewing session results (paths that should show session navigation)
+     const sessionResultPaths = ['/class-summary', '/school-summary', '/prediction-table', '/section-comparison'];
+     const isViewingSessionResult = sessionResultPaths.includes(location.pathname);
+     if (isViewingSessionResult) {
+       // Menu for admin/researcher admin viewing session results: show overview and session-related pages
+       menuItems = [
+         { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
+         { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
+         { name: 'School Summary', path: '/school-summary', icon: icon('school') },
+         { name: 'Section Comparison', path: '/section-comparison', icon: icon('compare') },
+         { name: 'Prediction Table', path: '/prediction-table', icon: icon('table_chart') },
+       ];
+     } else {
+       menuItems = getMenuItems(role, researcherMode, viewMode);
+     }
+   } else {
+     menuItems = getMenuItems(role, researcherMode, viewMode);
+   }
   const currentMenuItem = menuItems.find((m) => m.path === location.pathname);
   const needsUploadGuard = !isEvaluation && !isAdmin;
   const isAlwaysAccessible = currentMenuItem?.alwaysAccessible ?? false;
@@ -120,9 +144,13 @@ export function AppLayout() {
   const sampleKey = getSampleDatasetKey(role, researcherMode, viewMode);
   const sampleDataset = sampleKey ? sampleDatasetConfig[sampleKey] : null;
 
-  const badge = isResearcher
-    ? { label: `RESEARCHER — ${researcherMode.toUpperCase()} MODE`, className: 'bg-blue-100 text-blue-700' }
-    : badgeConfig[role];
+   const badge = isResearcher && researcherMode === 'prediction'
+     ? viewMode === 'teacher'
+       ? badgeConfig.teacher
+       : badgeConfig.admin
+     : isResearcher
+     ? { label: `RESEARCHER — ${researcherMode.toUpperCase()} MODE`, className: 'bg-blue-100 text-blue-700' }
+     : badgeConfig[role];
 
   const isActive = (path: string) => location.pathname === path;
   const isDisabled = (item: typeof menuItems[0]) => {
@@ -210,7 +238,7 @@ export function AppLayout() {
                 title={disabled ? 'Upload a dataset first' : undefined}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition
                   ${isActive(item.path)
-                    ? role === 'admin' ? 'bg-purple-50 text-purple-700' : 'bg-blue-50 text-blue-700'
+                    ? role === 'admin' ? 'bg-blue-50 text-blue-700' : 'bg-blue-50 text-blue-700'
                     : disabled
                       ? 'text-gray-300 cursor-not-allowed opacity-50'
                       : 'text-gray-700 hover:bg-gray-100'}`}
@@ -234,7 +262,7 @@ export function AppLayout() {
               className="h-10 w-10 rounded-full flex items-center justify-center shrink-0"
               style={{
                 background: role === 'admin'
-                  ? 'linear-gradient(135deg, #7c3aed, #4f46e5)'
+                  ? 'linear-gradient(135deg, #214bd3, #01398d)'
                   : 'linear-gradient(135deg, #3da6e2, #1480be)',
               }}
             >

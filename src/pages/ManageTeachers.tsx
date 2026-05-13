@@ -1,15 +1,68 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import {
-  collection, query, where, getDocs, deleteDoc, doc,
+  collection, query, where, getDocs, deleteDoc, doc, serverTimestamp, setDoc,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, signOut as firebaseSignOut } from 'firebase/auth';
 import type { UserProfile } from '../contexts/AuthContext';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface TeacherRow extends Pick<UserProfile, 'id' | 'name' | 'email' | 'firstName' | 'lastName'> {
   createdAt?: string;
+}
+
+// Secondary Firebase app for admin-created users (preserves admin session)
+let secondaryApp: FirebaseApp | null = null;
+
+function getSecondaryAuth() {
+  if (!secondaryApp) {
+    const primaryApp = getApps()[0];
+    if (!primaryApp) throw new Error('Primary Firebase app not initialized');
+    secondaryApp = initializeApp(primaryApp.options, 'AdminCreateApp');
+  }
+  return getAuth(secondaryApp);
+}
+
+async function createTeacherAccount(
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+  role: 'teacher',
+  schoolId: string
+): Promise<{ error: Error | null; user?: UserProfile }> {
+  const secondaryAuth = getSecondaryAuth();
+  try {
+    const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+    const userId = cred.user.uid;
+
+    const profile: UserProfile = {
+      id: userId,
+      email: email.toLowerCase().trim(),
+      role,
+      firstName,
+      lastName,
+      name: `${firstName} ${lastName}`.trim(),
+      schoolId,
+    };
+
+    await updateProfile(cred.user, { displayName: profile.name });
+    await setDoc(doc(db, 'users', userId), {
+      ...profile,
+      createdAt: serverTimestamp(),
+    });
+
+    // Sign out from secondary auth to keep it clean
+    await firebaseSignOut(secondaryAuth);
+    return { error: null, user: profile };
+  } catch (error) {
+    // Ensure we don't leave a signed-in secondary user
+    try { await firebaseSignOut(secondaryAuth); } catch { /* ignore */ }
+    return { error: error as Error };
+  }
 }
 
 // ── Add Teacher Modal ─────────────────────────────────────────────────────────
@@ -44,7 +97,7 @@ function AddTeacherModal({
     setLoading(true);
     setError('');
     const { error: err, user } = await signUp(
-      form.email, form.password, form.firstName, form.lastName, 'teacher', ""
+      form.email, form.password, form.firstName, form.lastName, 'teacher', schoolId
     );
     setLoading(false);
     if (err) {
@@ -86,7 +139,7 @@ function AddTeacherModal({
                   type="text"
                   value={form[k]}
                   onChange={set(k)}
-                  className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder={k === 'firstName' ? 'Juan' : 'Dela Cruz'}
                 />
               </div>
@@ -99,7 +152,7 @@ function AddTeacherModal({
               type="email"
               value={form.email}
               onChange={set('email')}
-              className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="teacher@school.edu.ph"
             />
           </div>
@@ -110,12 +163,12 @@ function AddTeacherModal({
               type="password"
               value={form.password}
               onChange={set('password')}
-              className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Min. 6 characters"
             />
           </div>
 
-          <div className="bg-purple-50 rounded-lg p-3 text-xs text-purple-700">
+          <div className="bg-blue-50 rounded-lg p-3 text-xs text-blue-700">
             <strong>Organization ID:</strong> <span className="font-mono">{schoolId}</span>
             <br />This teacher will be linked to your school automatically.
           </div>
@@ -128,7 +181,7 @@ function AddTeacherModal({
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="flex-1 py-2.5 bg-purple-600 text-white rounded-xl text-sm font-semibold hover:bg-purple-700 transition disabled:opacity-60"
+            className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition disabled:opacity-60"
           >
             {loading ? 'Creating…' : 'Create Account'}
           </button>
@@ -165,7 +218,7 @@ function DeleteTeacherModal({ name, onConfirm, onCancel }: { name: string; onCon
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function ManageTeachers() {
-  const { user, signUp } = useAuth();
+  const { user } = useAuth();
   const [teachers, setTeachers] = useState<TeacherRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
@@ -179,7 +232,7 @@ export function ManageTeachers() {
       const snap = await getDocs(
         query(
           collection(db, 'users'),
-          where('organizationId', '==', user.schoolId),
+          where('schoolId', '==', user.schoolId),
           where('role', '==', 'teacher')
         )
       );
@@ -226,8 +279,8 @@ export function ManageTeachers() {
     <div className="space-y-6">
       {/* Header */}
       <header
-        className="rounded-2xl p-6 text-white"
-        style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' }}
+        className="justify-between items-center mb-8 p-6 rounded-2xl text-white bg-[linear-gradient(135deg,_#3da6e2_0%,_#1480be_100%)]"
+        style={{ background: 'linear-gradient(135deg, #3da6e2 0%, #1480be 100%)' }}
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -238,7 +291,7 @@ export function ManageTeachers() {
           </div>
           <button
             onClick={() => setShowAdd(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white text-purple-700 rounded-xl font-semibold text-sm hover:bg-purple-50 transition shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-700 rounded-xl font-semibold text-sm hover:bg-blue-50 transition shrink-0"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -249,14 +302,14 @@ export function ManageTeachers() {
       </header>
 
       {/* Org ID info */}
-      <div className="bg-purple-50 border border-purple-100 rounded-xl p-4 flex items-start gap-3">
-        <svg className="h-5 w-5 text-purple-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
+        <svg className="h-5 w-5 text-blue-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div>
-          <p className="text-sm font-semibold text-purple-800">Your Organization ID</p>
-          <p className="text-sm text-purple-700 font-mono mt-0.5">{user?.schoolId}</p>
-          <p className="text-xs text-purple-600 mt-1">
+          <p className="text-sm font-semibold text-blue-800">Your Organization ID</p>
+          <p className="text-sm text-blue-700 font-mono mt-0.5">{user?.schoolId}</p>
+          <p className="text-xs text-blue-600 mt-1">
             Teacher accounts created here are automatically linked to your school. You can also share this ID with teachers who self-register.
           </p>
         </div>
@@ -278,14 +331,14 @@ export function ManageTeachers() {
               placeholder="Search…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 w-48"
+              className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
             />
           </div>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-purple-500" />
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -298,7 +351,7 @@ export function ManageTeachers() {
               {search ? 'No teachers match your search.' : 'No teachers yet.'}
             </p>
             {!search && (
-              <button onClick={() => setShowAdd(true)} className="mt-3 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition">
+              <button onClick={() => setShowAdd(true)} className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition">
                 Add First Teacher
               </button>
             )}
@@ -320,7 +373,7 @@ export function ManageTeachers() {
                       <div className="flex items-center gap-3">
                         <div
                           className="h-8 w-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                          style={{ background: 'linear-gradient(135deg, #7c3aed, #4f46e5)' }}
+                          style={{ background: 'linear-gradient(135deg, #3da6e2 0%, #1480be 100%)' }}
                         >
                           {teacher.name.charAt(0).toUpperCase()}
                         </div>
@@ -348,7 +401,7 @@ export function ManageTeachers() {
       {showAdd && user && (
         <AddTeacherModal
           schoolId={user.schoolId}
-          signUp={signUp}
+          signUp={createTeacherAccount}
           onCreated={(t) => {
             setTeachers((prev) => [...prev, t].sort((a, b) => a.name.localeCompare(b.name)));
             setShowAdd(false);

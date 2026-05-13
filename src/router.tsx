@@ -18,6 +18,8 @@ import { Charts } from './pages/Charts';
 import { FeatureImportance } from './pages/FeatureImportance';
 import { SchoolComparison } from './pages/SchoolComparison';
 import { StudentTable } from './pages/StudentTable';
+import { ManageTeachers } from './pages/ManageTeachers';
+import { Settings } from './pages/Settings';
 
 
 export const router = createBrowserRouter([
@@ -57,6 +59,8 @@ export const router = createBrowserRouter([
       { path: 'section-comparison', element: <SectionComparison /> },
       { path: 'prediction-table', element: <Results /> },
       { path: 'model-reliability', element: <ModelReliability /> },
+      { path: 'manage-teachers', element: <ManageTeachers /> },
+      { path: 'settings', element: <Settings /> },
       // evaluation
       { path: 'evaluation/metrics', element: <ModelEvaluation /> },
       { path: 'evaluation/charts', element: <Charts /> },

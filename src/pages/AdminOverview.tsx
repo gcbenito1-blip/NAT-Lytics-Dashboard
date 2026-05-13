@@ -210,8 +210,7 @@ export function AdminOverview() {
     <div className="space-y-6">
       {/* Header */}
       <header
-        className="rounded-2xl p-6 text-white"
-        style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' }}
+        className="justify-between items-center mb-8 p-6 rounded-2xl text-white bg-[linear-gradient(135deg,_#3da6e2_0%,_#1480be_100%)]"
       >
         <h1 className="text-2xl font-bold mb-1">School Overview</h1>
         <p className="text-sm opacity-90">
@@ -222,7 +221,7 @@ export function AdminOverview() {
       {/* Summary stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: 'Teachers', value: totalTeachers, color: 'text-purple-600', bg: 'bg-purple-50' },
+          { label: 'Teachers', value: totalTeachers, color: 'text-blue-600', bg: 'bg-blue-50' },
           { label: 'Total Sessions', value: totalSessions, color: 'text-blue-600', bg: 'bg-blue-50' },
           { label: 'Total Learners', value: totalLearners, color: 'text-indigo-600', bg: 'bg-indigo-50' },
           { label: 'Org Avg MPS', value: orgAvg.toFixed(1), color: orgAvg >= 75 ? 'text-green-600' : 'text-orange-500', bg: orgAvg >= 75 ? 'bg-green-50' : 'bg-orange-50' },
@@ -250,14 +249,14 @@ export function AdminOverview() {
               placeholder="Search teachers…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 w-48"
+              className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
             />
           </div>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-purple-500" />
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500" />
           </div>
         ) : filteredGroups.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">

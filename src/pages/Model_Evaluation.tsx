@@ -847,7 +847,7 @@ export function ModelEvaluation() {
                         <td>{formatMetricValue(model.metrics.RMSE, 4)}</td>
                         <td>{formatMetricValue(model.metrics.R2, 4)}</td>
                         <td>
-                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${status === 'Perfect' ? 'bg-purple-100 text-purple-800' :
+                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${status === 'Perfect' ? 'bg-blue-100 text-blue-800' :
                             status === 'Best Fit' ? 'bg-green-100 text-green-800' :
                               status === 'Good' ? 'bg-blue-100 text-blue-800' :
                                 status === 'Baseline Performance' ? 'bg-gray-100 text-gray-800' :

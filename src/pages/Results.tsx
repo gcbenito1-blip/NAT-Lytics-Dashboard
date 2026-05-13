@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useOutletContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PredictionResult as ApiPredictionResult } from '../services/api';
@@ -200,30 +200,30 @@ export function Results() {
     return Array.from(set).sort();
   }, [predictions]);
 
-   // ── Body scroll lock when modal is open ───────────────────────────────────
-   useEffect(() => {
-     document.body.style.overflow = selectedStudent ? 'hidden' : 'unset';
-     return () => {
-       document.body.style.overflow = 'unset';
-     };
-   }, [selectedStudent]);
+  // ── Body scroll lock when modal is open ───────────────────────────────────
+  useEffect(() => {
+    document.body.style.overflow = selectedStudent ? 'hidden' : 'unset';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedStudent]);
 
-   // ── Load predictions from navigation state ─────────────────────
-   useEffect(() => {
-     const loadResults = async () => {
-       const state = location.state as ResultsState | null;
+  // ── Load predictions from navigation state ─────────────────────
+  useEffect(() => {
+    const loadResults = async () => {
+      const state = location.state as ResultsState | null;
 
-       if (state?.predictions) {
-         setPredictions(state.predictions);
-         setFileName(state.fileName ?? 'Dataset');
-         setSessionName(state.sessionName ?? '');
-       } else {
-         navigate('/home');
-       }
-     };
+      if (state?.predictions) {
+        setPredictions(state.predictions);
+        setFileName(state.fileName ?? 'Dataset');
+        setSessionName(state.sessionName ?? '');
+      } else {
+        navigate('/home');
+      }
+    };
 
-     loadResults();
-   }, [location.state, navigate]);
+    loadResults();
+  }, [location.state, navigate]);
 
   // ── Sort ───────────────────────────────────────────────────────────────────
   const handleSort = (field: keyof ApiPredictionResult) => {
@@ -694,19 +694,12 @@ export function Results() {
                           <div className="flex-1">
                             <div className="flex items-center justify-between mb-1">
                               <span className="text-sm font-medium text-gray-700">{getFriendlyFeatureName(feat.feature)}</span>
-                              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isPos ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                {isPos ? '↑ Boosted Score' : '↓ Lowered Score'}
-                              </span>
                             </div>
                             <div className="w-full bg-gray-100 rounded-full h-2.5">
                               <div
                                 className={`h-2.5 rounded-full transition-all duration-500 ${isPos ? 'bg-gradient-to-r from-green-400 to-green-600' : 'bg-gradient-to-r from-red-400 to-red-600'}`}
                                 style={{ width: `${pct}%` }}
                               />
-                            </div>
-                            <div className="flex justify-between text-xs text-gray-500 mt-1">
-                              <span>Impact: {feat.shap_value > 0 ? '+' : ''}{feat.shap_value.toFixed(3)}</span>
-                              <span>{pct.toFixed(0)}% of total impact</span>
                             </div>
                           </div>
                         </div>
@@ -759,12 +752,17 @@ export function Results() {
         </div>
       )}
 
-      {/* Back to Dashboard */}
-      <div className="flex justify-center pb-8">
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
-        >
+       {/* Back to Dashboard */}
+       <div className="flex justify-center pb-8">
+         <button
+           onClick={() => {
+             const { viewMode } = useOutletContext();
+             const isAdminView = user?.role === 'admin' || 
+               (user?.role === 'researcher' && viewMode === 'admin');
+             navigate(isAdminView ? '/overview' : '/dashboard');
+           }}
+           className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+         >
           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>

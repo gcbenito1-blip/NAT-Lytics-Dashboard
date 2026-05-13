@@ -913,8 +913,8 @@ export function Results() {
                             <p className="text-sm font-medium text-gray-500">Average Score</p>
                             <p className="text-3xl font-bold text-gray-900 mt-1">{averageScore.toFixed(1)}</p>
                         </div>
-                        <div className="h-12 w-12 rounded-xl bg-purple-100 flex items-center justify-center">
-                            <svg className="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                            <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
                         </div>
@@ -983,9 +983,9 @@ export function Results() {
                         <p className="text-sm font-medium text-blue-600">Highest Score</p>
                         <p className="text-2xl font-bold text-blue-700 mt-1">{highestScore.toFixed(1)}</p>
                     </div>
-                    <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
-                        <p className="text-sm font-medium text-purple-600">Average Score</p>
-                        <p className="text-2xl font-bold text-purple-700 mt-1">{averageScore.toFixed(1)}</p>
+                    <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
+                        <p className="text-sm font-medium text-blue-600">Average Score</p>
+                        <p className="text-2xl font-bold text-blue-700 mt-1">{averageScore.toFixed(1)}</p>
                     </div>
                     <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
                         <p className="text-sm font-medium text-orange-600">Lowest Score</p>

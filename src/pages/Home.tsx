@@ -17,17 +17,22 @@ export function Home() {
     () => (localStorage.getItem('researcherMode') as ResearcherMode | null)
   );
 
-  useEffect(() => {
-    if (!user) return;
+   useEffect(() => {
+     if (!user) return;
 
-    if (isTeacher || isAdmin) {
-      navigate('/dashboard', { replace: true });
-      return;
-    }
+     if (isAdmin) {
+       navigate('/overview', { replace: true });
+       return;
+     }
 
-    // Researchers don't need sessions — just stop the loading spinner
-    setLoading(false);
-  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+     if (isTeacher) {
+       navigate('/dashboard', { replace: true });
+       return;
+     }
+
+     // Researchers don't need sessions — just stop the loading spinner
+     setLoading(false);
+   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const enterMode = (mode: ResearcherMode) => {
     localStorage.setItem('researcherMode', mode);

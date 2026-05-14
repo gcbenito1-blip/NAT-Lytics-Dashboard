@@ -10,7 +10,7 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 
 export interface UserProfile {
@@ -20,7 +20,7 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   name: string;
-  schoolId: string; // shared between admin + teachers in same school
+  schoolId: string;
 }
 
 interface AuthContextType {
@@ -37,6 +37,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: Error | null; user?: UserProfile }>;
   signOut: () => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<{ error: Error | null }>;
+  updateSchoolId: (newSchoolId: string) => Promise<{ error: Error | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -74,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     firstName: string,
     lastName: string,
-    role: 'teacher' | 'admin' | 'researcher' = 'researcher',
+    role: 'teacher' | 'admin' | 'researcher' = 'admin',
     schoolId: string = ''
   ): Promise<{ error: Error | null; user?: UserProfile }> {
     try {
@@ -122,6 +123,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
+  async function updateSchoolId(newSchoolId: string): Promise<{ error: Error | null }> {
+    const firebaseUser = auth.currentUser;
+    if (!firebaseUser) {
+      return { error: new Error('No authenticated user found.') };
+    }
+    try {
+      if (user?.role === 'admin') {
+        const usersRef = collection(db, USERS_COLLECTION);
+        const q = query(usersRef, where('schoolId', '==', newSchoolId));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          return { error: new Error('This School ID is already taken. Please use a unique School ID.') };
+        }
+      }
+
+      const profile = { ...user, schoolId: newSchoolId } as UserProfile;
+      await setDoc(doc(db, USERS_COLLECTION, firebaseUser.uid), {
+        ...profile,
+        updatedAt: serverTimestamp(),
+      });
+      setUser(profile);
+      return { error: null };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  }
+
   async function changePassword(
     currentPassword: string,
     newPassword: string
@@ -141,10 +169,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, changePassword }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, changePassword, updateSchoolId }}>
       {children}
     </AuthContext.Provider>
   );
+}
+
+export async function checkSchoolIdExists(schoolId: string): Promise<boolean> {
+  const usersRef = collection(db, USERS_COLLECTION);
+  const q = query(usersRef, where('schoolId', '==', schoolId));
+  const querySnapshot = await getDocs(q);
+  return !querySnapshot.empty;
 }
 
 async function getUserProfile(uid: string): Promise<UserProfile> {

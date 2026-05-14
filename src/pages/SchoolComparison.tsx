@@ -44,66 +44,66 @@ export function SchoolComparison() {
     const [availableModels, setAvailableModels] = useState<string[]>([]);
     const [selectedModel, setSelectedModel] = useState<string>('');
 
-      useEffect(() => {
-          const fetchModels = async () => {
-              try {
-                  const modelRes = await fetch(`${API_BASE_URL}/model-predict`);
-                 if (modelRes.ok) {
-                     const modelData = await modelRes.json();
-                     const models = Object.keys(modelData);
-                     setAvailableModels(models);
-                     setSelectedModel(models[0] || '');
-                 }
-             } catch (error) {
-                 console.error('Failed to fetch models:', error);
-             }
-         };
-         fetchModels();
-     }, []);
+    useEffect(() => {
+        const fetchModels = async () => {
+            try {
+                const modelRes = await fetch(`${API_BASE_URL}/model-predict`);
+                if (modelRes.ok) {
+                    const modelData = await modelRes.json();
+                    const models = Object.keys(modelData);
+                    setAvailableModels(models);
+                    setSelectedModel(models[0] || '');
+                }
+            } catch (error) {
+                console.error('Failed to fetch models:', error);
+            }
+        };
+        fetchModels();
+    }, []);
 
-      useEffect(() => {
-          const fetchData = async () => {
-              setLoading(true);
-              try {
-                  const metricsRes = await fetch(`${API_BASE_URL}/api/school-metrics?model=${encodeURIComponent(selectedModel)}`);
-                  if (metricsRes.ok) {
-                      const metricsData = await metricsRes.json();
-                      setSchoolMetrics(metricsData.schools || []);
-                  }
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const metricsRes = await fetch(`${API_BASE_URL}/api/school-metrics?model=${encodeURIComponent(selectedModel)}`);
+                if (metricsRes.ok) {
+                    const metricsData = await metricsRes.json();
+                    setSchoolMetrics(metricsData.schools || []);
+                }
 
-                  const maeRes = await fetch(`${API_BASE_URL}/api/school-mae?model=${encodeURIComponent(selectedModel)}`);
-                  if (maeRes.ok) {
-                      const maeData = await maeRes.json();
-                      setSchoolMAE(maeData.schools || []);
-                  }
+                const maeRes = await fetch(`${API_BASE_URL}/api/school-mae?model=${encodeURIComponent(selectedModel)}`);
+                if (maeRes.ok) {
+                    const maeData = await maeRes.json();
+                    setSchoolMAE(maeData.schools || []);
+                }
 
-                  const profDistRes = await fetch(`${API_BASE_URL}/api/school-proficiency?model=${encodeURIComponent(selectedModel)}`);
-                 if (profDistRes.ok) {
-                     const profDistData = await profDistRes.json();
-                     const transformed = (profDistData.schools || []).map((s: any) => ({
-                         School: s.School,
-                         Actual_Not_Proficient: s.Actual["Not Proficient"] || 0,
-                         Actual_Low_Proficient: s.Actual["Low Proficient"] || 0,
-                         Actual_Nearly_Proficient: s.Actual["Nearly Proficient"] || 0,
-                         Actual_Proficient: s.Actual["Proficient"] || 0,
-                         Actual_Highly_Proficient: s.Actual["Highly Proficient"] || 0,
-                         Pred_Not_Proficient: s.Predicted["Not Proficient"] || 0,
-                         Pred_Low_Proficient: s.Predicted["Low Proficient"] || 0,
-                         Pred_Nearly_Proficient: s.Predicted["Nearly Proficient"] || 0,
-                         Pred_Proficient: s.Predicted["Proficient"] || 0,
-                         Pred_Highly_Proficient: s.Predicted["Highly Proficient"] || 0,
-                     }));
-                     setSchoolProficiency(transformed);
-                 }
-             } catch (error) {
-                 console.error('Failed to fetch school comparison data:', error);
-             } finally {
-                 setLoading(false);
-             }
-         };
+                const profDistRes = await fetch(`${API_BASE_URL}/api/school-proficiency?model=${encodeURIComponent(selectedModel)}`);
+                if (profDistRes.ok) {
+                    const profDistData = await profDistRes.json();
+                    const transformed = (profDistData.schools || []).map((s: any) => ({
+                        School: s.School,
+                        Actual_Not_Proficient: s.Actual["Not Proficient"] || 0,
+                        Actual_Low_Proficient: s.Actual["Low Proficient"] || 0,
+                        Actual_Nearly_Proficient: s.Actual["Nearly Proficient"] || 0,
+                        Actual_Proficient: s.Actual["Proficient"] || 0,
+                        Actual_Highly_Proficient: s.Actual["Highly Proficient"] || 0,
+                        Pred_Not_Proficient: s.Predicted["Not Proficient"] || 0,
+                        Pred_Low_Proficient: s.Predicted["Low Proficient"] || 0,
+                        Pred_Nearly_Proficient: s.Predicted["Nearly Proficient"] || 0,
+                        Pred_Proficient: s.Predicted["Proficient"] || 0,
+                        Pred_Highly_Proficient: s.Predicted["Highly Proficient"] || 0,
+                    }));
+                    setSchoolProficiency(transformed);
+                }
+            } catch (error) {
+                console.error('Failed to fetch school comparison data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-         fetchData();
-     }, [selectedModel]);
+        fetchData();
+    }, [selectedModel]);
 
     return (
         <div className="space-y-6">
@@ -169,7 +169,7 @@ export function SchoolComparison() {
                             <BarChart data={schoolMAE} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="School" angle={-45} textAnchor="end" height={120} interval={0} tick={{ fontSize: 10 }} />
-                                <YAxis label={{ value: 'MAE (Lower is Better)', angle: -90, position: 'insideLeft', dx: -40 }} domain={[0, 40]} />
+                                <YAxis label={{ value: 'MAE (Lower is Better)', angle: -90, position: 'center', dx: -20, offset: -30 }} domain={[0, 40]} />
                                 <Tooltip formatter={(value: any) => [Number(value).toFixed(4), 'MAE']} contentStyle={{ fontSize: 12 }} />
                                 <Bar dataKey="MAE" radius={[4, 4, 0, 0]}>
                                     {schoolMAE.map((entry, index) => (
@@ -205,7 +205,7 @@ export function SchoolComparison() {
                             <BarChart data={schoolProficiency} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="School" angle={-45} textAnchor="end" height={120} interval={0} tick={{ fontSize: 10 }} />
-                                <YAxis label={{ value: 'Percentage of Students', angle: -90, position: 'insideLeft', dx: -40 }} domain={[0, 100]} />
+                                <YAxis label={{ value: 'Percentage of Students (%)', angle: -90, position: 'center', offset: -30, dx: -20, }} domain={[0, 100]} />
                                 <Tooltip
                                     content={({ active, payload }) => {
                                         if (active && payload && payload.length) {

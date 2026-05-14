@@ -107,28 +107,28 @@ export function AppLayout() {
   const hasPredictions = !!location.state?.predictions;
   const isEvaluation = isResearcher && researcherMode === 'evaluation';
 
-   // Determine menu items - for admins and researcher admin viewing session results, use a special menu
-   let menuItems: MenuItem[];
-   const isAdminOrResearcherAdmin = isAdmin || (isResearcher && researcherMode === 'prediction' && viewMode === 'admin');
-   if (isAdminOrResearcherAdmin) {
-     // Check if we're viewing session results (paths that should show session navigation)
-     const sessionResultPaths = ['/class-summary', '/school-summary', '/prediction-table', '/section-comparison'];
-     const isViewingSessionResult = sessionResultPaths.includes(location.pathname);
-     if (isViewingSessionResult) {
-       // Menu for admin/researcher admin viewing session results: show overview and session-related pages
-       menuItems = [
-         { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
-         { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
-         { name: 'School Summary', path: '/school-summary', icon: icon('school') },
-         { name: 'Section Comparison', path: '/section-comparison', icon: icon('compare') },
-         { name: 'Prediction Table', path: '/prediction-table', icon: icon('table_chart') },
-       ];
-     } else {
-       menuItems = getMenuItems(role, researcherMode, viewMode);
-     }
-   } else {
-     menuItems = getMenuItems(role, researcherMode, viewMode);
-   }
+  // Determine menu items - for admins and researcher admin viewing session results, use a special menu
+  let menuItems: MenuItem[];
+  const isAdminOrResearcherAdmin = isAdmin || (isResearcher && researcherMode === 'prediction' && viewMode === 'admin');
+  if (isAdminOrResearcherAdmin) {
+    // Check if we're viewing session results (paths that should show session navigation)
+    const sessionResultPaths = ['/class-summary', '/school-summary', '/prediction-table', '/section-comparison'];
+    const isViewingSessionResult = sessionResultPaths.includes(location.pathname);
+    if (isViewingSessionResult) {
+      // Menu for admin/researcher admin viewing session results: show overview and session-related pages
+      menuItems = [
+        { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
+        { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
+        { name: 'School Summary', path: '/school-summary', icon: icon('school') },
+        { name: 'Section Comparison', path: '/section-comparison', icon: icon('compare') },
+        { name: 'Prediction Table', path: '/prediction-table', icon: icon('table_chart') },
+      ];
+    } else {
+      menuItems = getMenuItems(role, researcherMode, viewMode);
+    }
+  } else {
+    menuItems = getMenuItems(role, researcherMode, viewMode);
+  }
   const currentMenuItem = menuItems.find((m) => m.path === location.pathname);
   const needsUploadGuard = !isEvaluation && !isAdmin;
   const isAlwaysAccessible = currentMenuItem?.alwaysAccessible ?? false;
@@ -144,13 +144,13 @@ export function AppLayout() {
   const sampleKey = getSampleDatasetKey(role, researcherMode, viewMode);
   const sampleDataset = sampleKey ? sampleDatasetConfig[sampleKey] : null;
 
-   const badge = isResearcher && researcherMode === 'prediction'
-     ? viewMode === 'teacher'
-       ? badgeConfig.teacher
-       : badgeConfig.admin
-     : isResearcher
-     ? { label: `RESEARCHER — ${researcherMode.toUpperCase()} MODE`, className: 'bg-blue-100 text-blue-700' }
-     : badgeConfig[role];
+  const badge = isResearcher && researcherMode === 'prediction'
+    ? viewMode === 'teacher'
+      ? badgeConfig.teacher
+      : badgeConfig.admin
+    : isResearcher
+      ? { label: `RESEARCHER — ${researcherMode.toUpperCase()}`, className: 'bg-blue-100 text-blue-700' }
+      : badgeConfig[role];
 
   const isActive = (path: string) => location.pathname === path;
   const isDisabled = (item: typeof menuItems[0]) => {
@@ -193,7 +193,7 @@ export function AppLayout() {
         {/* Logo */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <Link
-            to={isAdmin ? OVERVIEW_PATH : (isTeacher ? OVERVIEW_PATH : UPLOAD_PATH)}
+            to={isResearcher && researcherMode === 'evaluation' ? '/home' : (isAdmin ? OVERVIEW_PATH : (isTeacher ? OVERVIEW_PATH : UPLOAD_PATH))}
             className="flex items-center space-x-3 hover:opacity-90 transition"
           >
             <div className="w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">

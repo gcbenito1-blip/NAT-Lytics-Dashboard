@@ -360,7 +360,7 @@ export function ClassSummary() {
           <div className="bg-white rounded-2xl shadow-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-gray-500">Passed</p>
+                <p className="text-xs font-medium text-gray-500">Above Proficient</p>
                 <p className="text-2xl font-bold text-green-600 mt-1">{passedCount}</p>
                 <p className="text-xs text-gray-500">{totalPredictions > 0 ? ((passedCount / totalPredictions) * 100).toFixed(0) : 0}%</p>
               </div>
@@ -376,7 +376,7 @@ export function ClassSummary() {
           <div className="bg-white rounded-2xl shadow-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-gray-500">Failed</p>
+                <p className="text-xs font-medium text-gray-500">Below Proficient</p>
                 <p className="text-2xl font-bold text-red-600 mt-1">{failedCount}</p>
                 <p className="text-xs text-gray-500">{totalPredictions > 0 ? ((failedCount / totalPredictions) * 100).toFixed(0) : 0}%</p>
               </div>
@@ -491,13 +491,13 @@ export function ClassSummary() {
 
         {/* Back to Dashboard Button */}
         <div className="flex justify-center">
-           <button
-             onClick={() => {
-               const { viewMode } = useOutletContext();
-               const isAdminView = user?.role === 'admin' || 
-                 (user?.role === 'researcher' && viewMode === 'admin');
-               navigate(isAdminView ? '/overview' : '/dashboard');
-             }}
+          <button
+            onClick={() => {
+              const { viewMode } = useOutletContext();
+              const isAdminView = user?.role === 'admin' ||
+                (user?.role === 'researcher' && viewMode === 'admin');
+              navigate(isAdminView ? '/overview' : '/dashboard');
+            }}
             className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center space-x-2"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

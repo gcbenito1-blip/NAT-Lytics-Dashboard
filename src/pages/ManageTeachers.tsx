@@ -310,7 +310,7 @@ export function ManageTeachers() {
           <p className="text-sm font-semibold text-blue-800">Your Organization ID</p>
           <p className="text-sm text-blue-700 font-mono mt-0.5">{user?.schoolId}</p>
           <p className="text-xs text-blue-600 mt-1">
-            Teacher accounts created here are automatically linked to your school. You can also share this ID with teachers who self-register.
+            Teacher accounts created here are automatically linked to your school.
           </p>
         </div>
       </div>

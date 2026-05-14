@@ -17,22 +17,22 @@ export function Home() {
     () => (localStorage.getItem('researcherMode') as ResearcherMode | null)
   );
 
-   useEffect(() => {
-     if (!user) return;
+  useEffect(() => {
+    if (!user) return;
 
-     if (isAdmin) {
-       navigate('/overview', { replace: true });
-       return;
-     }
+    if (isAdmin) {
+      navigate('/overview', { replace: true });
+      return;
+    }
 
-     if (isTeacher) {
-       navigate('/dashboard', { replace: true });
-       return;
-     }
+    if (isTeacher) {
+      navigate('/dashboard', { replace: true });
+      return;
+    }
 
-     // Researchers don't need sessions — just stop the loading spinner
-     setLoading(false);
-   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Researchers don't need sessions — just stop the loading spinner
+    setLoading(false);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const enterMode = (mode: ResearcherMode) => {
     localStorage.setItem('researcherMode', mode);
@@ -66,6 +66,7 @@ export function Home() {
               title="Evaluation Mode"
               description="Analyze model performance, review metrics, and understand prediction accuracy. Access detailed model evaluation reports and comparative analysis."
               color="blue"
+              logo="quiz"
               features={[
                 'View model performance metrics (R², MAE, RMSE)',
                 'Compare different model algorithms',
@@ -80,6 +81,7 @@ export function Home() {
               title="Prediction Mode"
               description="Run predictions on student data, generate forecasts, and export results. Create sessions and analyze prediction outcomes with detailed explanations."
               color="green"
+              logo="category"
               features={[
                 'Upload datasets for prediction',
                 'Generate student performance forecasts',
@@ -105,15 +107,17 @@ interface ModeCardProps {
   description: string;
   color: 'blue' | 'green';
   features: string[];
+  logo: string;
   onEnter: () => void;
 }
 
-function ModeCard({ title, description, color, features, onEnter }: ModeCardProps) {
+function ModeCard({ title, description, color, features, onEnter, logo }: ModeCardProps) {
   const palette = {
     blue: {
       border: 'hover:border-blue-200',
       icon: 'from-blue-500 to-blue-600',
       bg: 'bg-blue-50',
+      logo: "",
       heading: 'text-blue-900',
       text: 'text-blue-800',
       button: 'bg-blue-600 hover:bg-blue-700',
@@ -123,6 +127,7 @@ function ModeCard({ title, description, color, features, onEnter }: ModeCardProp
       icon: 'from-green-500 to-green-600',
       bg: 'bg-green-50',
       heading: 'text-green-900',
+      logo: '',
       text: 'text-green-800',
       button: 'bg-green-600 hover:bg-green-700',
     },
@@ -136,14 +141,7 @@ function ModeCard({ title, description, color, features, onEnter }: ModeCardProp
         <div
           className={`w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br ${palette.icon} flex items-center justify-center`}
         >
-          <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-            />
-          </svg>
+          <span className='material-icons-round text-white'>{logo}</span>
         </div>
 
         <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">{title}</h2>

@@ -43,8 +43,8 @@ export const researcherTeacherMenuItems: MenuItem[] = teacherMenuItems.filter(it
 export const researcherAdminMenuItems: MenuItem[] = adminMenuItems.filter(item => item.path !== '/manage-teachers' && item.path !== '/settings');
 
 export const badgeConfig = {
-  teacher: { label: 'TEACHER MODE', className: 'bg-green-100 text-green-700' },
-  admin: { label: 'ADMIN MODE', className: 'bg-blue-100 text-blue-700' },
+  teacher: { label: 'TEACHER ACCOUNT', className: 'bg-green-100 text-green-700' },
+  admin: { label: 'SCHOOL ADMIN ACCOUNT', className: 'bg-blue-100 text-blue-700' },
   researcher: { label: 'RESEARCHER MODE', className: 'bg-blue-100 text-blue-700' },
 };
 

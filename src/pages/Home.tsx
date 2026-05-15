@@ -26,7 +26,7 @@ export function Home() {
     }
 
     if (isTeacher) {
-      navigate('/dashboard', { replace: true });
+      navigate('/overview', { replace: true });
       return;
     }
 

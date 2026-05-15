@@ -1,9 +1,66 @@
-import React, { useState, useEffect, useRef, useOutletContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PredictionResult as ApiPredictionResult } from '../services/api';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+
+// ============================================================
+// CONSTANTS
+// ============================================================
+
+const SIGNIFICANCE_THRESHOLD = 0.05;
+
+const ACADEMIC_FEATURE_MAP: Record<string, { label: string; icon: string }> = {
+  Math_avg: { label: 'Mathematics', icon: '📐' },
+  Filipino_avg: { label: 'Filipino', icon: '📖' },
+  English_avg: { label: 'English', icon: '🔤' },
+  AralPan_avg: { label: 'Araling Panlipunan', icon: '🌏' },
+  Science_avg: { label: 'Science', icon: '🔬' },
+};
+
+const DEMOGRAPHIC_FEATURE_MAP: Record<string, { group: string; label: string }> = {
+  Gender_F: { group: 'Gender', label: 'Female' },
+  Gender_M: { group: 'Gender', label: 'Male' },
+  'Mother Tongue_Cebuano / Sinugbuanong Binisay': { group: 'Mother Tongue', label: 'Cebuano / Bisaya' },
+  'Mother Tongue_English': { group: 'Mother Tongue', label: 'English' },
+  'Mother Tongue_Hiligaynon': { group: 'Mother Tongue', label: 'Hiligaynon' },
+  'Mother Tongue_Ilocano': { group: 'Mother Tongue', label: 'Ilocano' },
+  'Mother Tongue_Kamayo': { group: 'Mother Tongue', label: 'Kamayo' },
+  'Mother Tongue_Kapampangan': { group: 'Mother Tongue', label: 'Kapampangan' },
+  'Mother Tongue_Maranao': { group: 'Mother Tongue', label: 'Maranao' },
+  'Mother Tongue_Pangasinan': { group: 'Mother Tongue', label: 'Pangasinan' },
+  'Mother Tongue_Tagalog': { group: 'Mother Tongue', label: 'Tagalog' },
+  'Nutritional Status_Normal': { group: 'Nutritional Status', label: 'Normal' },
+  'Nutritional Status_Obese': { group: 'Nutritional Status', label: 'Obese' },
+  'Nutritional Status_Overweight': { group: 'Nutritional Status', label: 'Overweight' },
+  'Nutritional Status_Severely Wasted': { group: 'Nutritional Status', label: 'Severely Wasted' },
+  'Nutritional Status_Wasted': { group: 'Nutritional Status', label: 'Wasted' },
+};
+
+// ============================================================
+// TYPES
+// ============================================================
+
+interface FactorItem {
+  label: string;
+  icon?: string;
+  avgShap: number;
+  avgAbsShap: number;
+}
+
+interface DemoGroup {
+  group: string;
+  features: FactorItem[];
+}
+
+interface ResultsState {
+  predictions: ApiPredictionResult[];
+  fileName: string;
+  sessionId?: string;
+  sessionName?: string;
+  rawData?: Record<string, unknown>[];
+}
 
 // ============================================================
 // EXPORT HELPERS
@@ -96,73 +153,60 @@ const exportToPDF = (
 };
 
 // ============================================================
-// FEATURE IMPORTANCE HELPERS
+// FACTOR PILL LIST
 // ============================================================
 
-export const featureExplanations: Record<
-  string,
-  {
-    friendlyName: string;
-    category: string;
-    description: string;
-    canChange: boolean;
-    insight: string;
-  }
-> = {
-  // Add your feature mappings here, e.g.:
-  // math_grade_5: { friendlyName: 'Math Grade 5', category: 'Academic History', ... }
+const FactorPillList = ({ items }: { items: FactorItem[] }) => {
+  const helping = items
+    .filter((f) => f.avgShap > SIGNIFICANCE_THRESHOLD)
+    .sort((a, b) => b.avgShap - a.avgShap);
+  const hurting = items
+    .filter((f) => f.avgShap < -SIGNIFICANCE_THRESHOLD)
+    .sort((a, b) => a.avgShap - b.avgShap);
+
+  if (helping.length === 0 && hurting.length === 0) return null;
+
+  return (
+    <div className="space-y-2">
+      {helping.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {helping.map((f) => (
+            <span
+              key={f.label}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 border border-green-200 text-sm text-green-800"
+            >
+              {f.icon && <span className="text-base leading-none">{f.icon}</span>}
+              {f.label}
+            </span>
+          ))}
+        </div>
+      )}
+      {hurting.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {hurting.map((f) => (
+            <span
+              key={f.label}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-sm text-red-800"
+            >
+              {f.icon && <span className="text-base leading-none">{f.icon}</span>}
+              {f.label}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
-
-export const getFriendlyFeatureName = (featureName: string): string =>
-  featureExplanations[featureName]?.friendlyName ?? featureName;
-
-export const getCategoryColor = (_category: string): string => '#8b5cf6';
-
-export function getFeatureCategory(featureName: string): string {
-  const info = featureExplanations[featureName];
-  if (info) return info.category;
-
-  const lower = featureName.toLowerCase();
-  if (
-    lower.includes('math') ||
-    lower.includes('english') ||
-    lower.includes('filipino') ||
-    lower.includes('science') ||
-    lower.includes('aral')
-  )
-    return 'Academic History';
-  if (
-    lower.includes('age') ||
-    lower.includes('sex') ||
-    lower.includes('gender') ||
-    lower.includes('mother tongue') ||
-    lower.includes('nutrition') ||
-    lower.includes('bmi') ||
-    lower.startsWith('gender_') ||
-    lower.startsWith('mother tongue_') ||
-    lower.startsWith('nutritional status(bmi)_')
-  )
-    return 'Student Profile';
-
-  return 'Other';
-}
 
 // ============================================================
 // COMPONENT
 // ============================================================
 
-interface ResultsState {
-  predictions: ApiPredictionResult[];
-  fileName: string;
-  sessionId?: string;
-  sessionName?: string;
-  rawData?: Record<string, unknown>[];
-}
-
 export function Results() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { viewMode } = useOutletContext<{ viewMode: string }>();
 
   const [predictions, setPredictions] = useState<ApiPredictionResult[]>([]);
   const [fileName, setFileName] = useState('');
@@ -176,7 +220,6 @@ export function Results() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
-  // Initialize pageInput to '1' so the input is never blank on first render
   const [pageInput, setPageInput] = useState('1');
   const [hasAnySession, setHasAnySession] = useState(false);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
@@ -200,7 +243,7 @@ export function Results() {
     return Array.from(set).sort();
   }, [predictions]);
 
-  // ── Body scroll lock when modal is open ───────────────────────────────────
+  // Body scroll lock when modal is open
   useEffect(() => {
     document.body.style.overflow = selectedStudent ? 'hidden' : 'unset';
     return () => {
@@ -208,24 +251,18 @@ export function Results() {
     };
   }, [selectedStudent]);
 
-  // ── Load predictions from navigation state ─────────────────────
+  // Load predictions from navigation state
   useEffect(() => {
-    const loadResults = async () => {
-      const state = location.state as ResultsState | null;
-
-      if (state?.predictions) {
-        setPredictions(state.predictions);
-        setFileName(state.fileName ?? 'Dataset');
-        setSessionName(state.sessionName ?? '');
-      } else {
-        navigate('/home');
-      }
-    };
-
-    loadResults();
+    const state = location.state as ResultsState | null;
+    if (state?.predictions) {
+      setPredictions(state.predictions);
+      setFileName(state.fileName ?? 'Dataset');
+      setSessionName(state.sessionName ?? '');
+    } else {
+      navigate('/home');
+    }
   }, [location.state, navigate]);
 
-  // ── Sort ───────────────────────────────────────────────────────────────────
   const handleSort = (field: keyof ApiPredictionResult) => {
     if (sortField === field) {
       setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'));
@@ -235,17 +272,13 @@ export function Results() {
     }
   };
 
-  // ── Derived stats (actually used in the header) ───────────────────────────
   const totalPredictions = predictions.length;
-
   const averageScore =
     totalPredictions > 0
       ? predictions.reduce((s, p) => s + p.prediction, 0) / totalPredictions
       : 0;
-
   const passedCount = predictions.filter((p) => (p.proficiency?.code ?? 0) > 2).length;
 
-  // ── Filtered + sorted list ────────────────────────────────────────────────
   const filteredAndSortedPredictions = predictions
     .filter((pred) => {
       if (filterStatus === 'all') return true;
@@ -291,6 +324,9 @@ export function Results() {
     setPageInput(String(clamped));
   };
 
+  const isAdminView =
+    user?.role === 'admin' || (user?.role === 'researcher' && viewMode === 'admin');
+
   // ── Empty state ───────────────────────────────────────────────────────────
   if (predictions.length === 0) {
     return (
@@ -333,11 +369,16 @@ export function Results() {
     <div className="space-y-8" ref={resultsContainerRef}>
 
       {/* Header */}
-      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 rounded-2xl text-white" style={{ background: 'linear-gradient(135deg, #3da6e2 0%, #1480be 100%)' }}>
+      <header
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 rounded-2xl text-white"
+        style={{ background: 'linear-gradient(135deg, #3da6e2 0%, #1480be 100%)' }}
+      >
         <div>
           <h1 className="text-2xl font-bold mb-1">Prediction Results</h1>
           <p className="text-sm opacity-90">
-            {sessionName && <><span className="font-semibold">Session: {sessionName}</span> &nbsp;|&nbsp; </>}
+            {sessionName && (
+              <><span className="font-semibold">Session: {sessionName}</span> &nbsp;|&nbsp; </>
+            )}
             {fileName} — {totalPredictions} predictions &nbsp;·&nbsp;
             Avg MPS: <span className="font-semibold">{averageScore.toFixed(1)}</span> &nbsp;·&nbsp;
             Passed: <span className="font-semibold">{passedCount}</span> / {totalPredictions}
@@ -415,7 +456,7 @@ export function Results() {
               ))}
             </select>
 
-            {/* Section filter — only when Section column exists */}
+            {/* Section filter */}
             {hasSection && uniqueSections.length > 0 && (
               <select
                 value={filterSection}
@@ -438,13 +479,24 @@ export function Results() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                {/* Learner ID */}
                 <SortableHeader label="Learner ID" field="learnerID" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
-                {hasSection && <SortableHeader label="Section" field="Section" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />}
-                <SortableHeader label="Predicted MPS" field="prediction" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} title="This is the model's estimated Mean Percentage Score for this learner based on their academic grades and demographic profile. It is a forecast, not an official NAT result, and should be used as a guide for planning — not as a final assessment of the learner's ability." />
+                {hasSection && (
+                  <SortableHeader label="Section" field="Section" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} />
+                )}
+                <SortableHeader
+                  label="Predicted MPS"
+                  field="prediction"
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                  title="This is the model's estimated Mean Percentage Score for this learner based on their academic grades and demographic profile. It is a forecast, not an official NAT result, and should be used as a guide for planning — not as a final assessment of the learner's ability."
+                />
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Proficiency</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Probability Breakdown</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="The estimated likelihood that this learner will reach the Proficient level (MPS ≥ 75) in the NAT. A probability of 30% means the model estimates a 30-in-100 chance of meeting the proficiency threshold based on current academic records. Use this to prioritize learners who may need early support.">
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  title="The estimated likelihood that this learner will reach the Proficient level (MPS ≥ 75) in the NAT. A probability of 30% means the model estimates a 30-in-100 chance of meeting the proficiency threshold based on current academic records. Use this to prioritize learners who may need early support."
+                >
                   Pass Probability<br />P(MPS ≥ 75)
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -520,7 +572,7 @@ export function Results() {
                         onClick={() => setSelectedStudent(result.learnerID ?? '')}
                         className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                       >
-                        Feature Importance
+                        Diagnose Student
                       </button>
                     </td>
                   </tr>
@@ -597,7 +649,7 @@ export function Results() {
         </div>
       )}
 
-      {/* Per-Student Feature Importance Modal */}
+      {/* Diagnose Student Modal */}
       {selectedStudent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
@@ -605,19 +657,14 @@ export function Results() {
             onClick={() => setSelectedStudent(null)}
           />
           <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden">
-            {/* Modal header — fixed layout: title on left, close on right */}
+
+            {/* Modal header */}
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    Feature Importance — Learner {selectedStudent}
+                    Factors Affecting Student — Learner {selectedStudent}
                   </h3>
-                  <div className="mt-2 flex items-center gap-2 text-xs text-gray-500 bg-blue-50 px-3 py-2 rounded-lg w-fit">
-                    <svg className="h-4 w-4 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    These are historical grades (Past Performance) — they cannot be changed but help predict future scores.
-                  </div>
                 </div>
                 <button
                   onClick={() => setSelectedStudent(null)}
@@ -630,37 +677,8 @@ export function Results() {
               </div>
             </div>
 
+            {/* Modal body */}
             <div className="p-6 overflow-y-auto max-h-[65vh]">
-              {/* Legend */}
-              <div className="mb-6 p-4 bg-amber-50 rounded-xl border border-amber-100">
-                <h4 className="text-sm font-semibold text-amber-800 mb-2 flex items-center gap-2">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  Important: These are Historical Grades
-                </h4>
-                <p className="text-sm text-amber-700 mb-3">
-                  Features shown are <strong>past grades from Grades 1–5</strong>. They are records of academic history used to predict future performance.
-                </p>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="flex items-start gap-2">
-                    <span className="w-3 h-3 rounded-full bg-green-500 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <span className="font-semibold text-green-700">Positive (Green)</span>
-                      <p className="text-green-600">Past performance that boosted the predicted score</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="w-3 h-3 rounded-full bg-red-500 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <span className="font-semibold text-red-700">Negative (Red)</span>
-                      <p className="text-red-600">Past patterns correlated with a lower predicted score</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Feature drivers */}
               {(() => {
                 const pred = predictions.find((p) => p.learnerID === selectedStudent);
                 const explanation = pred?.explanation;
@@ -677,70 +695,125 @@ export function Results() {
                   );
                 }
 
-                const maxImpact = Math.max(...explanation.top_drivers.map((f) => Math.abs(f.shap_value)));
+                const significant = (explanation.features ?? []).filter(
+                  (f: { feature: string; shap_value: number }) =>
+                    Math.abs(f.shap_value) >= SIGNIFICANCE_THRESHOLD
+                );
+
+                const academicItems: FactorItem[] = significant
+                  .filter((f: { feature: string }) => f.feature in ACADEMIC_FEATURE_MAP)
+                  .map((f: { feature: string; shap_value: number }) => ({
+                    label: ACADEMIC_FEATURE_MAP[f.feature].label,
+                    icon: ACADEMIC_FEATURE_MAP[f.feature].icon,
+                    avgShap: f.shap_value,
+                    avgAbsShap: Math.abs(f.shap_value),
+                  }));
+
+                const groupMap = new Map<string, DemoGroup>();
+                significant
+                  .filter((f: { feature: string }) => f.feature in DEMOGRAPHIC_FEATURE_MAP)
+                  .forEach((f: { feature: string; shap_value: number }) => {
+                    const meta = DEMOGRAPHIC_FEATURE_MAP[f.feature];
+                    if (!meta) return;
+                    if (!groupMap.has(meta.group))
+                      groupMap.set(meta.group, { group: meta.group, features: [] });
+                    groupMap.get(meta.group)!.features.push({
+                      label: meta.label,
+                      avgShap: f.shap_value,
+                      avgAbsShap: Math.abs(f.shap_value),
+                    });
+                  });
+
+                const demoGroups = Array.from(groupMap.values()).filter((g) =>
+                  g.features.some(
+                    (f) => f.avgShap > SIGNIFICANCE_THRESHOLD || f.avgShap < -SIGNIFICANCE_THRESHOLD
+                  )
+                );
+
+                const hasAcademic = academicItems.some(
+                  (f) => f.avgShap > SIGNIFICANCE_THRESHOLD || f.avgShap < -SIGNIFICANCE_THRESHOLD
+                );
+                const hasDemo = demoGroups.length > 0;
+
+                if (!hasAcademic && !hasDemo) {
+                  return (
+                    <p className="text-sm text-gray-500 text-center py-6">
+                      No significant factors found for this student.
+                    </p>
+                  );
+                }
 
                 return (
-                  <div className="space-y-4">
-                    <h5 className="text-sm font-semibold text-gray-700">Top Influencing Factors</h5>
-
-                    {explanation.top_drivers.map((feat, idx) => {
-                      const pct = maxImpact > 0 ? (Math.abs(feat.shap_value) / maxImpact) * 100 : 0;
-                      const isPos = feat.direction === 'positive';
-                      return (
-                        <div key={feat.feature} className="flex items-center gap-4">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 ${isPos ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                            {idx + 1}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-sm font-medium text-gray-700">{getFriendlyFeatureName(feat.feature)}</span>
-                            </div>
-                            <div className="w-full bg-gray-100 rounded-full h-2.5">
-                              <div
-                                className={`h-2.5 rounded-full transition-all duration-500 ${isPos ? 'bg-gradient-to-r from-green-400 to-green-600' : 'bg-gradient-to-r from-red-400 to-red-600'}`}
-                                style={{ width: `${pct}%` }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                    {/* Insights */}
-                    <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                      <h5 className="text-sm font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                        What This Means for the Student
+                  <div>
+                    {/* Header */}
+                    <div className="mb-4">
+                      <h5 className="text-sm font-semibold text-gray-900">
+                        Factors that affect this learner
                       </h5>
-                      <ul className="text-sm text-blue-700 space-y-2">
-                        {explanation.top_drivers
-                          .filter((f) => f.direction === 'negative')
-                          .slice(0, 3)
-                          .map((feat, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span>•</span>
-                              <span>
-                                <strong>"{getFriendlyFeatureName(feat.feature)}"</strong> contributes a negative impact — investigate further.
-                                {getFeatureCategory(feat.feature) === 'Academic History' &&
-                                  ' (Past grades cannot be changed, but indicate areas needing current support)'}
-                              </span>
-                            </li>
-                          ))}
-                        {explanation.top_drivers.filter((f) => f.direction === 'negative').length === 0 && (
-                          <li className="flex items-start gap-2">
-                            <span>•</span>
-                            <span>All major factors positively contribute to this student's predicted score.</span>
-                          </li>
-                        )}
-                      </ul>
-                      <div className="mt-3 pt-3 border-t border-blue-200 text-xs text-blue-600">
-                        <strong>Note:</strong> All features are from historical data. Current teaching and support are what can improve future outcomes.
-                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Based on this student's data, here are the factors that most influenced their predicted MPS score.
+                      </p>
                     </div>
 
-                    <div className="p-3 bg-gray-50 rounded-lg text-xs text-gray-500">
+                    {/* Shared legend */}
+                    <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
+                      <span className="flex items-center gap-2 text-xs text-gray-500">
+                        <span className="w-3 h-3 rounded-full bg-green-400 inline-block flex-shrink-0" />
+                        Raises MPS score
+                      </span>
+                      <span className="flex items-center gap-2 text-xs text-gray-500">
+                        <span className="w-3 h-3 rounded-full bg-red-400 inline-block flex-shrink-0" />
+                        Lowers MPS score
+                      </span>
+                    </div>
+
+                    {/* Academic factors */}
+                    {hasAcademic && (
+                      <div className={hasDemo ? 'mb-6' : ''}>
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center text-sm">🎓</div>
+                          <div>
+                            <p className="text-sm font-semibold text-gray-900">Academic factors</p>
+                            <p className="text-xs text-gray-400">Based on past subject grades</p>
+                          </div>
+                        </div>
+                        <FactorPillList items={academicItems} />
+                        <p className="mt-4 text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
+                          These reflect historical grades and cannot be changed, but they help identify which subjects to prioritize when supporting this student.
+                        </p>
+                      </div>
+                    )}
+
+                    {hasAcademic && hasDemo && <hr className="border-gray-100 my-6" />}
+
+                    {/* Demographic factors */}
+                    {hasDemo && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-4">
+                          <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-sm">👥</div>
+                          <div>
+                            <p className="text-sm font-semibold text-gray-900">Demographic factors</p>
+                            <p className="text-xs text-gray-400">Background characteristics — for context, not judgment</p>
+                          </div>
+                        </div>
+                        <div className="space-y-5">
+                          {demoGroups.map((group) => (
+                            <div key={group.group}>
+                              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
+                                {group.group}
+                              </p>
+                              <FactorPillList items={group.features} />
+                            </div>
+                          ))}
+                        </div>
+                        <p className="mt-4 text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
+                          These patterns provide background context. Every student is unique — use these as conversation starters, not conclusions.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Base score note */}
+                    <div className="mt-6 p-3 bg-gray-50 rounded-lg text-xs text-gray-500">
                       <span className="font-medium">Base Score:</span>{' '}
                       {explanation.base_value?.toFixed(1) ?? 'N/A'} (average prediction before considering specific factors)
                     </div>
@@ -752,28 +825,26 @@ export function Results() {
         </div>
       )}
 
-       {/* Back to Dashboard */}
-       <div className="flex justify-center pb-8">
-         <button
-           onClick={() => {
-             const { viewMode } = useOutletContext();
-             const isAdminView = user?.role === 'admin' || 
-               (user?.role === 'researcher' && viewMode === 'admin');
-             navigate(isAdminView ? '/overview' : '/dashboard');
-           }}
-           className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
-         >
+      {/* Back to Dashboard */}
+      <div className="flex justify-center pb-8">
+        <button
+          onClick={() => navigate(isAdminView ? '/overview' : '/dashboard')}
+          className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+        >
           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           Analyze Different Dataset
         </button>
       </div>
+
     </div>
   );
 }
 
-// ── Small reusable sub-components ─────────────────────────────────────────────
+// ============================================================
+// SUB-COMPONENTS
+// ============================================================
 
 function SortableHeader<T>({
   label,

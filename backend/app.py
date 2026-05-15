@@ -594,10 +594,10 @@ def analyze_data():
 @app.route("/api/sample-dataset/download", methods=["GET"])
 def download_sample_dataset():
 
-    role = request.args.get("role")          # "admin", "researcher", "teacher"
-    view_mode = request.args.get("viewMode") # "admin" or "teacher"
+    role = request.args.get("role")          # "teacher" or "researcher"
+    view_mode = request.args.get("viewMode") # "teacher" only
 
-    include_section = (role == "admin") or (role == "researcher" and view_mode == "admin")
+    include_section = (role == "teacher") or (role == "researcher" and view_mode == "teacher")
 
     base_row = {
         "learnerID": "L001",
@@ -618,7 +618,7 @@ def download_sample_dataset():
     df = pd.DataFrame([base_row])
     csv = df.to_csv(index=False)
 
-    filename = "sample_dataset_admin.csv" if include_section else "sample_dataset_teacher.csv"
+    filename = "sample_dataset.csv"  # Only teacher filename needed
 
     return Response(
         csv,

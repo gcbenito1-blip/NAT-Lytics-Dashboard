@@ -26,7 +26,7 @@ function PassBadge({ pct }: { pct: number }) {
         : 'bg-red-100 text-red-700';
   return (
     <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${color}`}>
-      {pct.toFixed(0)}% pass rate
+      {pct.toFixed(0)}% above proficient
     </span>
   );
 }

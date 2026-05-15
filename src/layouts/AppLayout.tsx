@@ -111,19 +111,18 @@ export function AppLayout() {
   let menuItems: MenuItem[];
   const isAdminOrResearcherAdmin = isAdmin || (isResearcher && researcherMode === 'prediction' && viewMode === 'admin');
   if (isAdminOrResearcherAdmin) {
-    // Check if we're viewing session results (paths that should show session navigation)
-    const sessionResultPaths = ['/class-summary', '/school-summary', '/prediction-table', '/section-comparison'];
-    const isViewingSessionResult = sessionResultPaths.includes(location.pathname);
-    if (isViewingSessionResult) {
-      // Menu for admin/researcher admin viewing session results: show overview and session-related pages
-      menuItems = [
-        { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
-        { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
-        { name: 'School Summary', path: '/school-summary', icon: icon('school') },
-        { name: 'Section Comparison', path: '/section-comparison', icon: icon('compare') },
-        { name: 'Prediction Table', path: '/prediction-table', icon: icon('table_chart') },
-      ];
-    } else {
+// Check if we're viewing session results (paths that should show session navigation)
+     const sessionResultPaths = ["/class-summary", "/prediction-table"];
+     const isViewingSessionResult = sessionResultPaths.includes(location.pathname);
+if (isViewingSessionResult) {
+        // Menu for admin/researcher admin viewing session results: show overview and session-related pages
+        // Note: Class Comparison is on the default menu only (shows aggregated data from all teachers)
+        menuItems = [
+          { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
+          { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
+          { name: 'Prediction Table', path: '/prediction-table', icon: icon('table_chart') },
+        ];
+      } else {
       menuItems = getMenuItems(role, researcherMode, viewMode);
     }
   } else {

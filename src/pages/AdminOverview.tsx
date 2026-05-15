@@ -176,23 +176,23 @@ export function AdminOverview() {
 
   useEffect(() => { load(); }, [load]);
 
-  const handleViewSession = async (meta: SessionMeta) => {
-    setLoadingSession(true);
-    try {
-      const full = await getSessionById(meta.teacherId, meta.id);
-      if (full) {
-        navigate('/school-summary', {
-          state: {
-            predictions: full.predictions,
-            fileName: full.fileName,
-            sessionName: `${meta.teacherName} – ${full.sessionName}`,
-          },
-        });
-      }
-    } finally {
-      setLoadingSession(false);
-    }
-  };
+const handleViewSession = async (meta: SessionMeta) => {
+     setLoadingSession(true);
+     try {
+       const full = await getSessionById(meta.teacherId, meta.id);
+       if (full) {
+         navigate('/class-summary', {
+           state: {
+             predictions: full.predictions,
+             fileName: full.fileName,
+             sessionName: `${meta.teacherName} – ${full.sessionName}`,
+           },
+         });
+       }
+     } finally {
+       setLoadingSession(false);
+     }
+   };
 
   // ── Aggregate stats ──────────────────────────────────────────────────────────
   const totalTeachers = groups.length;

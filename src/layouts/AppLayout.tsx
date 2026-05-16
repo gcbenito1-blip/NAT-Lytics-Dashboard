@@ -1,5 +1,5 @@
 // AppLayout.tsx
-import { Outlet, useNavigate, Link, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -7,14 +7,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   UserRole,
   ResearcherMode,
-  ViewMode,
   MenuItem,
   badgeConfig,
   sampleDatasetConfig,
   getMenuItems,
   getSampleDatasetKey,
   UPLOAD_PATH,
-  OVERVIEW_PATH,
   icon,
 } from './layoutConfig';
 
@@ -83,10 +81,13 @@ export function AppLayout() {
   const role = (user?.role ?? 'teacher') as UserRole;
   const isResearcher = role === 'researcher';
   const isAdmin = role === 'admin';
-  const isTeacher = role === 'teacher';
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
+
+  useEffect(() => {
+    setSidebarOpen(!(isResearcher && location.pathname === '/homepage'));
+  }, [isResearcher, location.pathname]);
 
   const [researcherMode, setResearcherModeInternal] = useState<ResearcherMode>(() => {
     if (isResearcher) {
@@ -101,15 +102,15 @@ export function AppLayout() {
     localStorage.setItem('researcherMode', mode);
   };
 
-  const [viewMode, setViewMode] = useState<ViewMode>('teacher');
+  const viewMode = 'teacher';
 
   // ── Upload guard (teacher & researcher prediction only) ───────────────────
   const hasPredictions = !!location.state?.predictions;
   const isEvaluation = isResearcher && researcherMode === 'evaluation';
 
-  // Determine menu items - for admins and researcher admin viewing session results, use a special menu
+  // Determine menu items
   let menuItems: MenuItem[];
-  const isAdminOrResearcherAdmin = isAdmin || (isResearcher && researcherMode === 'prediction' && viewMode === 'admin');
+  const isAdminOrResearcherAdmin = isAdmin;
   if (isAdminOrResearcherAdmin) {
     // Check if we're viewing session results (paths that should show session navigation)
     const sessionResultPaths = ["/class-summary", "/prediction-table"];
@@ -123,33 +124,46 @@ export function AppLayout() {
         { name: 'Student Results', path: '/prediction-table', icon: icon('table_chart') },
       ];
     } else {
-      menuItems = getMenuItems(role, researcherMode, viewMode);
+      menuItems = getMenuItems(role, researcherMode);
     }
   } else {
-    menuItems = getMenuItems(role, researcherMode, viewMode);
+    menuItems = getMenuItems(role, researcherMode);
   }
   const currentMenuItem = menuItems.find((m) => m.path === location.pathname);
   const needsUploadGuard = !isEvaluation && !isAdmin;
   const isAlwaysAccessible = currentMenuItem?.alwaysAccessible ?? false;
 
   useEffect(() => {
-    if (needsUploadGuard && !hasPredictions && !isAlwaysAccessible) {
+    const isResearcherHome = isResearcher && location.pathname === '/homepage';
+    if (needsUploadGuard && !hasPredictions && !isAlwaysAccessible && !isResearcherHome) {
       toast.warn('No dataset uploaded. Please upload a dataset first.');
       navigate(UPLOAD_PATH, { replace: true });
     }
   }, [location.pathname]);
 
+  useEffect(() => {
+    const handler = (e: StorageEvent) => {
+      if (e.key === 'researcherMode' && e.newValue) {
+        setResearcherModeInternal(e.newValue as ResearcherMode);
+      }
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
+
   // ── Derived ───────────────────────────────────────────────────────────────
-  const sampleKey = getSampleDatasetKey(role, researcherMode, viewMode);
+  const sampleKey = getSampleDatasetKey(role, researcherMode);
   const sampleDataset = sampleKey ? sampleDatasetConfig[sampleKey] : null;
 
-  const badge = isResearcher && researcherMode === 'prediction'
-    ? viewMode === 'teacher'
-      ? badgeConfig.teacher
-      : badgeConfig.admin
-    : isResearcher
-      ? { label: `RESEARCHER — ${researcherMode.toUpperCase()}`, className: 'bg-blue-100 text-blue-700' }
-      : badgeConfig[role];
+  const badge = isResearcher
+    ? {
+      label: `${researcherMode.toUpperCase()} MODE`,
+      className:
+        researcherMode === 'prediction'
+          ? 'bg-green-100 text-green-700'
+          : 'bg-blue-100 text-blue-700',
+    }
+    : badgeConfig[role];
 
   const isActive = (path: string) => location.pathname === path;
   const isDisabled = (item: typeof menuItems[0]) => {
@@ -191,10 +205,7 @@ export function AppLayout() {
       >
         {/* Logo */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <Link
-            to={isResearcher && researcherMode === 'evaluation' ? '/homepage' : (isAdmin ? OVERVIEW_PATH : (isTeacher ? OVERVIEW_PATH : UPLOAD_PATH))}
-            className="flex items-center space-x-3 hover:opacity-90 transition"
-          >
+          <div className="flex items-center space-x-3">
             <div className="w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
               <img src="/logo.png" alt="Logo" className="w-full h-full object-cover block" />
             </div>
@@ -204,26 +215,8 @@ export function AppLayout() {
                 National Achievement Test Predictive Analytics Tool
               </span>
             </div>
-          </Link>
-        </div>
-
-        {/* Researcher view toggle */}
-        {isResearcher && researcherMode === 'prediction' && (
-          <div className="px-4 py-2 border-b border-gray-200">
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              {(['teacher', 'admin'] as ViewMode[]).map((v) => (
-                <button
-                  key={v}
-                  onClick={() => setViewMode(v)}
-                  className={`flex-1 px-3 py-1 text-xs font-medium rounded-md transition capitalize
-                    ${viewMode === v ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
-                >
-                  {v} View
-                </button>
-              ))}
-            </div>
           </div>
-        )}
+        </div>
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -312,43 +305,47 @@ export function AppLayout() {
 
       {/* ── Main content ─────────────────────────────────────────────────────── */}
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <header className="bg-white shadow-sm sticky top-0 z-40">
-          <div className="flex items-center justify-between px-4 py-3">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setSidebarOpen((o) => !o)}
-                className="p-2 rounded-lg hover:bg-gray-100 transition"
-              >
-                {sidebarOpen ? (
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                )}
-              </button>
+        {!(
+          isResearcher &&
+          location.pathname === '/homepage'
+        ) && (
+            <header className="bg-white shadow-sm sticky top-0 z-40">
+              <div className="flex items-center justify-between px-4 py-3">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setSidebarOpen((o) => !o)}
+                    className="p-2 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    {sidebarOpen ? (
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    ) : (
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                      </svg>
+                    )}
+                  </button>
 
-              {isResearcher ? (
-                <button
-                  onClick={toggleResearcherMode}
-                  className={`cursor-pointer px-3 py-1 rounded-full text-xs font-medium transition hover:opacity-80 flex items-center gap-1 ${badge.className}`}
-                >
-                  {badge.label}
-                  <span className="material-icons-round text-xs">cached</span>
-                </button>
-              ) : (
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${badge.className}`}>
-                  {badge.label}
-                </span>
-              )}
-            </div>
+                  {isResearcher ? (
+                    <button
+                      onClick={toggleResearcherMode}
+                      className={`cursor-pointer px-3 py-1 rounded-full text-xs font-medium transition hover:opacity-80 flex items-center gap-1 ${badge.className}`}
+                    >
+                      {badge.label}
+                      <span className="material-icons-round text-xs">cached</span>
+                    </button>
+                  ) : (
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${badge.className}`}>
+                      {badge.label}
+                    </span>
+                  )}
+                </div>
 
-            <ProficiencyHelperBadge />
-          </div>
-        </header>
-
+                <ProficiencyHelperBadge />
+              </div>
+            </header>
+          )}
         <main className="p-6">
           <Outlet context={{ sampleDataset, viewMode }} />
         </main>

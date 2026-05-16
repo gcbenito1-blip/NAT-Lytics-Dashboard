@@ -34,7 +34,7 @@ function TeacherAccordion({
   group: TeacherGroup;
   onViewSession: (meta: SessionMeta) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const totalLearners = group.sessions.reduce((a, s) => a + s.totalPredictions, 0);
   const avgMps = group.sessions.length
     ? group.sessions.reduce((a, s) => a + s.averageScore, 0) / group.sessions.length
@@ -176,23 +176,23 @@ export function AdminOverview() {
 
   useEffect(() => { load(); }, [load]);
 
-const handleViewSession = async (meta: SessionMeta) => {
-     setLoadingSession(true);
-     try {
-       const full = await getSessionById(meta.teacherId, meta.id);
-       if (full) {
-         navigate('/class-summary', {
-           state: {
-             predictions: full.predictions,
-             fileName: full.fileName,
-             sessionName: `${meta.teacherName} – ${full.sessionName}`,
-           },
-         });
-       }
-     } finally {
-       setLoadingSession(false);
-     }
-   };
+  const handleViewSession = async (meta: SessionMeta) => {
+    setLoadingSession(true);
+    try {
+      const full = await getSessionById(meta.teacherId, meta.id);
+      if (full) {
+        navigate('/class-summary', {
+          state: {
+            predictions: full.predictions,
+            fileName: full.fileName,
+            sessionName: `${meta.teacherName} – ${full.sessionName}`,
+          },
+        });
+      }
+    } finally {
+      setLoadingSession(false);
+    }
+  };
 
   // ── Aggregate stats ──────────────────────────────────────────────────────────
   const totalTeachers = groups.length;

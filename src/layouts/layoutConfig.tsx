@@ -27,9 +27,9 @@ export const teacherMenuItems: MenuItem[] = [
 
 export const adminMenuItems: MenuItem[] = [
   { name: 'Home', path: '/homepage', icon: icon('home'), alwaysAccessible: true },
-  { name: 'Manage Teachers', path: '/manage-teachers', icon: icon('manage_accounts'), alwaysAccessible: true },
   { name: 'Results List', path: '/results-list', icon: icon('analytics'), alwaysAccessible: true },
   { name: 'Class Comparison', path: '/class-comparison', icon: icon('compare'), alwaysAccessible: true },
+  { name: 'Manage Teachers', path: '/manage-teachers', icon: icon('manage_accounts'), alwaysAccessible: true },
   { name: 'Model Reliability', path: '/model-reliability', icon: icon('monitor_heart'), alwaysAccessible: true },
   { name: 'Settings', path: '/settings', icon: icon('settings'), alwaysAccessible: true },
 ];
@@ -42,8 +42,7 @@ export const evaluationMenuItems: MenuItem[] = [
   { name: 'Student Table', path: '/evaluation/student-table', icon: icon('table_chart'), alwaysAccessible: true },
 ];
 
-export const researcherTeacherMenuItems: MenuItem[] = teacherMenuItems.filter(item => item.path !== '/settings');
-export const researcherAdminMenuItems: MenuItem[] = adminMenuItems.filter(item => item.path !== '/manage-teachers' && item.path !== '/settings');
+export const researcherTeacherMenuItems: MenuItem[] = teacherMenuItems.filter(item => item.path !== '/settings' && item.path !== '/homepage');
 
 export const badgeConfig = {
   teacher: { label: 'TEACHER ACCOUNT', className: 'bg-green-100 text-green-700' },
@@ -54,24 +53,18 @@ export const badgeConfig = {
 export const sampleDatasetConfig: Record<string, { href: string; filename: string; label: string }> = {
   teacher: {
     href: '/sample_dataset.csv',
-    filename: 'sample_dataset.csv',
+    filename: 'sample_dataset_template.csv',
     label: 'Download Template',
-  },
-  admin: {
-    href: '/admin_sample_dataset.csv',
-    filename: 'admin_sample_dataset.csv',
-    label: 'Download Sample Dataset (with Section)',
   },
 };
 
 export function getMenuItems(
   role: UserRole,
   researcherMode: ResearcherMode,
-  viewMode: ViewMode,
 ): MenuItem[] {
   if (role === 'researcher') {
     if (researcherMode === 'evaluation') return evaluationMenuItems;
-    return viewMode === 'admin' ? researcherAdminMenuItems : researcherTeacherMenuItems;
+    return researcherTeacherMenuItems;
   }
   return role === 'admin' ? adminMenuItems : teacherMenuItems;
 }
@@ -79,11 +72,10 @@ export function getMenuItems(
 export function getSampleDatasetKey(
   role: UserRole,
   researcherMode: ResearcherMode,
-  viewMode: ViewMode,
 ): SampleDataset {
   if (role === 'admin') return null;
   if (role === 'researcher' && researcherMode === 'evaluation') return null;
-  if (role === 'researcher') return viewMode === 'admin' ? 'admin' : 'teacher';
+  if (role === 'researcher') return 'teacher';
   return 'teacher';
 }
 

@@ -13,6 +13,7 @@ export function Home() {
   const isTeacher = user?.role === 'teacher';
   const isAdmin = user?.role === 'admin';
 
+
   useEffect(() => {
     if (!user) return;
 
@@ -27,11 +28,14 @@ export function Home() {
     }
 
     // Researchers don't need sessions — just stop the loading spinner
+    // Clear saved mode so researcher always sees the picker on login
+    localStorage.removeItem('researcherMode');
     setLoading(false);
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const enterMode = (mode: ResearcherMode) => {
     localStorage.setItem('researcherMode', mode);
+    window.dispatchEvent(new StorageEvent('storage', { key: 'researcherMode', newValue: mode }));
     navigate(mode === 'evaluation' ? '/evaluation/metrics' : '/dashboard');
   };
 

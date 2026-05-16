@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PredictionResult as ApiPredictionResult, getProficiencyLabels } from '../services/api';
@@ -66,42 +66,6 @@ interface DemoGroup {
   features: FactorItem[];
 }
 
-// ─── ProficiencyDistributionChart ─────────────────────────────────────────────
-
-const ProficiencyDistributionChart = ({
-  predictions,
-  proficiencyBands,
-}: {
-  predictions: ApiPredictionResult[];
-  proficiencyBands: ProficiencyBand[];
-}) => {
-  const [hoveredBar, setHoveredBar] = useState<number | null>(null);
-
-  const distribution = useMemo(() => {
-    if (!predictions.length || !proficiencyBands.length) return [];
-    const counts: Record<number, { count: number; band: ProficiencyBand | null }> = {};
-    proficiencyBands.forEach(band => { counts[band.code] = { count: 0, band }; });
-    predictions.forEach(pred => {
-      const code = pred.proficiency?.code;
-      if (code !== undefined && counts[code]) counts[code].count++;
-    });
-    const total = predictions.length;
-    return Object.values(counts)
-      .filter(item => item.count > 0)
-      .map(item => ({ ...item, percentage: total > 0 ? (item.count / total) * 100 : 0 }))
-      .sort((a, b) => (a.band?.code || 0) - (b.band?.code || 0));
-  }, [predictions, proficiencyBands]);
-
-
-
-};
-
-// ─── FactorPillList ───────────────────────────────────────────────────────────
-
-/**
- * Renders pills split into two rows (positive / negative).
- * No inline labels — the parent legend covers the meaning.
- */
 const FactorPillList = ({ items }: { items: FactorItem[] }) => {
   const helping = items
     .filter(f => f.avgShap > SIGNIFICANCE_THRESHOLD)
@@ -203,12 +167,12 @@ const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeatur
 
       {/* Shared legend */}
       <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
-        <span className="flex items-center gap-2 text-xs text-gray-500">
-          <span className="w-3 h-3 rounded-full bg-green-400 inline-block flex-shrink-0" />
+        <span className="flex items-center gap-2 text-sm text-gray-500">
+          <span className="w-3 h-3 rounded-full bg-green-500 inline-block flex-shrink-0" />
           Raises MPS
         </span>
-        <span className="flex items-center gap-2 text-xs text-gray-500">
-          <span className="w-3 h-3 rounded-full bg-red-400 inline-block flex-shrink-0" />
+        <span className="flex items-center gap-2 text-sm text-gray-500">
+          <span className="w-3 h-3 rounded-full bg-red-500 inline-block flex-shrink-0" />
           Lowers MPS
         </span>
       </div>
@@ -364,7 +328,7 @@ export function ClassSummary() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {sessionName || fileName} — Class Summary
+                {fileName.endsWith('.csv') ? fileName.slice(0, -4) : fileName} Summary
               </h1>
             </div>
             <button
@@ -380,7 +344,7 @@ export function ClassSummary() {
         </header>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2 mb-8">
+        <div className="grid grid-cols-2 gap-2 mb-8">
           <div className="bg-white rounded-2xl shadow-lg p-4">
             <div className="flex items-center justify-between">
               <div>

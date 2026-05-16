@@ -43,7 +43,7 @@ export type SessionMeta = Omit<PredictionSession, 'predictions'>;
 
 const LS_KEY = (teacherId: string) => `nat_sessions_${teacherId}`;
 
-function lsGetAll(teacherId: string): PredictionSession[] {
+export function lsGetAll(teacherId: string): PredictionSession[] {
   try {
     const raw = localStorage.getItem(LS_KEY(teacherId));
     return raw ? JSON.parse(raw) : [];

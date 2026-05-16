@@ -166,7 +166,7 @@ export function SchoolComparison() {
                         </div>
                     ) : schoolMAE.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={schoolMAE} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+                            <BarChart data={schoolMAE} margin={{ top: 20, right: 30, left: 60, bottom: 80 }}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="School" angle={-45} textAnchor="end" height={120} interval={0} tick={{ fontSize: 10 }} />
                                 <YAxis label={{ value: 'MAE (Lower is Better)', angle: -90, position: 'center', dx: -20, offset: -30 }} domain={[0, 40]} />

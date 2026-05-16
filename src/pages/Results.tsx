@@ -663,7 +663,7 @@ export function Results() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    Factors Affecting Student — Learner {selectedStudent}
+                    Factors Affecting Learner {selectedStudent}'s Predicted NAT MPS
                   </h3>
                 </div>
                 <button
@@ -758,11 +758,11 @@ export function Results() {
                     {/* Shared legend */}
                     <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
                       <span className="flex items-center gap-2 text-xs text-gray-500">
-                        <span className="w-3 h-3 rounded-full bg-green-400 inline-block flex-shrink-0" />
+                        <span className="w-3 h-3 rounded-full bg-green-500 inline-block flex-shrink-0" />
                         Raises MPS
                       </span>
                       <span className="flex items-center gap-2 text-xs text-gray-500">
-                        <span className="w-3 h-3 rounded-full bg-red-400 inline-block flex-shrink-0" />
+                        <span className="w-3 h-3 rounded-full bg-red-500 inline-block flex-shrink-0" />
                         Lowers MPS
                       </span>
                     </div>

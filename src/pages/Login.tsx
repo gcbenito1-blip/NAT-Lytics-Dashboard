@@ -43,10 +43,12 @@ export function Login() {
         toast.error(getFriendlyError(error));
         setLoading(false);
       } else if (user) {
-        // User is successfully logged in and profile is loaded
         toast.success(`Welcome back, ${user.firstName}!`);
-        // Navigate immediately - no timeout needed because user state is already updated
-         navigate('/homepage', { replace: true });
+        if (user.role === 'researcher') {
+          navigate('/homepage', { replace: true });
+        } else {
+          navigate('/homepage', { replace: true });
+        }
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -120,7 +122,7 @@ export function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="cursor-pointer w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span className="flex items-center justify-center">

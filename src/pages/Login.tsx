@@ -46,7 +46,7 @@ export function Login() {
         // User is successfully logged in and profile is loaded
         toast.success(`Welcome back, ${user.firstName}!`);
         // Navigate immediately - no timeout needed because user state is already updated
-        navigate('/home', { replace: true });
+         navigate('/homepage', { replace: true });
       }
     } catch (err) {
       console.error('Login error:', err);

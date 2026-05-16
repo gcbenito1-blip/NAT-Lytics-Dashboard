@@ -197,7 +197,7 @@ const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeatur
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-gray-900">Factors that affect learners</h2>
         <p className="text-sm text-gray-500 mt-1">
-          Based on the class predictions, here are the factors that most influenced students' MPS scores on average.
+          Based on the class predictions, here are the factors that most influenced students' MPS on average.
         </p>
       </div>
 
@@ -205,11 +205,11 @@ const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeatur
       <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
         <span className="flex items-center gap-2 text-xs text-gray-500">
           <span className="w-3 h-3 rounded-full bg-green-400 inline-block flex-shrink-0" />
-          Raises MPS score
+          Raises MPS
         </span>
         <span className="flex items-center gap-2 text-xs text-gray-500">
           <span className="w-3 h-3 rounded-full bg-red-400 inline-block flex-shrink-0" />
-          Lowers MPS score
+          Lowers MPS
         </span>
       </div>
 
@@ -366,7 +366,6 @@ export function ClassSummary() {
               <h1 className="text-3xl font-bold text-gray-900">
                 {sessionName || fileName} — Class Summary
               </h1>
-              <p className="text-gray-600 mt-1">Aggregated view of {totalPredictions} student predictions</p>
             </div>
             <button
               onClick={() => navigate('/prediction-table', { state: { predictions, fileName, sessionName } })}
@@ -385,14 +384,22 @@ export function ClassSummary() {
           <div className="bg-white rounded-2xl shadow-lg p-4">
             <div className="flex items-center justify-between">
               <div>
+                <p className="text-xs font-medium text-gray-500">Total Learners</p>
+                <p className="text-2xl font-bold mt-1 text-blue-800" >{totalPredictions}</p>
+              </div>
+              <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-blue-100">
+                <span className='material-icons-round text-blue-700'>people</span>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl shadow-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-xs font-medium text-gray-500">Average MPS</p>
                 <p className="text-2xl font-bold mt-1" style={{ color: avgColor }}>{averageScore.toFixed(1)}</p>
               </div>
               <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: avgColor + '20' }}>
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: avgColor }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
+                <span className='material-icons-round' style={{ color: avgColor }}>leaderboard</span>
               </div>
             </div>
           </div>

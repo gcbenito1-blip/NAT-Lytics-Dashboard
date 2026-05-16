@@ -259,7 +259,7 @@ export function Results() {
       setFileName(state.fileName ?? 'Dataset');
       setSessionName(state.sessionName ?? '');
     } else {
-      navigate('/home');
+      navigate('/homepage');
     }
   }, [location.state, navigate]);
 
@@ -352,7 +352,7 @@ export function Results() {
             </button>
             {hasAnySession && (
               <button
-                onClick={() => navigate('/home')}
+                onClick={() => navigate('/homepage')}
                 className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition"
               >
                 Select Session
@@ -374,7 +374,7 @@ export function Results() {
         style={{ background: 'linear-gradient(135deg, #3da6e2 0%, #1480be 100%)' }}
       >
         <div>
-          <h1 className="text-2xl font-bold mb-1">Prediction Results</h1>
+          <h1 className="text-2xl font-bold mb-1">Student Results</h1>
           <p className="text-sm opacity-90">
             {sessionName && (
               <><span className="font-semibold">Session: {sessionName}</span> &nbsp;|&nbsp; </>
@@ -410,7 +410,7 @@ export function Results() {
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Prediction Results</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Detailed Student Results</h2>
             <p className="text-sm text-gray-500 mt-1">
               Showing {filteredAndSortedPredictions.length} of {totalPredictions} predictions
             </p>
@@ -751,7 +751,7 @@ export function Results() {
                         Factors that affect this learner
                       </h5>
                       <p className="text-xs text-gray-500 mt-1">
-                        Based on this student's data, here are the factors that most influenced their predicted MPS score.
+                        Based on this student's data, here are the factors that most influenced their predicted MPS.
                       </p>
                     </div>
 
@@ -759,11 +759,11 @@ export function Results() {
                     <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
                       <span className="flex items-center gap-2 text-xs text-gray-500">
                         <span className="w-3 h-3 rounded-full bg-green-400 inline-block flex-shrink-0" />
-                        Raises MPS score
+                        Raises MPS
                       </span>
                       <span className="flex items-center gap-2 text-xs text-gray-500">
                         <span className="w-3 h-3 rounded-full bg-red-400 inline-block flex-shrink-0" />
-                        Lowers MPS score
+                        Lowers MPS
                       </span>
                     </div>
 

@@ -111,18 +111,18 @@ export function AppLayout() {
   let menuItems: MenuItem[];
   const isAdminOrResearcherAdmin = isAdmin || (isResearcher && researcherMode === 'prediction' && viewMode === 'admin');
   if (isAdminOrResearcherAdmin) {
-// Check if we're viewing session results (paths that should show session navigation)
-     const sessionResultPaths = ["/class-summary", "/prediction-table"];
-     const isViewingSessionResult = sessionResultPaths.includes(location.pathname);
-if (isViewingSessionResult) {
-        // Menu for admin/researcher admin viewing session results: show overview and session-related pages
-        // Note: Class Comparison is on the default menu only (shows aggregated data from all teachers)
-        menuItems = [
-          { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
-          { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
-          { name: 'Prediction Table', path: '/prediction-table', icon: icon('table_chart') },
-        ];
-      } else {
+    // Check if we're viewing session results (paths that should show session navigation)
+    const sessionResultPaths = ["/class-summary", "/prediction-table"];
+    const isViewingSessionResult = sessionResultPaths.includes(location.pathname);
+    if (isViewingSessionResult) {
+      // Menu for admin/researcher admin viewing session results: show overview and session-related pages
+      // Note: Class Comparison is on the default menu only (shows aggregated data from all teachers)
+      menuItems = [
+        { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
+        { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
+        { name: 'Student Results', path: '/prediction-table', icon: icon('table_chart') },
+      ];
+    } else {
       menuItems = getMenuItems(role, researcherMode, viewMode);
     }
   } else {
@@ -192,7 +192,7 @@ if (isViewingSessionResult) {
         {/* Logo */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <Link
-            to={isResearcher && researcherMode === 'evaluation' ? '/home' : (isAdmin ? OVERVIEW_PATH : (isTeacher ? OVERVIEW_PATH : UPLOAD_PATH))}
+            to={isResearcher && researcherMode === 'evaluation' ? '/homepage' : (isAdmin ? OVERVIEW_PATH : (isTeacher ? OVERVIEW_PATH : UPLOAD_PATH))}
             className="flex items-center space-x-3 hover:opacity-90 transition"
           >
             <div className="w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
@@ -279,7 +279,7 @@ if (isViewingSessionResult) {
           </div>
           <button
             onClick={() => setShowSignOutConfirm(true)}
-            className="w-full flex items-center justify-center space-x-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition"
+            className="w-full flex items-center justify-center space-x-2 px-4 py-2 text-sm font-medium bg-red-500 text-white hover:bg-red-600 rounded-lg transition"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

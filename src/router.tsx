@@ -3,6 +3,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './layouts/AppLayout';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
+import { HomeRouter } from './pages/HomeRouter';
 import { Home } from './pages/Home';
 import { Dashboard } from './pages/Dashboard';
 import { ClassSummary } from './pages/ClassSummary';
@@ -27,16 +28,6 @@ export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
   { path: '/signup', element: <Signup /> },
 
-  // home — all roles, protected
-  {
-    path: '/home',
-    element: (
-      <ProtectedRoute>
-        <Home />
-      </ProtectedRoute>
-    ),
-  },
-
   // app shell — protected, all roles
   {
     path: '/',
@@ -45,32 +36,42 @@ export const router = createBrowserRouter([
         <AppLayout />
       </ProtectedRoute>
     ),
-children: [
-       // prediction
+    children: [
+      // home — all roles, protected
        {
-         path: 'overview',
+         path: 'homepage',
          element: (
-           <OverviewRouter />
+           <ProtectedRoute>
+             <HomeRouter />
+           </ProtectedRoute>
          ),
        },
-       { path: 'dashboard', element: <Dashboard /> },
-       { path: 'class-summary', element: <ClassSummary /> },
-       { path: 'section-comparison', element: <SectionComparison /> },
-       { path: 'class-comparison', element: <ClassComparison /> },
-       { path: 'prediction-table', element: <Results /> },
-       { path: 'model-reliability', element: <ModelReliability /> },
-       { path: 'manage-teachers', element: <ManageTeachers /> },
-       { path: 'settings', element: <Settings /> },
-       // evaluation
-       { path: 'evaluation/metrics', element: <ModelEvaluation /> },
-       { path: 'evaluation/charts', element: <Charts /> },
-       { path: 'evaluation/feature-importance', element: <FeatureImportance /> },
-       { path: 'evaluation/school-comparison', element: <SchoolComparison /> },
-       { path: 'evaluation/student-table', element: <StudentTable /> },
-     ],
+      // prediction
+      {
+        path: 'overview',
+        element: (
+          <OverviewRouter />
+        ),
+      },
+      { path: 'dashboard', element: <Dashboard /> },
+      { path: 'class-summary', element: <ClassSummary /> },
+      { path: 'section-comparison', element: <SectionComparison /> },
+      { path: 'class-comparison', element: <ClassComparison /> },
+      { path: 'prediction-table', element: <Results /> },
+      { path: 'model-reliability', element: <ModelReliability /> },
+      { path: 'manage-teachers', element: <ManageTeachers /> },
+      { path: 'results-list', element: <AdminOverview /> },
+      { path: 'settings', element: <Settings /> },
+      // evaluation
+      { path: 'evaluation/metrics', element: <ModelEvaluation /> },
+      { path: 'evaluation/charts', element: <Charts /> },
+      { path: 'evaluation/feature-importance', element: <FeatureImportance /> },
+      { path: 'evaluation/school-comparison', element: <SchoolComparison /> },
+      { path: 'evaluation/student-table', element: <StudentTable /> },
+    ],
   },
 
   // redirects
-  { path: '/', element: <Navigate to="/home" replace /> },
+  { path: '/', element: <Navigate to="/homepage" replace /> },
   { path: '*', element: <Navigate to="/login" replace /> },
 ]);

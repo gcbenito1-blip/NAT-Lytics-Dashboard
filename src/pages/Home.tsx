@@ -13,10 +13,6 @@ export function Home() {
   const isTeacher = user?.role === 'teacher';
   const isAdmin = user?.role === 'admin';
 
-  const [researcherMode, setResearcherMode] = useState<ResearcherMode | null>(
-    () => (localStorage.getItem('researcherMode') as ResearcherMode | null)
-  );
-
   useEffect(() => {
     if (!user) return;
 
@@ -36,7 +32,6 @@ export function Home() {
 
   const enterMode = (mode: ResearcherMode) => {
     localStorage.setItem('researcherMode', mode);
-    setResearcherMode(mode);
     navigate(mode === 'evaluation' ? '/evaluation/metrics' : '/dashboard');
   };
 

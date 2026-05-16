@@ -16,17 +16,19 @@ export interface MenuItem {
 export const icon = (name: string) => <span className="material-icons-round text-base">{name}</span>;
 
 export const teacherMenuItems: MenuItem[] = [
-  { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
-  { name: 'Upload Dataset', path: '/dashboard', icon: icon('upload_file'), alwaysAccessible: true },
-  { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
-  { name: 'Prediction Table', path: '/prediction-table', icon: icon('table_chart') },
+  { name: 'Home', path: '/homepage', icon: icon('home'), alwaysAccessible: true },
+  { name: 'Upload Class Data', path: '/dashboard', icon: icon('upload_file'), alwaysAccessible: true },
+  { name: 'Class Overview', path: '/class-summary', icon: icon('analytics') },
+  { name: 'Student Results', path: '/prediction-table', icon: icon('table_chart') },
+  { name: 'Prediction History', path: '/overview', icon: icon('history'), alwaysAccessible: true },
   { name: 'Model Reliability', path: '/model-reliability', icon: icon('monitor_heart'), alwaysAccessible: true },
   { name: 'Settings', path: '/settings', icon: icon('settings'), alwaysAccessible: true },
 ];
 
 export const adminMenuItems: MenuItem[] = [
-  { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
+  { name: 'Home', path: '/homepage', icon: icon('home'), alwaysAccessible: true },
   { name: 'Manage Teachers', path: '/manage-teachers', icon: icon('manage_accounts'), alwaysAccessible: true },
+  { name: 'Results List', path: '/results-list', icon: icon('analytics'), alwaysAccessible: true },
   { name: 'Class Comparison', path: '/class-comparison', icon: icon('compare'), alwaysAccessible: true },
   { name: 'Model Reliability', path: '/model-reliability', icon: icon('monitor_heart'), alwaysAccessible: true },
   { name: 'Settings', path: '/settings', icon: icon('settings'), alwaysAccessible: true },
@@ -53,7 +55,7 @@ export const sampleDatasetConfig: Record<string, { href: string; filename: strin
   teacher: {
     href: '/sample_dataset.csv',
     filename: 'sample_dataset.csv',
-    label: 'Download Sample Dataset',
+    label: 'Download Template',
   },
   admin: {
     href: '/admin_sample_dataset.csv',

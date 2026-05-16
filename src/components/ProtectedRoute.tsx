@@ -18,10 +18,13 @@ export function ProtectedRoute({ children, allowedRoles }: Props) {
     );
   }
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/home" replace />;
+    // For unauthorized access, redirect to homepage
+    return <Navigate to="/homepage" replace />;
   }
 
   return <>{children}</>;

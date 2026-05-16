@@ -20,12 +20,12 @@ function formatDate(iso: string) {
 function PassBadge({ pct }: { pct: number }) {
   const color =
     pct >= 75
-      ? 'bg-green-100 text-green-700'
+      ? 'text-green-700'
       : pct >= 50
-        ? 'bg-yellow-100 text-yellow-700'
-        : 'bg-red-100 text-red-700';
+        ? 'text-yellow-700'
+        : 'text-red-700';
   return (
-    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${color}`}>
+    <span className={`px-2 py-0.5 text-xs font-semibold ${color}`}>
       {pct.toFixed(0)}% above proficient
     </span>
   );
@@ -505,9 +505,9 @@ export function TeacherOverview() {
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold mb-1">Welcome back, {user?.firstName}!</h1>
+            <h1 className="text-2xl font-bold mb-1">Prediction History</h1>
             <p className="text-sm opacity-90">
-              Manage your prediction sessions and track your class's progress.
+              Manage your prediction history and track your class's progress.
             </p>
           </div>
           <button
@@ -517,7 +517,7 @@ export function TeacherOverview() {
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            New Prediction Session
+            New Prediction
           </button>
         </div>
       </header>
@@ -527,7 +527,7 @@ export function TeacherOverview() {
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
           <h2 className="text-lg font-semibold text-gray-900">
-            Prediction Sessions
+            History List
             <span className="ml-2 text-sm font-normal text-gray-400">({sessions.length})</span>
           </h2>
 
@@ -549,7 +549,7 @@ export function TeacherOverview() {
               </svg>
               <input
                 type="text"
-                placeholder="Search sessions…"
+                placeholder="Search history…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"

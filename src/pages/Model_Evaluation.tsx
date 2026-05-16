@@ -415,7 +415,7 @@ const MetricExplanation = ({ metric }: { metric: 'R2' | 'MAE' | 'RMSE' }) => {
 // Tooltip content for each metric
 const metricTooltips = {
   MAE:
-    "MAE (Mean Absolute Error): Average absolute difference between predicted and actual MPS scores. " +
+    "MAE (Mean Absolute Error): Average absolute difference between predicted and actual MPS. " +
     "\n\nAn MAE of 4 means predictions are typically off by about 4 points. Lower values indicate better accuracy.",
 
   RMSE:
@@ -732,7 +732,7 @@ export function ModelEvaluation() {
           <h1>Model Evaluation Dashboard</h1>
           <p>Comprehensive metrics and performance analysis for trained models</p>
         </div>
-        <Link to="/home" className="back-link">
+        <Link to="/homepage" className="back-link">
           ← Back to Homepage
         </Link>
       </header>

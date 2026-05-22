@@ -222,9 +222,9 @@ export function AdminOverview() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: 'Teachers', value: totalTeachers, color: 'text-blue-600', bg: 'bg-blue-50' },
-          { label: 'Total Sessions', value: totalSessions, color: 'text-blue-600', bg: 'bg-blue-50' },
+          { label: 'Total Predictions', value: totalSessions, color: 'text-blue-600', bg: 'bg-blue-50' },
           { label: 'Total Learners', value: totalLearners, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-          { label: 'Org Avg MPS', value: orgAvg.toFixed(1), color: orgAvg >= 75 ? 'text-green-600' : 'text-orange-500', bg: orgAvg >= 75 ? 'bg-green-50' : 'bg-orange-50' },
+          { label: 'Average NAT MPS', value: orgAvg.toFixed(1), color: orgAvg >= 75 ? 'text-green-600' : 'text-orange-500', bg: orgAvg >= 75 ? 'bg-green-50' : 'bg-orange-50' },
         ].map((stat) => (
           <div key={stat.label} className={`${stat.bg} rounded-xl p-4`}>
             <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>

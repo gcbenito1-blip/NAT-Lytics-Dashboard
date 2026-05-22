@@ -28,7 +28,7 @@ export const teacherMenuItems: MenuItem[] = [
 export const adminMenuItems: MenuItem[] = [
   { name: 'Home', path: '/homepage', icon: icon('home'), alwaysAccessible: true },
   { name: 'Results List', path: '/results-list', icon: icon('analytics'), alwaysAccessible: true },
-  { name: 'Class Comparison', path: '/class-comparison', icon: icon('compare'), alwaysAccessible: true },
+  { name: 'Section Comparison', path: '/class-comparison', icon: icon('compare'), alwaysAccessible: true },
   { name: 'Manage Teachers', path: '/manage-teachers', icon: icon('manage_accounts'), alwaysAccessible: true },
   { name: 'Model Reliability', path: '/model-reliability', icon: icon('monitor_heart'), alwaysAccessible: true },
   { name: 'Settings', path: '/settings', icon: icon('settings'), alwaysAccessible: true },

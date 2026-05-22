@@ -37,7 +37,7 @@ export function ClassComparison() {
             try {
                 // Get all sessions for this school
                 const sessions = await getOrgSessions(user.schoolId);
-                
+
                 if (sessions.length === 0) {
                     setPredictions([]);
                     return;
@@ -162,7 +162,7 @@ export function ClassComparison() {
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
                 <div className="flex flex-col items-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-600 mb-4"></div>
-                    <p className="text-gray-600">Loading class comparison data...</p>
+                    <p className="text-gray-600">Loading section comparison data...</p>
                 </div>
             </div>
         );
@@ -225,7 +225,7 @@ export function ClassComparison() {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900">
-                                Class Comparison
+                                Section Comparison
                             </h1>
                             <p className="text-gray-600 mt-1">
                                 Aggregated from all teacher sessions - {totalStudents} learners across {sectionsWithData} sections

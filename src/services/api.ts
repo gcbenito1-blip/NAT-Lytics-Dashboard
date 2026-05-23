@@ -143,7 +143,7 @@ export interface AnalysisResult {
   column_count: number;
   columns: ColumnInfo[];
   preview: Record<string, unknown>[];
-  correlation_matrix: Record<string, Record<string, number>>;
+  correlation_matrix: Record<string, Record<string, number | null>>;
   missing_values: {
     total_missing: number;
     total_cells: number;

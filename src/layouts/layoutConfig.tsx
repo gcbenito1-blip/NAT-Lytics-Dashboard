@@ -19,7 +19,7 @@ export const teacherMenuItems: MenuItem[] = [
   { name: 'Home', path: '/homepage', icon: icon('home'), alwaysAccessible: true },
   { name: 'Upload Class Data', path: '/dashboard', icon: icon('upload_file'), alwaysAccessible: true },
   { name: 'Class Overview', path: '/class-summary', icon: icon('analytics') },
-  { name: 'Student Results', path: '/prediction-table', icon: icon('table_chart') },
+  { name: 'Prediction Results', path: '/prediction-table', icon: icon('table_chart') },
   { name: 'Prediction History', path: '/overview', icon: icon('history'), alwaysAccessible: true },
   { name: 'Model Reliability', path: '/model-reliability', icon: icon('monitor_heart'), alwaysAccessible: true },
   { name: 'Settings', path: '/settings', icon: icon('settings'), alwaysAccessible: true },

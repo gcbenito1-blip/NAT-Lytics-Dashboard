@@ -121,7 +121,7 @@ export function AppLayout() {
       menuItems = [
         { name: 'Overview', path: '/overview', icon: icon('home'), alwaysAccessible: true },
         { name: 'Class Summary', path: '/class-summary', icon: icon('analytics') },
-        { name: 'Student Results', path: '/prediction-table', icon: icon('table_chart') },
+        { name: 'Prediction Result', path: '/prediction-table', icon: icon('table_chart') },
       ];
     } else {
       menuItems = getMenuItems(role, researcherMode);

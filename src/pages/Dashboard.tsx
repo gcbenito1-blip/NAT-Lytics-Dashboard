@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { uploadFile, analyzeData, explainBatch, AnalysisResult, BatchPredictionResponse } from '../services/api';
+import { explainBatch, AnalysisResult, BatchPredictionResponse } from '../services/api';
 import { createSession } from '../services/sessionService';
 import { API_BASE_URL } from '../config';
 import {
@@ -16,9 +16,9 @@ const colors = ['#fa456d', '#58b9f1', '#ffe369', '#82ca9d', '#caa1ff'];
 const colors1 = ['#3da6e2', '#be3614', '#8f0d23', '#7bc4e6', '#5aafe0'];
 const colors2 = ['#1480be', '#3da6e2', '#ffe369', '#fa456d', '#ca0909'];
 
-const MyCustomPie = (props: PieSectorShapeProps) => <Sector {...props} fill={colors[props.index % colors.length]} />;
-const MyCustomPie1 = (props: PieSectorShapeProps) => <Sector {...props} fill={colors1[props.index % colors1.length]} />;
-const MyCustomPie2 = (props: PieSectorShapeProps) => <Sector {...props} fill={colors2[props.index % colors2.length]} />;
+// const MyCustomPie = (props: PieSectorShapeProps) => <Sector {...props} fill={colors[props.index % colors.length]} />;
+// const MyCustomPie1 = (props: PieSectorShapeProps) => <Sector {...props} fill={colors1[props.index % colors1.length]} />;
+// const MyCustomPie2 = (props: PieSectorShapeProps) => <Sector {...props} fill={colors2[props.index % colors2.length]} />;
 
 interface AnomalyInfo {
   column: string;
@@ -29,6 +29,178 @@ interface AnomalyInfo {
 interface OutletContextType {
   sampleDataset: { href: string; filename: string; label: string } | null;
   viewMode?: 'teacher' | 'admin';
+}
+
+// ── Local CSV Parser ──────────────────────────────────────────────────────────
+
+function parseCSVContent(content: string): Record<string, unknown>[] {
+  const lines = content.split('\n').filter(line => line.trim());
+  if (lines.length === 0) return [];
+  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+  return lines.slice(1).map(line => {
+    const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+    const row: Record<string, unknown> = {};
+    headers.forEach((header, idx) => {
+      const value = values[idx] ?? '';
+      const num = parseFloat(value);
+      row[header] = isNaN(num) ? value : num;
+    });
+    return row;
+  });
+}
+
+async function readFileAsText(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target?.result as string ?? '');
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.readAsText(file);
+  });
+}
+
+// ── Local Analyzer ────────────────────────────────────────────────────────────
+// Replicates the /api/analyze backend logic entirely in the browser.
+
+function analyzeLocally(records: Record<string, unknown>[]): AnalysisResult {
+  if (records.length === 0) {
+    return {
+      row_count: 0,
+      column_count: 0,
+      columns: [],
+      preview: [],
+      correlation_matrix: {},
+      missing_values: { total_missing: 0, total_cells: 0, missing_percentage: 0, columns_with_missing: [] },
+      proficiency_distribution: null,
+    };
+  }
+
+  const allKeys = Object.keys(records[0]);
+  const rowCount = records.length;
+  const columnCount = allKeys.length;
+
+  // Helper: is value null/empty/undefined
+  const isMissing = (v: unknown) => v === null || v === undefined || v === '' || (typeof v === 'number' && isNaN(v));
+
+  // Per-column stats
+  const columns: AnalysisResult['columns'] = allKeys.map(col => {
+    const values = records.map(r => r[col]);
+    const nullCount = values.filter(isMissing).length;
+    const nonNullCount = rowCount - nullCount;
+    const nullPct = rowCount > 0 ? parseFloat(((nullCount / rowCount) * 100).toFixed(2)) : 0;
+
+    const numericValues = values
+      .filter(v => !isMissing(v) && !isNaN(Number(v)))
+      .map(Number);
+
+    const isNumeric = numericValues.length > 0 && numericValues.length >= nonNullCount * 0.5;
+    const isId = col.toLowerCase() === 'learnerid';
+
+    const base = {
+      name: col,
+      dtype: isNumeric ? 'float64' : 'object',
+      non_null_count: nonNullCount,
+      null_count: nullCount,
+      null_percentage: nullPct,
+    };
+
+    if (isId) {
+      const unique = new Set(values.filter(v => !isMissing(v)).map(String)).size;
+      return { ...base, unique_count: unique, duplicate_count: nonNullCount - unique, is_id_column: true };
+    }
+
+    if (isNumeric) {
+      const sorted = [...numericValues].sort((a, b) => a - b);
+      const mean = numericValues.reduce((s, n) => s + n, 0) / numericValues.length;
+      const variance = numericValues.reduce((s, n) => s + (n - mean) ** 2, 0) / numericValues.length;
+      const std = Math.sqrt(variance);
+      const median = sorted.length % 2 === 0
+        ? (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2
+        : sorted[Math.floor(sorted.length / 2)];
+      const q25 = sorted[Math.floor(sorted.length * 0.25)];
+      const q75 = sorted[Math.floor(sorted.length * 0.75)];
+      return {
+        ...base,
+        statistics: {
+          mean: parseFloat(mean.toFixed(4)),
+          std: parseFloat(std.toFixed(4)),
+          min: sorted[0],
+          max: sorted[sorted.length - 1],
+          median: parseFloat(median.toFixed(4)),
+          q1: parseFloat(q25.toFixed(4)),
+          q3: parseFloat(q75.toFixed(4)),
+        },
+      };
+    }
+
+    // Categorical
+    const vc: Record<string, number> = {};
+    values.filter(v => !isMissing(v)).forEach(v => {
+      const k = String(v);
+      vc[k] = (vc[k] ?? 0) + 1;
+    });
+    const sortedVc = Object.entries(vc)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 10);
+    const unique = new Set(values.filter(v => !isMissing(v)).map(String)).size;
+    return {
+      ...base,
+      value_counts: Object.fromEntries(sortedVc),
+      unique_count: unique,
+    };
+  });
+
+  // Correlation matrix (numeric columns only, Pearson)
+  const numericCols = columns.filter(c => c.statistics).map(c => c.name);
+  const correlation_matrix: Record<string, Record<string, number | null>> = {};
+
+  if (numericCols.length > 1) {
+    const vectors: Record<string, number[]> = {};
+    numericCols.forEach(col => {
+      vectors[col] = records.map(r => Number(r[col])).filter(n => !isNaN(n));
+    });
+
+    numericCols.forEach(colA => {
+      correlation_matrix[colA] = {};
+      numericCols.forEach(colB => {
+        const a = vectors[colA];
+        const b = vectors[colB];
+        const n = Math.min(a.length, b.length);
+        if (n < 2) { correlation_matrix[colA][colB] = 0; return; }
+        const meanA = a.slice(0, n).reduce((s, v) => s + v, 0) / n;
+        const meanB = b.slice(0, n).reduce((s, v) => s + v, 0) / n;
+        let num = 0, denA = 0, denB = 0;
+        for (let i = 0; i < n; i++) {
+          num += (a[i] - meanA) * (b[i] - meanB);
+          denA += (a[i] - meanA) ** 2;
+          denB += (b[i] - meanB) ** 2;
+        }
+        const den = Math.sqrt(denA * denB);
+        correlation_matrix[colA][colB] = den === 0 ? 0 : parseFloat((num / den).toFixed(4));
+      });
+    });
+  }
+
+  // Missing values summary
+  const totalCells = rowCount * columnCount;
+  const totalMissing = columns.reduce((s, c) => s + c.null_count, 0);
+  const missing_values = {
+    total_missing: totalMissing,
+    total_cells: totalCells,
+    missing_percentage: totalCells > 0 ? parseFloat(((totalMissing / totalCells) * 100).toFixed(2)) : 0,
+    columns_with_missing: columns
+      .filter(c => c.null_count > 0)
+      .map(c => ({ column: c.name, missing_count: c.null_count })),
+  };
+
+  return {
+    row_count: rowCount,
+    column_count: columnCount,
+    columns,
+    preview: records.slice(0, 5),
+    correlation_matrix,
+    missing_values,
+    proficiency_distribution: null,
+  };
 }
 
 // ── Session Name Modal ────────────────────────────────────────────────────────
@@ -97,7 +269,6 @@ export function Dashboard() {
   const [hasUploadedData, setHasUploadedData] = useState(false);
   const [isPredicting, setIsPredicting] = useState(false);
   const [, setPredictionError] = useState('');
-  const [fullData, setFullData] = useState<Record<string, unknown>[]>([]);
   const [modalChart, setModalChart] = useState<{ title: string; data: { name: string; value: number }[]; colors: string[] } | null>(null);
   const [showRadarChart, setShowRadarChart] = useState(false);
   const [anomalies, setAnomalies] = useState<AnomalyInfo[]>([]);
@@ -131,7 +302,9 @@ export function Dashboard() {
       });
     }
     analysisResult.columns.forEach(col => {
-      if (col.null_percentage > 50) newAnomalies.push({ column: col.name, type: 'wrong_dtype', message: `High null percentage (${col.null_percentage.toFixed(1)}%)` });
+      const OPTIONAL_COLUMNS = ['science 3', 'science 4', 'science 5'];
+      if (col.null_percentage > 80 && !OPTIONAL_COLUMNS.includes(col.name.toLowerCase()))
+        newAnomalies.push({ column: col.name, type: 'wrong_dtype', message: `Very high null percentage (${col.null_percentage.toFixed(1)}%)` });
     });
     setAnomalies(newAnomalies);
   }, [analysisResult]);
@@ -142,11 +315,29 @@ export function Dashboard() {
     }
   }, [analysisResult]);
 
-  const canRunPredictions = useMemo(() => data.length > 0 && anomalies.length === 0 && privacyAccepted, [data.length, anomalies, privacyAccepted]);
+  const REQUIRED_COLUMNS = ['learnerid', 'gender', 'age', 'mother tongue', 'nutritional status'];
+
+  // Critical anomalies - missing values in required columns
+  const criticalAnomalies = anomalies.filter(a =>
+    a.type === 'missing' && REQUIRED_COLUMNS.includes(a.column.toLowerCase())
+  );
+
+  // Warning anomalies - all other anomalies (missing in non-required columns, wrong_dtype, etc.)
+  const warningAnomalies = anomalies.filter(a =>
+    !(a.type === 'missing' && REQUIRED_COLUMNS.includes(a.column.toLowerCase()))
+  );
+
+  // Enable predictions if: data exists AND no critical anomalies AND privacy accepted
+  const canRunPredictions = useMemo(() =>
+    data.length > 0 && criticalAnomalies.length === 0 && privacyAccepted,
+    [data.length, criticalAnomalies, privacyAccepted]
+  );
+  // ── File Upload — fully client-side, no API calls ─────────────────────────
 
   const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     setFileName(file.name);
     setError('');
     setIsLoading(true);
@@ -154,64 +345,40 @@ export function Dashboard() {
     setPredictionError('');
     setAnomalies([]);
     setColumnsExpanded(false);
+    setHasUploadedData(false);
+
     try {
-      const uploadResponse = await uploadFile(file);
-      setData(uploadResponse.preview);
-      const full = await parseCSVFile(file);
-      setFullData(full);
-      const result = await analyzeData(full);
+      const content = await readFileAsText(file);
+      const parsed = parseCSVContent(content);
+
+      if (parsed.length === 0) throw new Error('File is empty or could not be parsed.');
+
+      setData(parsed);
+      const result = analyzeLocally(parsed);
       setAnalysisResult(result);
       setHasUploadedData(true);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to process file';
       setError(msg);
       toast.error(msg);
-      setHasUploadedData(false);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  const parseCSVFile = async (file: File): Promise<Record<string, unknown>[]> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const content = event.target?.result as string;
-          if (!content) { resolve([]); return; }
-          const lines = content.split('\n').filter(line => line.trim());
-          if (lines.length === 0) { resolve([]); return; }
-          const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-          const rows = lines.slice(1).map(line => {
-            const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
-            const row: Record<string, unknown> = {};
-            headers.forEach((header, idx) => {
-              const value = values[idx] ?? '';
-              const num = parseFloat(value);
-              row[header] = isNaN(num) ? value : num;
-            });
-            return row;
-          });
-          resolve(rows);
-        } catch (err) { reject(err); }
-      };
-      reader.onerror = () => reject(new Error('Failed to read file'));
-      reader.readAsText(file);
-    });
-  };
+  // ── Run Predictions — calls /explain-batch only ───────────────────────────
 
-  // Step 1: run predictions, then show session name modal
   const handleRunPredictions = useCallback(async () => {
     if (!canRunPredictions) return;
-    const dataToPredict = fullData.length > 0 ? fullData : data;
-    if (dataToPredict.length === 0) { setPredictionError('No data available.'); return; }
+    if (data.length === 0) { setPredictionError('No data available.'); return; }
+
     setIsPredicting(true);
     setPredictionError('');
+
     try {
-      const response: BatchPredictionResponse = await explainBatch(dataToPredict);
+      const response: BatchPredictionResponse = await explainBatch(data);
       setPendingResponse(response);
 
-      // Default session name
       const defaultName = `${fileName.replace(/\.csv$/i, '')} — ${new Date().toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })}`;
       setSessionNameInput(defaultName);
       setShowSessionModal(true);
@@ -222,9 +389,10 @@ export function Dashboard() {
     } finally {
       setIsPredicting(false);
     }
-  }, [data, fullData, fileName, canRunPredictions]);
+  }, [data, fileName, canRunPredictions]);
 
-  // Step 2: user confirms session name → save + navigate
+  // ── Session confirm ───────────────────────────────────────────────────────
+
   const handleConfirmSession = useCallback(async (name: string) => {
     if (!pendingResponse || !user) return;
     setShowSessionModal(false);
@@ -235,7 +403,6 @@ export function Dashboard() {
     const passedCount = predictions.filter((p) => (p.proficiency?.code ?? 0) >= 3).length;
     const finalName = name.trim() || sessionNameInput;
 
-    // Save session (non-blocking)
     createSession({
       teacherId: user.id,
       teacherName: user.name,
@@ -248,12 +415,11 @@ export function Dashboard() {
       predictions,
     }).catch((e) => console.warn('Session save failed (non-critical):', e));
 
-    // Navigate to results
     let resultsPath = '/prediction-table';
     if (user.role === 'teacher') resultsPath = '/class-summary';
     else if (user.role === 'admin') resultsPath = '/school-summary';
 
-    navigate(resultsPath, { state: { predictions, fileName, sessionName: finalName } });
+    navigate(resultsPath, { state: { predictions, fileName, sessionName: finalName, rawData: data } });
     window.scrollTo(0, 0);
   }, [pendingResponse, user, fileName, sessionNameInput, navigate]);
 
@@ -281,14 +447,16 @@ export function Dashboard() {
   }, [analysisResult]);
 
   const ageGroupData = useMemo(() => {
-    if (!analysisResult?.preview) return [];
+    if (!data.length) return [];
     const ageCounts: Record<string, number> = {};
-    analysisResult.preview.forEach(row => {
-      const age = String(row.age);
+    data.forEach(row => {
+      const age = String(row.age ?? row.Age);
       if (age && age !== 'undefined') ageCounts[age] = (ageCounts[age] || 0) + 1;
     });
-    return Object.entries(ageCounts).sort(([a], [b]) => Number(a) - Number(b)).map(([name, value]) => ({ name, value }));
-  }, [analysisResult]);
+    return Object.entries(ageCounts)
+      .sort(([a], [b]) => Number(a) - Number(b))
+      .map(([name, value]) => ({ name, value }));
+  }, [data]);
 
   const missingValuesData = useMemo(() => {
     if (!analysisResult) return [];
@@ -355,7 +523,6 @@ export function Dashboard() {
   return (
     <div className="space-y-8">
 
-      {/* Session Name Modal */}
       {showSessionModal && (
         <SessionNameModal
           value={sessionNameInput}
@@ -365,7 +532,6 @@ export function Dashboard() {
         />
       )}
 
-      {/* Chart Modal */}
       {modalChart && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setModalChart(null); }}>
           <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-2xl w-full mx-4 max-h-[85vh] overflow-auto">
@@ -381,7 +547,6 @@ export function Dashboard() {
         </div>
       )}
 
-      {/* Sign Out Modal */}
       {showSignOutConfirm && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={() => setShowSignOutConfirm(false)}>
           <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
@@ -443,7 +608,7 @@ export function Dashboard() {
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Upload Dataset</h2>
         <div className={`border-2 border-dashed rounded-xl p-8 text-center transition ${!privacyAccepted ? 'border-gray-300 bg-gray-50 cursor-not-allowed opacity-60' : 'border-gray-300 hover:border-blue-500'}`}>
-          <input type="file" accept=".csv,.xlsx" onChange={handleFileUpload} className="hidden" id="file-upload" disabled={isLoading || !privacyAccepted} />
+          <input type="file" accept=".csv" onChange={handleFileUpload} className="hidden" id="file-upload" disabled={isLoading || !privacyAccepted} />
           <label htmlFor="file-upload" className={`${!privacyAccepted ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
             <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -608,39 +773,117 @@ export function Dashboard() {
 
           {/* Run Predictions */}
           <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-start justify-between gap-6">
+              <div className="flex-1">
                 <h2 className="text-lg font-semibold text-gray-900">Run Predictions</h2>
                 <p className="text-sm text-gray-500 mt-1">Generate predictions for all {data.length} records. Results will be saved as a session.</p>
-                {anomalies.length > 0 && (
-                  <div className="mt-2 p-2 bg-red-50 rounded-lg">
-                    <p className="text-sm text-red-600 font-medium">Dataset has anomalies:</p>
-                    <ul className="text-xs text-red-500 mt-1 list-disc list-inside">
-                      {anomalies.slice(0, 3).map((a, i) => <li key={i}>{a.column}: {a.message}</li>)}
-                      {anomalies.length > 3 && <li>…and {anomalies.length - 3} more</li>}
+
+                {criticalAnomalies.length > 0 && (
+                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-600 font-medium mb-2">⚠️ Cannot run predictions — please fix these required columns:</p>
+                    <ul className="text-xs text-red-500 space-y-1">
+                      {criticalAnomalies.map((a, i) => (
+                        <li key={i} className="flex items-center gap-2">
+                          <svg className="h-3 w-3 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                          <span className="font-medium">{a.column}:</span> {a.message}
+                        </li>
+                      ))}
                     </ul>
+                    <p className="text-xs text-red-600 mt-2 pt-2 border-t border-red-200">
+                      Please ensure these required columns have no missing values before running predictions.
+                    </p>
+                  </div>
+                )}
+
+                {warningAnomalies.length > 0 && criticalAnomalies.length === 0 && (
+                  <div className="mt-3 space-y-2">
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <div className="flex items-start gap-2 mb-2">
+                        <svg className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-yellow-800">⚠️ Heads up — Missing Values Detected</p>
+                          <p className="text-xs text-yellow-700 mt-0.5">The following non-required columns have missing values:</p>
+                        </div>
+                      </div>
+
+                      <ul className="text-xs text-yellow-700 space-y-1 ml-7">
+                        {warningAnomalies.filter(a => a.type === 'missing').map((a, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
+                            <span className="font-medium">{a.column}:</span> {a.message}
+                          </li>
+                        ))}
+                        {warningAnomalies.filter(a => a.type === 'wrong_dtype').map((a, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
+                            <span className="font-medium">{a.column}:</span> {a.message}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-start gap-2">
+                        <svg className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-blue-800">How missing values will be handled:</p>
+                          <ul className="text-xs text-blue-700 mt-1 space-y-1 ml-5 list-disc">
+                            <li><span className="font-medium">Text/Categorical columns:</span> Empty values will be filled with "" (empty string)</li>
+                            <li><span className="font-medium">Numeric columns:</span> Empty values will be filled with the column's median value</li>
+                            <li className="mt-1 text-blue-600 font-medium">✓ Predictions will still run successfully with these automatic fixes</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {criticalAnomalies.length === 0 && warningAnomalies.length === 0 && data.length > 0 && (
+                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="text-sm font-medium text-green-700">✓ All checks passed — your dataset is ready for predictions!</p>
+                    </div>
                   </div>
                 )}
               </div>
+
               <button
                 onClick={handleRunPredictions}
                 disabled={isPredicting || !canRunPredictions}
-                className={`px-6 py-3 rounded-lg font-medium transition flex items-center space-x-2 ${isPredicting || !canRunPredictions ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                className={`px-6 py-3 rounded-lg font-medium transition flex items-center space-x-2 whitespace-nowrap ${isPredicting || !canRunPredictions
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+                  }`}
               >
                 {isPredicting ? (
                   <>
-                    <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /></svg>
-                    <span>Running Predictions…</span>
+                    <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span>Running Predictions...</span>
                   </>
                 ) : (
                   <>
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                     <span>Run Predictions</span>
                   </>
                 )}
               </button>
             </div>
           </div>
+
         </div>
       )}
     </div>

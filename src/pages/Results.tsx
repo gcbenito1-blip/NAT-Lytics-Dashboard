@@ -211,6 +211,7 @@ export function Results() {
   const [predictions, setPredictions] = useState<ApiPredictionResult[]>([]);
   const [fileName, setFileName] = useState('');
   const [sessionName, setSessionName] = useState('');
+  const [rawData, setRawData] = useState<Record<string, unknown>[]>([]);
   const [sortField, setSortField] = useState<keyof ApiPredictionResult>('prediction');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [filterStatus, setFilterStatus] = useState<string>('all');
@@ -258,6 +259,7 @@ export function Results() {
       setPredictions(state.predictions);
       setFileName(state.fileName ?? 'Dataset');
       setSessionName(state.sessionName ?? '');
+      setRawData(state.rawData ?? []);
     } else {
       navigate('/homepage');
     }
@@ -270,6 +272,21 @@ export function Results() {
       setSortField(field);
       setSortDirection('desc');
     }
+  };
+
+  const getStudentData = (learnerId: string) => {
+    const student = rawData.find(row => String(row.learnerID) === learnerId);
+    if (!student) return null;
+
+    const str = (v: unknown): string =>
+      v != null ? String(v) : 'N/A';
+
+    return {
+      age: str(student.age ?? student.Age),
+      gender: str(student.gender ?? student.Gender),
+      nutritionalStatus: str(student['nutritional status'] ?? student['Nutritional Status'] ?? student.nutritional_status),
+      motherTongue: str(student['mother tongue'] ?? student['Mother Tongue'] ?? student.mother_tongue),
+    };
   };
 
   const totalPredictions = predictions.length;
@@ -374,7 +391,7 @@ export function Results() {
         style={{ background: 'linear-gradient(135deg, #3da6e2 0%, #1480be 100%)' }}
       >
         <div>
-          <h1 className="text-2xl font-bold mb-1">Student Results</h1>
+          <h1 className="text-2xl font-bold mb-1">Individual Prediction Result</h1>
           <p className="text-sm opacity-90">
             {sessionName && (
               <><span className="font-semibold">Session: {sessionName}</span> &nbsp;|&nbsp; </>
@@ -410,7 +427,7 @@ export function Results() {
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Detailed Student Results</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Prediction Results</h2>
             <p className="text-sm text-gray-500 mt-1">
               Showing {filteredAndSortedPredictions.length} of {totalPredictions} predictions
             </p>
@@ -432,18 +449,6 @@ export function Results() {
               />
             </div>
 
-            {/* Band filter */}
-            <select
-              value={filterStatus}
-              onChange={(e) => { setFilterStatus(e.target.value); goToPage(1); }}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Bands</option>
-              {predictions[0]?.probability_breakdown?.map((band, i) => (
-                <option key={i} value={band.code.toString()}>{band.label}</option>
-              ))}
-            </select>
-
             {/* Proficiency filter */}
             <select
               value={filterProficiency}
@@ -455,20 +460,6 @@ export function Results() {
                 <option key={p} value={p}>{p}</option>
               ))}
             </select>
-
-            {/* Section filter */}
-            {hasSection && uniqueSections.length > 0 && (
-              <select
-                value={filterSection}
-                onChange={(e) => { setFilterSection(e.target.value); goToPage(1); }}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">All Sections</option>
-                {uniqueSections.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            )}
           </div>
         </div>
       </div>
@@ -572,7 +563,7 @@ export function Results() {
                         onClick={() => setSelectedStudent(result.learnerID ?? '')}
                         className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                       >
-                        Diagnose Student
+                        Student Prediction Details
                       </button>
                     </td>
                   </tr>
@@ -649,7 +640,7 @@ export function Results() {
         </div>
       )}
 
-      {/* Diagnose Student Modal */}
+      {/* Student Prediction Details Modal */}
       {selectedStudent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
@@ -663,9 +654,39 @@ export function Results() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    Factors Affecting Learner {selectedStudent}'s Predicted NAT MPS
+                    Learner {selectedStudent} Prediction Details
                   </h3>
+
+                  {/* Student Information - Now in Header */}
+                  {(() => {
+                    const studentInfo = getStudentData(selectedStudent);
+                    if (!studentInfo) return null;
+
+                    return (
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 pt-3 border-t border-blue-200">
+                        <div>
+                          <p className="text-xs text-gray-500 font-medium">Age</p>
+                          <p className="text-sm font-semibold text-gray-900">{studentInfo.age}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 font-medium">Gender</p>
+                          <p className="text-sm font-semibold text-gray-900">
+                            {studentInfo.gender === 'M' ? 'Male' : studentInfo.gender === 'F' ? 'Female' : studentInfo.gender}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 font-medium">Nutritional Status</p>
+                          <p className="text-sm font-semibold text-gray-900">{studentInfo.nutritionalStatus}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 font-medium">Mother Tongue</p>
+                          <p className="text-sm font-semibold text-gray-900">{studentInfo.motherTongue}</p>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
+
                 <button
                   onClick={() => setSelectedStudent(null)}
                   className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition flex-shrink-0"
@@ -682,6 +703,7 @@ export function Results() {
               {(() => {
                 const pred = predictions.find((p) => p.learnerID === selectedStudent);
                 const explanation = pred?.explanation;
+
 
                 if (!explanation) {
                   return (
@@ -759,11 +781,11 @@ export function Results() {
                     <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
                       <span className="flex items-center gap-2 text-xs text-gray-500">
                         <span className="w-3 h-3 rounded-full bg-green-500 inline-block flex-shrink-0" />
-                        Raises MPS
+                        Enrichment Subjects (raise predicted MPS)
                       </span>
                       <span className="flex items-center gap-2 text-xs text-gray-500">
                         <span className="w-3 h-3 rounded-full bg-red-500 inline-block flex-shrink-0" />
-                        Lowers MPS
+                        Remedial Subjects (lower predicted MPS)
                       </span>
                     </div>
 
@@ -779,7 +801,8 @@ export function Results() {
                         </div>
                         <FactorPillList items={academicItems} />
                         <p className="mt-4 text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
-                          These reflect historical grades and cannot be changed, but they help identify which subjects to prioritize when supporting this student.
+                          Subjects highlighted in green show strengths that can be further developed, while subjects
+                          in red indicate areas where students may need additional support and review.
                         </p>
                       </div>
                     )}

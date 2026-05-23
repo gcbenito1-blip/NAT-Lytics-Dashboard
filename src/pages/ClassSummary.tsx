@@ -3,6 +3,10 @@ import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PredictionResult as ApiPredictionResult, getProficiencyLabels } from '../services/api';
 import type { ProficiencyBand } from '../services/api';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  ResponsiveContainer, PieChart, Pie, Cell,
+} from 'recharts';
 
 // ─── Feature maps ─────────────────────────────────────────────────────────────
 
@@ -37,12 +41,32 @@ const DEMOGRAPHIC_FEATURE_MAP: Record<string, { group: string; label: string }> 
 
 const SIGNIFICANCE_THRESHOLD = 0.05;
 
+const SUBJECT_PREFIX_TO_LABEL: Record<string, string> = {
+  'Filipino': 'Filipino',
+  'English': 'English',
+  'Math': 'Mathematics',
+  'Science': 'Science',
+  'Aral Pan': 'Araling Panlipunan',
+};
+
+const SCORE_RANGES = ['75-80', '81-85', '86-90', '91-95', '96-100'] as const;
+
+function getScoreRange(score: number): string | null {
+  if (score >= 75 && score <= 80) return '75-80';
+  if (score >= 81 && score <= 85) return '81-85';
+  if (score >= 86 && score <= 90) return '86-90';
+  if (score >= 91 && score <= 95) return '91-95';
+  if (score >= 96 && score <= 100) return '96-100';
+  return null;
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface ClassSummaryState {
   predictions: ApiPredictionResult[];
   fileName?: string;
   sessionName?: string;
+  rawData?: Record<string, unknown>[];
 }
 
 interface AggregatedFeature {
@@ -108,6 +132,170 @@ const FactorPillList = ({ items }: { items: FactorItem[] }) => {
   );
 };
 
+
+// ─── Nutritional Status Pie Chart ─────────────────────────────────────────────
+
+const NUTRITION_COLORS: Record<string, string> = {
+  Normal: '#22c55e',
+  Overweight: '#f59e0b',
+  Obese: '#ef4444',
+  Wasted: '#3b82f6',
+  'Severely Wasted': '#8b5cf6',
+};
+
+const NutritionalPieChart = ({ rawData }: { rawData: Record<string, unknown>[] }) => {
+  const data = useMemo(() => {
+    const counts: Record<string, number> = {};
+    rawData.forEach(row => {
+      const val = String(
+        row['Nutritional Status'] ?? row['nutritional status'] ?? row.nutritional_status ?? ''
+      ).trim();
+      if (val) counts[val] = (counts[val] ?? 0) + 1;
+    });
+    return Object.entries(counts).map(([name, value]) => ({ name, value }));
+  }, [rawData]);
+
+  if (data.length === 0) return null;
+
+  const COLORS = data.map(d => NUTRITION_COLORS[d.name] ?? '#6b7280');
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg p-6 h-full">
+      <h3 className="text-base font-semibold text-gray-900 mb-4">Nutritional Status</h3>
+      <ResponsiveContainer width="100%" height={260}>
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            outerRadius={90}
+            dataKey="value"
+            label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
+            labelLine={true}
+          >
+            {data.map((_, i) => (
+              <Cell key={i} fill={COLORS[i]} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+// ─── Mother Tongue Bar Chart ───────────────────────────────────────────────────
+
+const MotherTongueBarChart = ({ rawData }: { rawData: Record<string, unknown>[] }) => {
+  const data = useMemo(() => {
+    const counts: Record<string, number> = {};
+    rawData.forEach(row => {
+      const val = String(
+        row['Mother Tongue'] ?? row['mother tongue'] ?? row.mother_tongue ?? ''
+      ).trim();
+      if (val) counts[val] = (counts[val] ?? 0) + 1;
+    });
+    return Object.entries(counts)
+      .sort(([, a], [, b]) => b - a)
+      .map(([name, value]) => ({ name, value }));
+  }, [rawData]);
+
+  if (data.length === 0) return null;
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg p-6 h-full">
+      <h3 className="text-base font-semibold text-gray-900 mb-4">Mother Tongue Distribution</h3>
+      <ResponsiveContainer width="100%" height={260}>
+        <BarChart data={data} margin={{ top: 4, right: 16, left: 0, bottom: 40 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" angle={-35} textAnchor="end" interval={0} tick={{ fontSize: 11 }} />
+          <YAxis allowDecimals={false} />
+          <Tooltip />
+          <Bar dataKey="value" name="Students" fill="#3da6e2" radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+// ─── Subject Average Distribution Charts ──────────────────────────────────────
+
+function computeSubjectAverages(
+  rawData: Record<string, unknown>[],
+  prefix: string
+): number[] {
+  return rawData.map(row => {
+    const grades = Object.entries(row)
+      .filter(([key]) => key.startsWith(prefix + ' ') && !isNaN(Number(key.split(' ').pop())))
+      .map(([, val]) => Number(val))
+      .filter(v => !isNaN(v));
+    if (grades.length === 0) return null;
+    return grades.reduce((s, v) => s + v, 0) / grades.length;
+  }).filter((v): v is number => v !== null);
+}
+
+const SubjectDistributionChart = ({
+  label,
+  averages,
+}: {
+  label: string;
+  averages: number[];
+}) => {
+  const data = useMemo(() => {
+    const counts: Record<string, number> = {
+      '75-80': 0, '81-85': 0, '86-90': 0, '91-95': 0, '96-100': 0,
+    };
+    averages.forEach(avg => {
+      const range = getScoreRange(avg);
+      if (range) counts[range]++;
+    });
+    return SCORE_RANGES.map(range => ({ range, students: counts[range] }));
+  }, [averages]);
+
+  const hasData = data.some(d => d.students > 0);
+  if (!hasData) return null;
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg p-5">
+      <h4 className="text-sm font-semibold text-gray-800 mb-3">{label}</h4>
+      <ResponsiveContainer width="100%" height={180}>
+        <BarChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="range" tick={{ fontSize: 11 }} />
+          <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+          <Tooltip formatter={(v) => [v, 'Students']} />
+          <Bar dataKey="students" name="Students" fill="#1480be" radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+const SubjectAverageDistributions = ({ rawData }: { rawData: Record<string, unknown>[] }) => {
+  const subjects = useMemo(() => [
+    { prefix: 'Math', label: 'Math Average Distribution' },
+    { prefix: 'Science', label: 'Science Average Distribution' },
+    { prefix: 'Filipino', label: 'Filipino Average Distribution' },
+    { prefix: 'English', label: 'English Average Distribution' },
+    { prefix: 'Aral Pan', label: 'Aral Pan Average Distribution' },
+  ].map(s => ({ ...s, averages: computeSubjectAverages(rawData, s.prefix) }))
+    .filter(s => s.averages.length > 0), [rawData]);
+
+  if (subjects.length === 0) return null;
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+      <h2 className="text-lg font-semibold text-gray-900 mb-1">Distribution of Subject Averages</h2>
+      <p className="text-sm text-gray-500 mb-5">Number of students per score range across subjects</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {subjects.map(s => (
+          <SubjectDistributionChart key={s.prefix} label={s.label} averages={s.averages} />
+        ))}
+      </div>
+    </div>
+  );
+};
 // ─── FeatureImportanceSection ─────────────────────────────────────────────────
 
 const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeature[] }) => {
@@ -169,11 +357,11 @@ const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeatur
       <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
         <span className="flex items-center gap-2 text-sm text-gray-500">
           <span className="w-3 h-3 rounded-full bg-green-500 inline-block flex-shrink-0" />
-          Raises MPS
+          Enrichment Subjects (raise predicted MPS)
         </span>
         <span className="flex items-center gap-2 text-sm text-gray-500">
           <span className="w-3 h-3 rounded-full bg-red-500 inline-block flex-shrink-0" />
-          Lowers MPS
+          Remedial Subjects (lower predicted MPS)
         </span>
       </div>
 
@@ -257,6 +445,7 @@ export function ClassSummary() {
   const predictions = state?.predictions || [];
   const fileName = state?.fileName || 'Dataset';
   const sessionName = state?.sessionName || '';
+  const rawData = state?.rawData || [];
 
   const totalPredictions = predictions.length;
   const passedCount = predictions.filter(p => (p.proficiency?.code ?? 0) >= 3).length;
@@ -405,6 +594,19 @@ export function ClassSummary() {
           </div>
         </div>
 
+
+        {/* Demographics — 2 column layout */}
+        {rawData.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <NutritionalPieChart rawData={rawData} />
+            <MotherTongueBarChart rawData={rawData} />
+          </div>
+        )}
+
+        {/* Subject Average Distributions */}
+        {rawData.length > 0 && (
+          <SubjectAverageDistributions rawData={rawData} />
+        )}
 
         {/* Feature Importance */}
         {predictions[0]?.explanation?.features && (

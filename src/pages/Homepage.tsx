@@ -146,7 +146,7 @@ export function Homepage() {
 
     const previewCards = [
         { icon: 'bar_chart', title: 'Class Overview', description: 'Class-wide performance summary at a glance', color: 'blue' as const },
-        { icon: 'group', title: 'Student Results', description: 'Individual NAT performance predictions per student', color: 'violet' as const },
+        { icon: 'group', title: 'Prediction Result', description: 'Individual NAT performance predictions per student', color: 'violet' as const },
         { icon: 'lightbulb', title: 'Key Learning Factors', description: 'Insights into what most influences performance', color: 'amber' as const },
         { icon: 'summarize', title: 'Reports', description: 'Downloadable summaries in CSV or PDF format', color: 'emerald' as const },
     ];

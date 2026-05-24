@@ -569,6 +569,7 @@ export function Dashboard() {
         .page-header .header-content p { margin: 0; opacity: 0.9; font-size: 14px; }
         .sample-download-btn { color: #fff; text-decoration: none; padding: 10px 20px; border: 2px solid rgba(255,255,255,0.5); border-radius: 8px; transition: all 0.2s; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; }
         .sample-download-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+        
       `}</style>
 
       {/* Privacy Notice */}
@@ -593,7 +594,8 @@ export function Dashboard() {
       <header className="page-header">
         <div className="header-content">
           <h1>Upload Dataset</h1>
-          <p>Upload your dataset to start a new prediction session</p>
+          <p>Upload your dataset to start a new prediction session </p>
+          <p className='text-sm'><b>Note: </b>Download the template provided for the prediction process to work properly.</p>
         </div>
         {user && sampleDataset && (
           <a href={`${API_BASE_URL}/api/sample-dataset/download?role=${user.role}&viewMode=${viewMode}`} className="sample-download-btn">
@@ -884,7 +886,6 @@ export function Dashboard() {
               </button>
             </div>
           </div>
-
         </div>
       )}
     </div>

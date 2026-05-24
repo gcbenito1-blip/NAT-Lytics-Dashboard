@@ -483,6 +483,7 @@ export function TeacherOverview() {
   const handleView = (session: PredictionSession) => {
     navigate('/class-summary', {
       state: {
+        sessionId: session.id,
         predictions: session.predictions,
         fileName: session.fileName,
         sessionName: session.sessionName,

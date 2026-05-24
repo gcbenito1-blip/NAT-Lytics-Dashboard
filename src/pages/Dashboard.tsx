@@ -403,7 +403,7 @@ export function Dashboard() {
     const passedCount = predictions.filter((p) => (p.proficiency?.code ?? 0) >= 3).length;
     const finalName = name.trim() || sessionNameInput;
 
-    createSession({
+    const sessionId = await createSession({
       teacherId: user.id,
       teacherName: user.name,
       schoolId: user.schoolId,
@@ -413,13 +413,14 @@ export function Dashboard() {
       averageScore,
       passedCount,
       predictions,
+      rawData: data,
     }).catch((e) => console.warn('Session save failed (non-critical):', e));
 
     let resultsPath = '/prediction-table';
     if (user.role === 'teacher') resultsPath = '/class-summary';
     else if (user.role === 'admin') resultsPath = '/school-summary';
 
-    navigate(resultsPath, { state: { predictions, fileName, sessionName: finalName, rawData: data } });
+    navigate(resultsPath, { state: { predictions, fileName, sessionName: finalName, rawData: data, sessionId } });
     window.scrollTo(0, 0);
   }, [pendingResponse, user, fileName, sessionNameInput, navigate]);
 

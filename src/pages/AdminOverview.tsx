@@ -186,6 +186,7 @@ export function AdminOverview() {
             predictions: full.predictions,
             fileName: full.fileName,
             sessionName: `${meta.teacherName} – ${full.sessionName}`,
+            sessionId: meta.id,
           },
         });
       }

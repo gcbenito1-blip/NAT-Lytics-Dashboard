@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { getSessionRawData } from '../services/sessionService';
 import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PredictionResult as ApiPredictionResult, getProficiencyLabels } from '../services/api';
@@ -67,6 +68,7 @@ interface ClassSummaryState {
   fileName?: string;
   sessionName?: string;
   rawData?: Record<string, unknown>[];
+  sessionId?: string;  // ← Added sessionId to state type
 }
 
 interface AggregatedFeature {
@@ -296,6 +298,7 @@ const SubjectAverageDistributions = ({ rawData }: { rawData: Record<string, unkn
     </div>
   );
 };
+
 // ─── FeatureImportanceSection ─────────────────────────────────────────────────
 
 const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeature[] }) => {
@@ -347,21 +350,18 @@ const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeatur
     <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
       {/* Header */}
       <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Factors that affect learners</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Based on the class predictions, here are the factors that most influenced students' MPS on average.
-        </p>
+        <h2 className="text-lg font-semibold text-gray-900">Key Factors Affecting Class Performance</h2>
       </div>
 
       {/* Shared legend */}
       <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
         <span className="flex items-center gap-2 text-sm text-gray-500">
           <span className="w-3 h-3 rounded-full bg-green-500 inline-block flex-shrink-0" />
-          Enrichment Subjects (raise predicted MPS)
+          Enrichment Subjects (Raises predicted MPS)
         </span>
         <span className="flex items-center gap-2 text-sm text-gray-500">
           <span className="w-3 h-3 rounded-full bg-red-500 inline-block flex-shrink-0" />
-          Remedial Subjects (lower predicted MPS)
+          Remedial Subjects (Lowers predicted MPS)
         </span>
       </div>
 
@@ -376,7 +376,7 @@ const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeatur
             </div>
           </div>
           <FactorPillList items={academicItems} />
-          <p className="mt-4 text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
+          <p className="mt-4 text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
             These reflect historical grades and cannot be changed, but they help identify which subjects to prioritize when supporting students.
           </p>
         </div>
@@ -423,6 +423,10 @@ export function ClassSummary() {
 
   const [proficiencyBands, setProficiencyBands] = useState<ProficiencyBand[]>([]);
 
+  // State for fetched rawData
+  const [fetchedRawData, setFetchedRawData] = useState<Record<string, unknown>[]>([]);
+  const [rawDataLoading, setRawDataLoading] = useState(false);
+
   useEffect(() => {
     getProficiencyLabels()
       .then((res) => setProficiencyBands(res.bands))
@@ -445,7 +449,27 @@ export function ClassSummary() {
   const predictions = state?.predictions || [];
   const fileName = state?.fileName || 'Dataset';
   const sessionName = state?.sessionName || '';
-  const rawData = state?.rawData || [];
+  const sessionId = state?.sessionId; // ← Get sessionId from state
+
+  // Use rawData from state if available, otherwise use fetched data
+  const rawData = state?.rawData?.length ? state.rawData : fetchedRawData;
+
+  // Fetch rawData from Firebase if not in state but sessionId exists
+  useEffect(() => {
+    if (rawData.length > 0 || !sessionId) return;
+
+    setRawDataLoading(true);
+    getSessionRawData(sessionId)
+      .then((rows) => {
+        setFetchedRawData(rows);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch raw data:', err);
+      })
+      .finally(() => {
+        setRawDataLoading(false);
+      });
+  }, [sessionId, rawData.length]);
 
   const totalPredictions = predictions.length;
   const passedCount = predictions.filter(p => (p.proficiency?.code ?? 0) >= 3).length;
@@ -548,7 +572,7 @@ export function ClassSummary() {
           <div className="bg-white rounded-2xl shadow-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-gray-500">Average MPS</p>
+                <p className="text-xs font-medium text-gray-500">NAT Mean Percentage Score (MPS)</p>
                 <p className="text-2xl font-bold mt-1" style={{ color: avgColor }}>{averageScore.toFixed(1)}</p>
               </div>
               <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: avgColor + '20' }}>
@@ -567,10 +591,7 @@ export function ClassSummary() {
                 </p>
               </div>
               <div className="h-10 w-10 rounded-xl bg-green-100 flex items-center justify-center">
-                <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <span className='material-icons-round text-green-700'>check</span>
               </div>
             </div>
           </div>
@@ -578,34 +599,47 @@ export function ClassSummary() {
           <div className="bg-white rounded-2xl shadow-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-gray-500">Below Proficient</p>
+                <p className="text-xs font-medium text-gray-500">At Risk (Below Proficient)</p>
                 <p className="text-2xl font-bold text-red-600 mt-1">{failedCount}</p>
                 <p className="text-xs text-gray-500">
                   {totalPredictions > 0 ? ((failedCount / totalPredictions) * 100).toFixed(0) : 0}%
                 </p>
               </div>
               <div className="h-10 w-10 rounded-xl bg-red-100 flex items-center justify-center">
-                <svg className="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <span className='material-icons-round text-red-700'>priority_high</span>
               </div>
             </div>
           </div>
         </div>
 
-
-        {/* Demographics — 2 column layout */}
-        {rawData.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <NutritionalPieChart rawData={rawData} />
-            <MotherTongueBarChart rawData={rawData} />
+        {/* Loading State for Demographics */}
+        {rawDataLoading && (
+          <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+            <div className="text-center py-8">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-3"></div>
+              <p className="text-gray-500">Loading demographic data...</p>
+            </div>
           </div>
         )}
 
-        {/* Subject Average Distributions */}
-        {rawData.length > 0 && (
-          <SubjectAverageDistributions rawData={rawData} />
+        {/* Demographics — 2 column layout */}
+        {!rawDataLoading && rawData.length > 0 && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <NutritionalPieChart rawData={rawData} />
+              <MotherTongueBarChart rawData={rawData} />
+            </div>
+
+            {/* Subject Average Distributions */}
+            <SubjectAverageDistributions rawData={rawData} />
+          </>
+        )}
+
+        {/* No rawData message */}
+        {!rawDataLoading && rawData.length === 0 && !sessionId && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 mb-8 text-center">
+            <p className="text-yellow-700">Demographic charts are not available for this session.</p>
+          </div>
         )}
 
         {/* Feature Importance */}

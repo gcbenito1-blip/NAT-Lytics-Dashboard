@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PredictionResult as ApiPredictionResult } from '../services/api';
+import { getSessionRawData } from '../services/sessionService';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -208,15 +209,25 @@ export function Results() {
   const { user } = useAuth();
   const { viewMode } = useOutletContext<{ viewMode: string }>();
 
+  // Pull everything out of location.state once so all effects can reference
+  // the stable primitive values rather than the state object itself.
+  const locationState = location.state as ResultsState | null;
+  const sessionId = locationState?.sessionId;
+
   const [predictions, setPredictions] = useState<ApiPredictionResult[]>([]);
   const [fileName, setFileName] = useState('');
   const [sessionName, setSessionName] = useState('');
-  const [rawData, setRawData] = useState<Record<string, unknown>[]>([]);
+  // Seed from route state immediately so charts render on first paint.
+  // If route state has no rawData (e.g. navigating from Overview), the
+  // second useEffect below will fetch it from Firestore / localStorage.
+  const [rawData, setRawData] = useState<Record<string, unknown>[]>(
+    locationState?.rawData ?? []
+  );
+  const [rawDataLoading, setRawDataLoading] = useState(false);
+
   const [sortField, setSortField] = useState<keyof ApiPredictionResult>('prediction');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterProficiency, setFilterProficiency] = useState<string>('all');
-  const [filterSection, setFilterSection] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -226,15 +237,6 @@ export function Results() {
   const resultsContainerRef = useRef<HTMLDivElement>(null);
 
   const hasSection = predictions.some((p) => p.Section != null && p.Section !== '');
-
-  const uniqueSections = React.useMemo(() => {
-    if (!hasSection) return [];
-    const set = new Set<string>();
-    predictions.forEach((p) => {
-      if (p.Section?.trim()) set.add(p.Section);
-    });
-    return Array.from(set).sort();
-  }, [predictions, hasSection]);
 
   const uniqueProficiencies = React.useMemo(() => {
     const set = new Set<string>();
@@ -252,18 +254,45 @@ export function Results() {
     };
   }, [selectedStudent]);
 
-  // Load predictions from navigation state
+  // ── 1. Load predictions from navigation state ─────────────────────────────
   useEffect(() => {
-    const state = location.state as ResultsState | null;
-    if (state?.predictions) {
-      setPredictions(state.predictions);
-      setFileName(state.fileName ?? 'Dataset');
-      setSessionName(state.sessionName ?? '');
-      setRawData(state.rawData ?? []);
+    if (locationState?.predictions) {
+      setPredictions(locationState.predictions);
+      setFileName(locationState.fileName ?? 'Dataset');
+      setSessionName(locationState.sessionName ?? '');
+      // Sync rawData if route state carries it (fresh navigation from Dashboard)
+      if (locationState.rawData?.length) {
+        setRawData(locationState.rawData);
+      }
     } else {
       navigate('/homepage');
     }
-  }, [location.state, navigate]);
+  }, [location.state]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── 2. Fetch rawData from Firestore if not already available ──────────────
+  // This runs when the user arrives via Overview (revisiting a saved session)
+  // where location.state has predictions but no rawData.
+  useEffect(() => {
+    if (rawData.length > 0 || !sessionId) return;
+
+    let cancelled = false;
+    setRawDataLoading(true);
+
+    getSessionRawData(sessionId)
+      .then((rows) => {
+        if (!cancelled) setRawData(rows);
+      })
+      .catch(() => {
+        if (!cancelled) setRawData([]);
+      })
+      .finally(() => {
+        if (!cancelled) setRawDataLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId]); // rawData.length intentionally omitted — we only want this to fire once per sessionId
 
   const handleSort = (field: keyof ApiPredictionResult) => {
     if (sortField === field) {
@@ -297,19 +326,8 @@ export function Results() {
   const passedCount = predictions.filter((p) => (p.proficiency?.code ?? 0) > 2).length;
 
   const filteredAndSortedPredictions = predictions
-    .filter((pred) => {
-      if (filterStatus === 'all') return true;
-      const bandCode = parseInt(filterStatus);
-      if (!isNaN(bandCode)) return pred.top_probable_band?.code === bandCode;
-      if (filterStatus === 'passed') return (pred.proficiency?.code ?? 0) > 2;
-      if (filterStatus === 'failed') return (pred.proficiency?.code ?? 0) <= 2;
-      return true;
-    })
     .filter((pred) =>
       filterProficiency === 'all' ? true : pred.proficiency?.label === filterProficiency
-    )
-    .filter((pred) =>
-      filterSection === 'all' ? true : pred.Section === filterSection
     )
     .filter((pred) => {
       if (!searchQuery.trim()) return true;
@@ -488,7 +506,7 @@ export function Results() {
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   title="The estimated likelihood that this learner will reach the Proficient level (MPS ≥ 75) in the NAT. A probability of 30% means the model estimates a 30-in-100 chance of meeting the proficiency threshold based on current academic records. Use this to prioritize learners who may need early support."
                 >
-                  Pass Probability<br />P(MPS ≥ 75)
+                  Proficiency Probability<br />(MPS ≥ 75)
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -657,8 +675,15 @@ export function Results() {
                     Learner {selectedStudent} Prediction Details
                   </h3>
 
-                  {/* Student Information - Now in Header */}
+                  {/* Student Information */}
                   {(() => {
+                    if (rawDataLoading) {
+                      return (
+                        <p className="text-xs text-gray-400 mt-2 animate-pulse">
+                          Loading student info…
+                        </p>
+                      );
+                    }
                     const studentInfo = getStudentData(selectedStudent);
                     if (!studentInfo) return null;
 
@@ -703,7 +728,6 @@ export function Results() {
               {(() => {
                 const pred = predictions.find((p) => p.learnerID === selectedStudent);
                 const explanation = pred?.explanation;
-
 
                 if (!explanation) {
                   return (
@@ -767,7 +791,6 @@ export function Results() {
 
                 return (
                   <div>
-                    {/* Header */}
                     <div className="mb-4">
                       <h5 className="text-sm font-semibold text-gray-900">
                         Factors that affect this learner
@@ -777,7 +800,6 @@ export function Results() {
                       </p>
                     </div>
 
-                    {/* Shared legend */}
                     <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
                       <span className="flex items-center gap-2 text-xs text-gray-500">
                         <span className="w-3 h-3 rounded-full bg-green-500 inline-block flex-shrink-0" />
@@ -789,7 +811,6 @@ export function Results() {
                       </span>
                     </div>
 
-                    {/* Academic factors */}
                     {hasAcademic && (
                       <div className={hasDemo ? 'mb-6' : ''}>
                         <div className="flex items-center gap-2 mb-3">
@@ -809,7 +830,6 @@ export function Results() {
 
                     {hasAcademic && hasDemo && <hr className="border-gray-100 my-6" />}
 
-                    {/* Demographic factors */}
                     {hasDemo && (
                       <div>
                         <div className="flex items-center gap-2 mb-4">
@@ -835,7 +855,6 @@ export function Results() {
                       </div>
                     )}
 
-                    {/* Base score note */}
                     <div className="mt-6 p-3 bg-gray-50 rounded-lg text-xs text-gray-500">
                       <span className="font-medium">Base Score:</span>{' '}
                       {explanation.base_value?.toFixed(1) ?? 'N/A'} (average prediction before considering specific factors)

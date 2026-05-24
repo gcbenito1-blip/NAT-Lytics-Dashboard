@@ -4,12 +4,10 @@ import { AppLayout } from './layouts/AppLayout';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { HomeRouter } from './pages/HomeRouter';
-import { Home } from './pages/Home';
 import { Dashboard } from './pages/Dashboard';
 import { ClassSummary } from './pages/ClassSummary';
 import { SectionComparison } from './pages/SectionComparison';
 import { ClassComparison } from './pages/ClassComparison';
-import { TeacherOverview } from './pages/TeacherOverview';
 import { AdminOverview } from './pages/AdminOverview';
 import { OverviewRouter } from './layouts/OverviewRouter';
 import { Results } from './pages/Results';
@@ -38,14 +36,14 @@ export const router = createBrowserRouter([
     ),
     children: [
       // home — all roles, protected
-       {
-         path: 'homepage',
-         element: (
-           <ProtectedRoute>
-             <HomeRouter />
-           </ProtectedRoute>
-         ),
-       },
+      {
+        path: 'homepage',
+        element: (
+          <ProtectedRoute>
+            <HomeRouter />
+          </ProtectedRoute>
+        ),
+      },
       // prediction
       {
         path: 'overview',

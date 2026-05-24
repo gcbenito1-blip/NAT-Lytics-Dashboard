@@ -19,10 +19,8 @@ const ACADEMIC_FEATURE_MAP: Record<string, { label: string; icon: string }> = {
   Science_avg: { label: 'Science', icon: '🔬' },
 };
 
+// Updated demographic map - only Mother Tongue and Nutritional Status (no Gender)
 const DEMOGRAPHIC_FEATURE_MAP: Record<string, { group: string; label: string }> = {
-  Gender_F: { group: 'Gender', label: 'Female' },
-  Gender_M: { group: 'Gender', label: 'Male' },
-
   'Mother Tongue_Cebuano / Sinugbuanong Binisay': { group: 'Mother Tongue', label: 'Cebuano / Bisaya' },
   'Mother Tongue_English': { group: 'Mother Tongue', label: 'English' },
   'Mother Tongue_Hiligaynon': { group: 'Mother Tongue', label: 'Hiligaynon' },
@@ -38,6 +36,34 @@ const DEMOGRAPHIC_FEATURE_MAP: Record<string, { group: string; label: string }> 
   'Nutritional Status_Overweight': { group: 'Nutritional Status', label: 'Overweight' },
   'Nutritional Status_Severely Wasted': { group: 'Nutritional Status', label: 'Severely Wasted' },
   'Nutritional Status_Wasted': { group: 'Nutritional Status', label: 'Wasted' },
+};
+
+// Helper function to get descriptive text for nutritional status
+const getNutritionalStatusDescription = (status: string): string => {
+  const descriptions: Record<string, string> = {
+    'Normal': 'Nutritional status shows minimal influence on predicted MPS. Maintain healthy habits, health monitoring and coordinate with school feeding programs.',
+    'Obese': 'Nutritional status is associated with lower predicted MPS. Consider nutrition counseling and promoting physical activity.',
+    'Overweight': 'Nutritional status shows moderate influence on predicted MPS. Encourage balanced diet and regular exercise.',
+    'Severely Wasted': 'Nutritional status shows strong influence on predicted MPS. Urgent nutrition intervention and school feeding program coordination needed.',
+    'Wasted': 'Nutritional status shows significant influence on predicted MPS. Prioritize nutrition support and health monitoring.',
+  };
+  return descriptions[status] || 'Nutritional status shows influence on predicted MPS. Consider health and nutrition support.';
+};
+
+// Helper function to get descriptive text for mother tongue
+const getMotherTongueDescription = (language: string): string => {
+  const descriptions: Record<string, string> = {
+    'Ilocano': 'Learners with Ilocano as their mother tongue showed lower predicted MPS on average. Consider additional language support and mother-tongue based instruction.',
+    'Tagalog': 'Learners with Tagalog as their mother tongue showed lower predicted MPS on average. Provide scaffolding and multilingual learning materials.',
+    'Cebuano / Bisaya': 'Learners with Cebuano/Bisaya as their mother tongue show average predicted MPS. Continue multilingual support and mother-tongue based instruction.',
+    'English': 'Learners with English as their mother tongue show average predicted MPS. Maintain current language support and enrichment activities.',
+    'Hiligaynon': 'Learners with Hiligaynon as their mother tongue show average predicted MPS. Continue mother-tongue based instruction.',
+    'Kapampangan': 'Learners with Kapampangan as their mother tongue show average predicted MPS.',
+    'Maranao': 'Learners with Maranao as their mother tongue show average predicted MPS.',
+    'Pangasinan': 'Learners with Pangasinan as their mother tongue show average predicted MPS.',
+    'Kamayo': 'Learners with Kamayo as their mother tongue show average predicted MPS.',
+  };
+  return descriptions[language] || 'Consider additional language support for this learner population.';
 };
 
 const SIGNIFICANCE_THRESHOLD = 0.05;
@@ -68,7 +94,7 @@ interface ClassSummaryState {
   fileName?: string;
   sessionName?: string;
   rawData?: Record<string, unknown>[];
-  sessionId?: string;  // ← Added sessionId to state type
+  sessionId?: string;
 }
 
 interface AggregatedFeature {
@@ -87,11 +113,14 @@ interface FactorItem {
   avgAbsShap: number;
 }
 
-interface DemoGroup {
+interface DemographicFactor {
   group: string;
-  features: FactorItem[];
+  label: string;
+  impact: number;
+  description: string;
 }
 
+// Academic Factor Pill List (with colors)
 const FactorPillList = ({ items }: { items: FactorItem[] }) => {
   const helping = items
     .filter(f => f.avgShap > SIGNIFICANCE_THRESHOLD)
@@ -134,6 +163,111 @@ const FactorPillList = ({ items }: { items: FactorItem[] }) => {
   );
 };
 
+// Demographic Factor Section (no colors, only lowering factors)
+const DemographicFactorsSection = ({ aggregated }: { aggregated: AggregatedFeature[] }) => {
+  // Filter only demographic factors that LOWER prediction (negative impact)
+  const loweringDemographics: DemographicFactor[] = aggregated
+    .filter(f =>
+      f.feature in DEMOGRAPHIC_FEATURE_MAP &&
+      f.avgShap < -SIGNIFICANCE_THRESHOLD
+    )
+    .map(f => {
+      const meta = DEMOGRAPHIC_FEATURE_MAP[f.feature];
+      let description = '';
+
+      if (meta.group === 'Mother Tongue') {
+        description = getMotherTongueDescription(meta.label);
+      } else if (meta.group === 'Nutritional Status') {
+        description = getNutritionalStatusDescription(meta.label);
+      }
+
+      return {
+        group: meta.group,
+        label: meta.label,
+        impact: f.avgShap,
+        description,
+      };
+    });
+
+  // Group by category
+  const groupedDemographics = loweringDemographics.reduce((acc, factor) => {
+    if (!acc[factor.group]) {
+      acc[factor.group] = [];
+    }
+    acc[factor.group].push(factor);
+    return acc;
+  }, {} as Record<string, DemographicFactor[]>);
+
+  const hasDemographic = Object.keys(groupedDemographics).length > 0;
+
+  // If no demographic factors lower prediction, show positive message
+  if (!hasDemographic) {
+    return (
+      <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-sm">👥</div>
+          <div>
+            <p className="text-sm font-semibold text-gray-900">Demographic Factors (Contextual)</p>
+          </div>
+        </div>
+
+        <div className="p-4 bg-green-50 rounded-xl border border-green-200">
+          <div className="flex items-start gap-3">
+            <div>
+              <p className="text-sm font-medium text-green-800">No Intervention Needed</p>
+              <p className="text-xs text-green-700 mt-1">
+                Both language background and nutritional status are linked to better predicted NAT performance.
+                This means that, overall, the class tends to perform higher when students have stronger language
+                foundations and better nutritional status.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show lowering demographic factors
+  return (
+    <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-sm">👥</div>
+        <div>
+          <p className="text-sm font-semibold text-gray-900">Demographic Factors (Contextual)</p>
+          <p className="text-xs text-gray-400">Background characteristics that may need support</p>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {Object.entries(groupedDemographics).map(([category, factors]) => (
+          <div key={category} className="border-b border-gray-100 last:border-0 pb-4 last:pb-0">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+              {category}
+            </p>
+            <div className="space-y-2">
+              {factors.map((factor, idx) => (
+                <div key={idx} className="p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-800">{factor.label}</p>
+                      <p className="text-xs text-gray-600 mt-1">{factor.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-4 text-sm text-blue-700 bg-blue-50 rounded-lg px-3 py-2">
+        This background is linked with lower predicted performance based on class patterns.
+        <br />
+        <b>Note:</b> Monitor academic progress and provide targeted support when needed.
+      </p>
+    </div>
+  );
+};
 
 // ─── Nutritional Status Pie Chart ─────────────────────────────────────────────
 
@@ -299,9 +433,9 @@ const SubjectAverageDistributions = ({ rawData }: { rawData: Record<string, unkn
   );
 };
 
-// ─── FeatureImportanceSection ─────────────────────────────────────────────────
+// ─── FeatureImportanceSection (Academic only) ─────────────────────────────────
 
-const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeature[] }) => {
+const AcademicFeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeature[] }) => {
   const significant = aggregated.filter(f => f.avgAbsShap >= SIGNIFICANCE_THRESHOLD);
 
   const academicItems: FactorItem[] = significant
@@ -313,47 +447,18 @@ const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeatur
       avgAbsShap: f.avgAbsShap,
     }));
 
-  // Build demographic groups, then discard any group where no pill would render
-  const demoGroups = useMemo<DemoGroup[]>(() => {
-    const groupMap = new Map<string, DemoGroup>();
-    significant
-      .filter(f => f.feature in DEMOGRAPHIC_FEATURE_MAP)
-      .forEach(f => {
-        const meta = DEMOGRAPHIC_FEATURE_MAP[f.feature];
-        if (!meta) return;
-        if (!groupMap.has(meta.group)) {
-          groupMap.set(meta.group, { group: meta.group, features: [] });
-        }
-        groupMap.get(meta.group)!.features.push({
-          label: meta.label,
-          avgShap: f.avgShap,
-          avgAbsShap: f.avgAbsShap,
-        });
-      });
-
-    // Keep only groups that have at least one visually significant item
-    return Array.from(groupMap.values()).filter(g =>
-      g.features.some(
-        f => f.avgShap > SIGNIFICANCE_THRESHOLD || f.avgShap < -SIGNIFICANCE_THRESHOLD
-      )
-    );
-  }, [significant]);
-
   const hasAcademic = academicItems.some(
     f => f.avgShap > SIGNIFICANCE_THRESHOLD || f.avgShap < -SIGNIFICANCE_THRESHOLD
   );
-  const hasDemo = demoGroups.length > 0;
 
-  if (!hasAcademic && !hasDemo) return null;
+  if (!hasAcademic) return null;
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-      {/* Header */}
       <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Key Factors Affecting Class Performance</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Key Academic Factors Affecting Class Performance</h2>
       </div>
 
-      {/* Shared legend */}
       <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
         <span className="flex items-center gap-2 text-sm text-gray-500">
           <span className="w-3 h-3 rounded-full bg-green-500 inline-block flex-shrink-0" />
@@ -365,50 +470,17 @@ const FeatureImportanceSection = ({ aggregated }: { aggregated: AggregatedFeatur
         </span>
       </div>
 
-      {/* Academic factors */}
-      {hasAcademic && (
-        <div className={hasDemo ? 'mb-6' : ''}>
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center text-sm">🎓</div>
-            <div>
-              <p className="text-sm font-semibold text-gray-900">Academic factors</p>
-              <p className="text-xs text-gray-400">Based on past subject grades</p>
-            </div>
-          </div>
-          <FactorPillList items={academicItems} />
-          <p className="mt-4 text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
-            These reflect historical grades and cannot be changed, but they help identify which subjects to prioritize when supporting students.
-          </p>
-        </div>
-      )}
-
-      {hasAcademic && hasDemo && <hr className="border-gray-100 my-6" />}
-
-      {/* Demographic factors */}
-      {hasDemo && (
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center text-sm">📚</div>
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-sm">👥</div>
-            <div>
-              <p className="text-sm font-semibold text-gray-900">Demographic factors</p>
-              <p className="text-xs text-gray-400">Background characteristics — for context, not judgment</p>
-            </div>
-          </div>
-          <div className="space-y-5">
-            {demoGroups.map(group => (
-              <div key={group.group}>
-                <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
-                  {group.group}
-                </p>
-                <FactorPillList items={group.features} />
-              </div>
-            ))}
-          </div>
-          <p className="mt-4 text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
-            These patterns may appear across the class, but every student is unique. Use these as conversation starters, not conclusions.
-          </p>
+          <p className="text-sm font-semibold text-gray-900">Academic factors</p>
+          <p className="text-xs text-gray-400">Based on past subject grades</p>
         </div>
-      )}
+      </div>
+      <FactorPillList items={academicItems} />
+      <p className="mt-4 text-sm text-blue-700 bg-blue-50 rounded-lg px-3 py-2">
+        Subjects highlighted in green show strengths that can be further developed, while subjects in red indicate areas where students may need additional support and review.
+      </p>
     </div>
   );
 };
@@ -449,7 +521,7 @@ export function ClassSummary() {
   const predictions = state?.predictions || [];
   const fileName = state?.fileName || 'Dataset';
   const sessionName = state?.sessionName || '';
-  const sessionId = state?.sessionId; // ← Get sessionId from state
+  const sessionId = state?.sessionId;
 
   // Use rawData from state if available, otherwise use fetched data
   const rawData = state?.rawData?.length ? state.rawData : fetchedRawData;
@@ -541,7 +613,7 @@ export function ClassSummary() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {fileName.endsWith('.csv') ? fileName.slice(0, -4) : fileName} Summary
+                Class Prediction Summary
               </h1>
             </div>
             <button
@@ -642,9 +714,14 @@ export function ClassSummary() {
           </div>
         )}
 
-        {/* Feature Importance */}
+        {/* Academic Feature Importance */}
         {predictions[0]?.explanation?.features && (
-          <FeatureImportanceSection aggregated={aggregatedFeatureImportance} />
+          <AcademicFeatureImportanceSection aggregated={aggregatedFeatureImportance} />
+        )}
+
+        {/* Demographic Factors Section */}
+        {predictions[0]?.explanation?.features && (
+          <DemographicFactorsSection aggregated={aggregatedFeatureImportance} />
         )}
 
         {/* Back button */}

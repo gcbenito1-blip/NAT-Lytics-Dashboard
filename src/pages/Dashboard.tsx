@@ -837,9 +837,9 @@ export function Dashboard() {
                         <div className="flex-1">
                           <p className="text-sm font-semibold text-blue-800">How missing values will be handled:</p>
                           <ul className="text-xs text-blue-700 mt-1 space-y-1 ml-5 list-disc">
-                            <li><span className="font-medium">Text/Categorical columns:</span> Empty values will be filled with "" (empty string)</li>
+                            <li><span className="font-medium">Text/Categorical columns:</span> Empty values will be filled with Most Occuring value</li>
                             <li><span className="font-medium">Numeric columns:</span> Empty values will be filled with the column's median value</li>
-                            <li className="mt-1 text-blue-600 font-medium">✓ Predictions will still run successfully with these automatic fixes</li>
+                            <li className="mt-1 text-blue-600 font-medium">Predictions will still run successfully with these automatic fixes</li>
                           </ul>
                         </div>
                       </div>
@@ -850,10 +850,8 @@ export function Dashboard() {
                 {criticalAnomalies.length === 0 && warningAnomalies.length === 0 && data.length > 0 && (
                   <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
                     <div className="flex items-center gap-2">
-                      <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <p className="text-sm font-medium text-green-700">✓ All checks passed — your dataset is ready for predictions!</p>
+                      <span className='material-icons-round text-green-600'>check</span>
+                      <p className="text-sm font-medium text-green-700">All checks passed — your dataset is ready for predictions</p>
                     </div>
                   </div>
                 )}

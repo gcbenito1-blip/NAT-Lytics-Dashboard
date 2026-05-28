@@ -684,6 +684,16 @@ export function ClassSummary() {
           </div>
         </div>
 
+        {/* Academic Feature Importance */}
+        {predictions[0]?.explanation?.features && (
+          <AcademicFeatureImportanceSection aggregated={aggregatedFeatureImportance} />
+        )}
+
+        {/* Demographic Factors Section */}
+        {predictions[0]?.explanation?.features && (
+          <DemographicFactorsSection aggregated={aggregatedFeatureImportance} />
+        )}
+
         {/* Loading State for Demographics */}
         {rawDataLoading && (
           <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
@@ -714,15 +724,6 @@ export function ClassSummary() {
           </div>
         )}
 
-        {/* Academic Feature Importance */}
-        {predictions[0]?.explanation?.features && (
-          <AcademicFeatureImportanceSection aggregated={aggregatedFeatureImportance} />
-        )}
-
-        {/* Demographic Factors Section */}
-        {predictions[0]?.explanation?.features && (
-          <DemographicFactorsSection aggregated={aggregatedFeatureImportance} />
-        )}
 
         {/* Back button */}
         <div className="flex justify-center">

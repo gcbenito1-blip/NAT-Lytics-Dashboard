@@ -593,9 +593,9 @@ export function Dashboard() {
       {/* Upload Header */}
       <header className="page-header">
         <div className="header-content">
-          <h1>Upload Dataset</h1>
-          <p>Upload your dataset to start a new prediction session </p>
-          <p className='text-sm'><b>Note: </b>Download the template provided for the prediction process to work properly.</p>
+          <h1>Upload Class Data</h1>
+          <p>Upload your Class Data to start a new prediction session </p>
+          <p className='text-sm'><b>Note: </b>Download the class data template provided for the prediction process to work properly.</p>
         </div>
         {user && sampleDataset && (
           <a href={`${API_BASE_URL}/api/sample-dataset/download?role=${user.role}&viewMode=${viewMode}`} className="sample-download-btn">
@@ -609,7 +609,7 @@ export function Dashboard() {
 
       {/* File Upload */}
       <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Upload Dataset</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Upload Class Data</h2>
         <div className={`border-2 border-dashed rounded-xl p-8 text-center transition ${!privacyAccepted ? 'border-gray-300 bg-gray-50 cursor-not-allowed opacity-60' : 'border-gray-300 hover:border-blue-500'}`}>
           <input type="file" accept=".csv" onChange={handleFileUpload} className="hidden" id="file-upload" disabled={isLoading || !privacyAccepted} />
           <label htmlFor="file-upload" className={`${!privacyAccepted ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
@@ -646,7 +646,7 @@ export function Dashboard() {
         <div className="space-y-6">
           {/* Dataset Summary */}
           <div ref={datasetSummaryRef} className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Dataset Summary</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Class Data Summary</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { label: 'Total Rows', value: analysisResult.row_count, color: 'from-blue-50 to-blue-100', text: 'text-blue-700' },
@@ -837,7 +837,7 @@ export function Dashboard() {
                         <div className="flex-1">
                           <p className="text-sm font-semibold text-blue-800">How missing values will be handled:</p>
                           <ul className="text-xs text-blue-700 mt-1 space-y-1 ml-5 list-disc">
-                            <li><span className="font-medium">Text/Categorical columns:</span> Empty values will be filled with Most Occuring value</li>
+                            {/* <li><span className="font-medium">Text/Categorical columns:</span> Empty values will be filled with Most Occuring value</li> */}
                             <li><span className="font-medium">Numeric columns:</span> Empty values will be filled with the column's median value</li>
                             <li className="mt-1 text-blue-600 font-medium">Predictions will still run successfully with these automatic fixes</li>
                           </ul>

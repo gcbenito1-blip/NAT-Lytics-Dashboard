@@ -276,6 +276,7 @@ export function Dashboard() {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
   const datasetSummaryRef = useRef<HTMLDivElement>(null);
+  const [showInvalidFileModal, setShowInvalidFileModal] = useState(false);
 
   // Session naming state
   const [pendingResponse, setPendingResponse] = useState<BatchPredictionResponse | null>(null);
@@ -337,6 +338,12 @@ export function Dashboard() {
   const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    // Block non-CSV files
+    if (!file.name.toLowerCase().endsWith('.csv') && file.type !== 'text/csv') {
+      setShowInvalidFileModal(true);
+      e.target.value = ''; // reset the input
+      return;
+    }
 
     setFileName(file.name);
     setError('');
@@ -523,6 +530,42 @@ export function Dashboard() {
 
   return (
     <div className="space-y-8">
+      {showInvalidFileModal && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-gray-900">Invalid File Type</h3>
+                <p className="text-xs text-gray-500">Only CSV files are supported.</p>
+              </div>
+            </div>
+
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-5">
+              <p className="text-sm text-red-700 font-medium mb-1">You uploaded an unsupported file format.</p>
+              <p className="text-sm text-red-600">
+                Please upload a <span className="font-semibold">.csv</span> file. Other formats like Excel (.xlsx), PDF, or text files are not accepted.
+              </p>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-5">
+              <p className="text-xs text-blue-800 font-medium mb-1">💡 Need a template?</p>
+              <p className="text-xs text-blue-700">Download the class data template from the header above — it's already in the correct CSV format.</p>
+            </div>
+
+            <button
+              onClick={() => setShowInvalidFileModal(false)}
+              className="w-full py-2.5 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition"
+            >
+              Got it, I'll upload a CSV
+            </button>
+          </div>
+        </div>
+      )}
 
       {showSessionModal && (
         <SessionNameModal
@@ -747,9 +790,12 @@ export function Dashboard() {
           {/* Column Details */}
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <button onClick={() => setColumnsExpanded(!columnsExpanded)} className="w-full flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Column Details <span className="ml-2 text-sm font-normal text-gray-400">({analysisResult.columns.length})</span>
-              </h2>
+              <div className='flex flex-col items-start'>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Column Details <span className="ml-2 text-sm font-normal text-gray-400">({analysisResult.columns.length})</span>
+                </h2>
+                <small className='text-sm text-gray-500'>A breakdown of all columns and their information.</small>
+              </div>
               <span className={`transition-transform duration-200 inline-block ${columnsExpanded ? 'rotate-180' : ''}`}>
                 <svg className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </span>

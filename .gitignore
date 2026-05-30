@@ -1,3 +1,4 @@
 .env
 .env.example
 .kilo
+node_modules

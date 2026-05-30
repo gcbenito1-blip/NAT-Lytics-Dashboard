@@ -705,6 +705,52 @@ export function Dashboard() {
             </div>
           </div>
 
+          {/* Dataset Preview Table */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Dataset Preview</h2>
+                <p className="text-sm text-gray-500 mt-0.5">Showing first {Math.min(10, data.length)} of {data.length} rows</p>
+              </div>
+            </div>
+            <div className="min-w-0 w-400">
+              <div className="overflow-x-auto rounded-xl border border-gray-200">
+                <table className="w-max divide-y divide-gray-200 text-sm">
+                  <thead className="bg-gray-50 sticky top-0 z-10">
+                    <tr>
+                      {analysisResult.columns.map((col) => (
+                        <th
+                          key={col.name}
+                          className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                        >
+                          {col.name}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-100">
+                    {data.slice(0, 10).map((row, rowIdx) => (
+                      <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        {analysisResult.columns.map((col) => {
+                          const val = row[col.name];
+                          const isEmpty = val === null || val === undefined || val === '';
+                          return (
+                            <td
+                              key={col.name}
+                              className={`px-4 py-2.5 whitespace-nowrap ${isEmpty ? 'text-red-400 italic' : 'text-gray-700'}`}
+                            >
+                              {isEmpty ? 'missing' : String(val)}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           {/* Demographics Charts */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {sexDistributionData.length > 0 && (

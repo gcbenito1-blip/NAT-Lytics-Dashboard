@@ -390,7 +390,6 @@ const PredictionsPDFDocument = ({
 // ============================================================
 // EXPORT HELPERS
 // ============================================================
-
 const exportToCSV = (
   predictions: ApiPredictionResult[],
   fileName: string,
@@ -398,25 +397,40 @@ const exportToCSV = (
 ) => {
   if (predictions.length === 0) return;
 
+  // Collect all unique band labels across all predictions (preserving order of first occurrence)
+  const bandLabels: string[] = [];
+  predictions.forEach((pred) => {
+    pred.probability_breakdown?.forEach((band) => {
+      if (!bandLabels.includes(band.label)) bandLabels.push(band.label);
+    });
+  });
+
   const headers = [
     'Learner ID',
     ...(hasSection ? ['Section'] : []),
     'Predicted MPS',
     'Proficiency Level',
-    'Pass Probability',
+    ...bandLabels.map((label) => `${label} Probability`),
+    'Probability of Passing',
   ];
 
-  const rows = predictions.map((pred) =>
-    [
+  const rows = predictions.map((pred) => {
+    const bandMap = Object.fromEntries(
+      (pred.probability_breakdown ?? []).map((b) => [b.label, b.probability])
+    );
+    return [
       String(pred.learnerID ?? ''),
       ...(hasSection ? [pred.Section ?? ''] : []),
       pred.prediction?.toString() ?? '',
       pred.proficiency?.label ?? '',
+      ...bandLabels.map((label) =>
+        bandMap[label] != null ? (bandMap[label] * 100).toFixed(1) + '%' : ''
+      ),
       pred.pass_probability != null
         ? (pred.pass_probability * 100).toFixed(1) + '%'
         : '',
-    ].join(',')
-  );
+    ].join(',');
+  });
 
   const csv = [headers.join(','), ...rows].join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -429,6 +443,7 @@ const exportToCSV = (
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 };
+
 
 const exportToPDF = async (
   predictions: ApiPredictionResult[],

@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PredictionResult as ApiPredictionResult } from '../services/api';
-import { getSessionRawData } from '../services/sessionService';
+import { getSessionRawData, getSessionById } from '../services/sessionService';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 // ============================================================
-// CONSTANTS
+// CONSTANTS (keep existing)
 // ============================================================
 
 const SIGNIFICANCE_THRESHOLD = 0.05;
@@ -20,15 +20,13 @@ const ACADEMIC_FEATURE_MAP: Record<string, { label: string; icon: string }> = {
   Science_avg: { label: 'Science', icon: '🔬' },
 };
 
-// Subject grade ranges
 const SUBJECT_PREFIXES = ['Math', 'Science', 'Filipino', 'English', 'Aral Pan'];
 
-// Helper function to compute average grade for a subject
+// Helper functions (keep existing)
 const computeSubjectAverage = (student: Record<string, unknown>, prefix: string): number | null => {
   const grades: number[] = [];
 
   Object.entries(student).forEach(([key, value]) => {
-    // Check if the key starts with the prefix and has a grade number
     if (key.startsWith(prefix + ' ')) {
       const grade = Number(value);
       if (!isNaN(grade) && grade > 0) {
@@ -42,7 +40,6 @@ const computeSubjectAverage = (student: Record<string, unknown>, prefix: string)
   return parseFloat((sum / grades.length).toFixed(2));
 };
 
-// Helper function to get grade color
 const getGradeColor = (grade: number): string => {
   if (grade >= 90) return 'text-green-600 bg-green-50';
   if (grade >= 80) return 'text-blue-600 bg-blue-50';
@@ -50,7 +47,6 @@ const getGradeColor = (grade: number): string => {
   return 'text-red-600 bg-red-50';
 };
 
-// Helper function to get grade label
 const getGradeLabel = (grade: number): string => {
   if (grade >= 90) return 'Excellent';
   if (grade >= 80) return 'Very Good';
@@ -58,7 +54,6 @@ const getGradeLabel = (grade: number): string => {
   return 'Needs Improvement';
 };
 
-// Helper function to get descriptive text for nutritional status based on actual data
 const getNutritionalStatusDescription = (status: string): string => {
   const lowerStatus = status.toLowerCase();
 
@@ -80,7 +75,6 @@ const getNutritionalStatusDescription = (status: string): string => {
   return `"${status}" nutritional status shows influence on predicted MPS. Consider health and nutrition support.`;
 };
 
-// Helper function to get descriptive text for mother tongue based on actual data
 const getMotherTongueDescription = (language: string): string => {
   const lowerLanguage = language.toLowerCase();
 
@@ -94,7 +88,6 @@ const getMotherTongueDescription = (language: string): string => {
   return `Learners with "${language}" as their mother tongue show average predicted MPS. Continue multilingual support and mother-tongue based instruction.`;
 };
 
-// Helper to check if a mother tongue is concerning (lowers prediction)
 const isConcerningMotherTongue = (language: string): boolean => {
   const lower = language.toLowerCase();
   return ['ilocano', 'tagalog'].includes(lower);
@@ -130,11 +123,10 @@ interface ResultsState {
   fileName: string;
   sessionId?: string;
   sessionName?: string;
-  rawData?: Record<string, unknown>[];
 }
 
 // ============================================================
-// EXPORT HELPERS
+// EXPORT HELPERS (keep existing)
 // ============================================================
 
 const exportToCSV = (
@@ -224,7 +216,7 @@ const exportToPDF = (
 };
 
 // ============================================================
-// FACTOR PILL LIST (Academic only - with colors)
+// FACTOR PILL LIST (keep existing)
 // ============================================================
 
 const FactorPillList = ({ items }: { items: FactorItem[] }) => {
@@ -279,21 +271,17 @@ export function Results() {
   const { user } = useAuth();
   const { viewMode } = useOutletContext<{ viewMode: string }>();
 
-  // Pull everything out of location.state once so all effects can reference
-  // the stable primitive values rather than the state object itself.
   const locationState = location.state as ResultsState | null;
   const sessionId = locationState?.sessionId;
 
   const [predictions, setPredictions] = useState<ApiPredictionResult[]>([]);
   const [fileName, setFileName] = useState('');
   const [sessionName, setSessionName] = useState('');
-  // Seed from route state immediately so charts render on first paint.
-  // If route state has no rawData (e.g. navigating from Overview), the
-  // second useEffect below will fetch it from Firestore / localStorage.
-  const [rawData, setRawData] = useState<Record<string, unknown>[]>(
-    locationState?.rawData ?? []
-  );
-  const [rawDataLoading, setRawDataLoading] = useState(false);
+
+  // Always fetch rawData from Firebase - never rely on navigation state
+  const [rawData, setRawData] = useState<Record<string, unknown>[]>([]);
+  const [rawDataLoading, setRawDataLoading] = useState(true);
+  const [rawDataError, setRawDataError] = useState<string | null>(null);
 
   const [sortField, setSortField] = useState<keyof ApiPredictionResult>('prediction');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -303,7 +291,6 @@ export function Results() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [pageInput, setPageInput] = useState('1');
-  const [hasAnySession, setHasAnySession] = useState(false);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
 
   const hasSection = predictions.some((p) => p.Section != null && p.Section !== '');
@@ -330,30 +317,40 @@ export function Results() {
       setPredictions(locationState.predictions);
       setFileName(locationState.fileName ?? 'Dataset');
       setSessionName(locationState.sessionName ?? '');
-      // Sync rawData if route state carries it (fresh navigation from Dashboard)
-      if (locationState.rawData?.length) {
-        setRawData(locationState.rawData);
-      }
     } else {
       navigate('/homepage');
     }
-  }, [location.state]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [location.state]);
 
-  // ── 2. Fetch rawData from Firestore if not already available ──────────────
-  // This runs when the user arrives via Overview (revisiting a saved session)
-  // where location.state has predictions but no rawData.
+  // ── 2. ALWAYS fetch rawData from Firebase using sessionId ─────────────────
   useEffect(() => {
-    if (rawData.length > 0 || !sessionId) return;
+    if (!sessionId) {
+      // No sessionId means this is a fresh prediction from Dashboard
+      // In this case, rawData should be in location.state
+      if (locationState?.predictions) {
+        // For fresh predictions, we don't have rawData in Firebase yet
+        // The user will need to re-upload or we need to pass it
+        setRawDataLoading(false);
+      }
+      return;
+    }
 
     let cancelled = false;
     setRawDataLoading(true);
+    setRawDataError(null);
 
     getSessionRawData(sessionId)
       .then((rows) => {
-        if (!cancelled) setRawData(rows);
+        if (!cancelled) {
+          setRawData(rows);
+          console.log(`✅ Loaded ${rows.length} raw data rows from Firebase for session ${sessionId}`);
+        }
       })
-      .catch(() => {
-        if (!cancelled) setRawData([]);
+      .catch((err) => {
+        if (!cancelled) {
+          console.error('Failed to fetch raw data:', err);
+          setRawDataError('Could not load student demographic data');
+        }
       })
       .finally(() => {
         if (!cancelled) setRawDataLoading(false);
@@ -362,7 +359,7 @@ export function Results() {
     return () => {
       cancelled = true;
     };
-  }, [sessionId]); // rawData.length intentionally omitted — we only want this to fire once per sessionId
+  }, [sessionId]);
 
   const handleSort = (field: keyof ApiPredictionResult) => {
     if (sortField === field) {
@@ -374,6 +371,8 @@ export function Results() {
   };
 
   const getStudentData = (learnerId: string) => {
+    if (rawData.length === 0) return null;
+
     const student = rawData.find(row => String(row.learnerID) === learnerId);
     if (!student) return null;
 
@@ -448,7 +447,19 @@ export function Results() {
   const isAdminView =
     user?.role === 'admin' || (user?.role === 'researcher' && viewMode === 'admin');
 
-  // ── Empty state ───────────────────────────────────────────────────────────
+  // Show loading state while fetching rawData
+  if (rawDataLoading && sessionId) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Loading Session Data</h2>
+          <p className="text-gray-600">Fetching student records from database...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (predictions.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -460,26 +471,14 @@ export function Results() {
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">No Dataset Uploaded</h2>
           <p className="text-gray-600 mb-6">
-            {hasAnySession
-              ? 'You have previous sessions, but no dataset is available here. Start a new analysis or return to your dashboard.'
-              : 'Upload a dataset from the Dashboard to view prediction results.'}
+            Upload a dataset from the Dashboard to view prediction results.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
-            >
-              Go to Dashboard
-            </button>
-            {hasAnySession && (
-              <button
-                onClick={() => navigate('/homepage')}
-                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition"
-              >
-                Select Session
-              </button>
-            )}
-          </div>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+          >
+            Go to Dashboard
+          </button>
         </div>
       </div>
     );
@@ -504,6 +503,9 @@ export function Results() {
             Avg MPS: <span className="font-semibold">{averageScore.toFixed(1)}</span> &nbsp;·&nbsp;
             Passed: <span className="font-semibold">{passedCount}</span> / {totalPredictions}
           </p>
+          {rawDataError && (
+            <p className="text-xs text-yellow-200 mt-1">⚠️ {rawDataError}</p>
+          )}
         </div>
         <div className="flex gap-3 flex-shrink-0">
           <button
@@ -775,263 +777,271 @@ export function Results() {
 
             {/* Modal body */}
             <div className="p-6 overflow-y-auto max-h-[85vh]">
-              {(() => {
-                const pred = predictions.find((p) => p.learnerID === selectedStudent);
-                const explanation = pred?.explanation;
-                const studentInfo = getStudentData(selectedStudent);
+              {rawDataLoading ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-4"></div>
+                  <p className="text-gray-500">Loading student data...</p>
+                </div>
+              ) : rawData.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <svg className="h-12 w-12 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <p>Student demographic data not available.</p>
+                  <p className="text-xs mt-1">The raw data for this session could not be loaded.</p>
+                </div>
+              ) : (
+                (() => {
+                  const pred = predictions.find((p) => p.learnerID === selectedStudent);
+                  const explanation = pred?.explanation;
+                  const studentInfo = getStudentData(selectedStudent);
 
-                // Get proficiency color
-                const getProficiencyColor = (proficiency: string) => {
-                  const colors: Record<string, string> = {
-                    'Below Basic': 'text-red-600 bg-red-50',
-                    'Basic': 'text-orange-600 bg-orange-50',
-                    'Proficient': 'text-green-600 bg-green-50',
-                    'Advanced': 'text-blue-600 bg-blue-50',
+                  const getProficiencyColor = (proficiency: string) => {
+                    const colors: Record<string, string> = {
+                      'Below Basic': 'text-red-600 bg-red-50',
+                      'Basic': 'text-orange-600 bg-orange-50',
+                      'Proficient': 'text-green-600 bg-green-50',
+                      'Advanced': 'text-blue-600 bg-blue-50',
+                    };
+                    return colors[proficiency] || 'text-gray-600 bg-gray-50';
                   };
-                  return colors[proficiency] || 'text-gray-600 bg-gray-50';
-                };
 
-                if (!explanation) {
-                  return (
-                    <div className="text-center py-8 text-gray-500">
-                      <svg className="h-12 w-12 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                      <p>Explanations not available for this student.</p>
-                      <p className="text-xs mt-1">Re-run the analysis to generate feature explanations.</p>
-                    </div>
+                  if (!explanation) {
+                    return (
+                      <div className="text-center py-8 text-gray-500">
+                        <svg className="h-12 w-12 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <p>Explanations not available for this student.</p>
+                        <p className="text-xs mt-1">Re-run the analysis to generate feature explanations.</p>
+                      </div>
+                    );
+                  }
+
+                  const significant = (explanation.features ?? []).filter(
+                    (f: { feature: string; shap_value: number }) =>
+                      Math.abs(f.shap_value) >= SIGNIFICANCE_THRESHOLD
                   );
-                }
 
-                const significant = (explanation.features ?? []).filter(
-                  (f: { feature: string; shap_value: number }) =>
-                    Math.abs(f.shap_value) >= SIGNIFICANCE_THRESHOLD
-                );
+                  const academicItems: FactorItem[] = significant
+                    .filter((f: { feature: string }) => f.feature in ACADEMIC_FEATURE_MAP)
+                    .map((f: { feature: string; shap_value: number }) => ({
+                      label: ACADEMIC_FEATURE_MAP[f.feature].label,
+                      icon: ACADEMIC_FEATURE_MAP[f.feature].icon,
+                      avgShap: f.shap_value,
+                      avgAbsShap: Math.abs(f.shap_value),
+                    }));
 
-                // Academic factors
-                const academicItems: FactorItem[] = significant
-                  .filter((f: { feature: string }) => f.feature in ACADEMIC_FEATURE_MAP)
-                  .map((f: { feature: string; shap_value: number }) => ({
-                    label: ACADEMIC_FEATURE_MAP[f.feature].label,
-                    icon: ACADEMIC_FEATURE_MAP[f.feature].icon,
-                    avgShap: f.shap_value,
-                    avgAbsShap: Math.abs(f.shap_value),
-                  }));
+                  const demographicFactors: DemographicFactor[] = [];
 
-                // Demographic factors based on actual student data from rawData
-                const demographicFactors: DemographicFactor[] = [];
-
-                // Check Nutritional Status from rawData
-                if (studentInfo?.nutritionalStatus) {
-                  const status = studentInfo.nutritionalStatus;
-                  const lowerStatus = status.toLowerCase();
-                  // Only add if concerning (not Normal)
-                  if (lowerStatus !== 'normal') {
-                    demographicFactors.push({
-                      group: 'Nutritional Status',
-                      label: status,
-                      impact: -0.1,
-                      description: getNutritionalStatusDescription(status),
-                    });
+                  if (studentInfo?.nutritionalStatus) {
+                    const status = studentInfo.nutritionalStatus;
+                    const lowerStatus = status.toLowerCase();
+                    if (lowerStatus !== 'normal') {
+                      demographicFactors.push({
+                        group: 'Nutritional Status',
+                        label: status,
+                        impact: -0.1,
+                        description: getNutritionalStatusDescription(status),
+                      });
+                    }
                   }
-                }
 
-                // Check Mother Tongue from rawData
-                if (studentInfo?.motherTongue) {
-                  const tongue = studentInfo.motherTongue;
-                  // Only add if concerning (Ilocano or Tagalog)
-                  if (isConcerningMotherTongue(tongue)) {
-                    demographicFactors.push({
-                      group: 'Mother Tongue',
-                      label: tongue,
-                      impact: -0.1,
-                      description: getMotherTongueDescription(tongue),
-                    });
+                  if (studentInfo?.motherTongue) {
+                    const tongue = studentInfo.motherTongue;
+                    if (isConcerningMotherTongue(tongue)) {
+                      demographicFactors.push({
+                        group: 'Mother Tongue',
+                        label: tongue,
+                        impact: -0.1,
+                        description: getMotherTongueDescription(tongue),
+                      });
+                    }
                   }
-                }
 
-                const hasAcademic = academicItems.some(
-                  (f) => f.avgShap > SIGNIFICANCE_THRESHOLD || f.avgShap < -SIGNIFICANCE_THRESHOLD
-                );
-                const hasDemographic = demographicFactors.length > 0;
+                  const hasAcademic = academicItems.some(
+                    (f) => f.avgShap > SIGNIFICANCE_THRESHOLD || f.avgShap < -SIGNIFICANCE_THRESHOLD
+                  );
+                  const hasDemographic = demographicFactors.length > 0;
 
-                return (
-                  <div className="space-y-6">
-                    {/* Student Info Card */}
-                    <div className="bg-gray-50 rounded-xl p-5 border border-blue-200">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-sm font-semibold text-gray-700">Student Information</h4>
-                        <span className="text-xs text-gray-500">ID: {selectedStudent}</span>
-                      </div>
-
-                      {/* Prediction Summary */}
-                      <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-blue-200">
-                        <div className="text-center">
-                          <p className="text-xs text-gray-500 mb-1">Predicted MPS</p>
-                          <p className={`text-2xl font-bold ${pred?.prediction >= 75 ? 'text-green-600' : 'text-red-600'}`}>
-                            {pred?.prediction.toFixed(1)}
-                          </p>
+                  return (
+                    <div className="space-y-6">
+                      {/* Student Info Card */}
+                      <div className="bg-gray-50 rounded-xl p-5 border border-blue-200">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-sm font-semibold text-gray-700">Student Information</h4>
+                          <span className="text-xs text-gray-500">ID: {selectedStudent}</span>
                         </div>
-                        <div className="text-center">
-                          <p className="text-xs text-gray-500 mb-1">Proficiency Classification</p>
-                          <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getProficiencyColor(pred?.proficiency?.label || '')}`}>
-                            {pred?.proficiency?.label || 'N/A'}
-                          </span>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-xs text-gray-500 mb-1">Pass Probability</p>
-                          <p className={`text-xl font-bold ${(pred?.pass_probability || 0) >= 0.5 ? 'text-green-600' : 'text-red-600'}`}>
-                            {pred?.pass_probability != null ? `${(pred.pass_probability * 100).toFixed(1)}%` : 'N/A'}
-                          </p>
-                        </div>
-                      </div>
 
-                      {/* Demographics Grid */}
-                      <div className="grid grid-cols-2 gap-4 mb-4">
-                        {studentInfo?.age && (
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                              <span className='material-icons-round text-blue-700'>access_time</span>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500">Age</p>
-                              <p className="text-sm font-semibold text-gray-800">{studentInfo.age}</p>
-                            </div>
+                        {/* Prediction Summary */}
+                        <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-blue-200">
+                          <div className="text-center">
+                            <p className="text-xs text-gray-500 mb-1">Predicted MPS</p>
+                            <p className={`text-2xl font-bold ${pred?.prediction >= 75 ? 'text-green-600' : 'text-red-600'}`}>
+                              {pred?.prediction.toFixed(1)}
+                            </p>
                           </div>
-                        )}
-                        {studentInfo?.gender && (
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                              <span className='material-icons-round text-blue-700 text-xs'>person</span>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500">Gender</p>
-                              <p className="text-sm font-semibold text-gray-800">
-                                {studentInfo.gender === 'M' ? 'Male' : studentInfo.gender === 'F' ? 'Female' : studentInfo.gender}
-                              </p>
-                            </div>
+                          <div className="text-center">
+                            <p className="text-xs text-gray-500 mb-1">Proficiency Classification</p>
+                            <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getProficiencyColor(pred?.proficiency?.label || '')}`}>
+                              {pred?.proficiency?.label || 'N/A'}
+                            </span>
                           </div>
-                        )}
-                        {studentInfo?.nutritionalStatus && (
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                              <span className='material-icons-round text-blue-700'>balance</span>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500">Nutritional Status</p>
-                              <p className="text-sm font-semibold text-gray-800">{studentInfo.nutritionalStatus}</p>
-                            </div>
-                          </div>
-                        )}
-                        {studentInfo?.motherTongue && (
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                              <span className='material-icons-round text-blue-700'>translate</span>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500">Mother Tongue</p>
-                              <p className="text-sm font-semibold text-gray-800">{studentInfo.motherTongue}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Subject Grades Cards */}
-                      {studentInfo?.subjectGrades && studentInfo.subjectGrades.length > 0 && (
-                        <div>
-                          <p className="text-xs font-semibold text-gray-600 mb-2">Subject Averages</p>
-                          <div className="grid grid-cols-3 gap-2">
-                            {studentInfo.subjectGrades.map((subject, idx) => (
-                              <div key={idx} className={`p-2 rounded-lg ${subject.colorClass} border border-blue-100`}>
-                                <p className="text-xs font-medium text-gray-600">{subject.name}</p>
-                                <div className="flex items-baseline justify-between mt-1">
-                                  <p className="text-lg font-bold">{subject.average}</p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Academic Factors Section */}
-                    {hasAcademic && (
-                      <div>
-                        <div className="mb-3">
-                          <h4 className='text-md font-semibold text-gray-900'>Factors Influencing this Student's Prediction</h4>
-                        </div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-sm">📚</div>
-                          <div>
-                            <p className="text-sm font-semibold text-gray-900">Academic Factors</p>
-                            <p className="text-xs text-gray-400">
-                              Based on this student's past subject grades
+                          <div className="text-center">
+                            <p className="text-xs text-gray-500 mb-1">Pass Probability</p>
+                            <p className={`text-xl font-bold ${(pred?.pass_probability || 0) >= 0.5 ? 'text-green-600' : 'text-red-600'}`}>
+                              {pred?.pass_probability != null ? `${(pred.pass_probability * 100).toFixed(1)}%` : 'N/A'}
                             </p>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-4 mb-4 pb-3 border-b border-gray-100">
-                          <span className="flex items-center gap-2 text-xs text-gray-500">
-                            <span className="w-3 h-3 rounded-full bg-green-500 inline-block flex-shrink-0" />
-                            Enrichment Subjects (raise predicted MPS)
-                          </span>
-                          <span className="flex items-center gap-2 text-xs text-gray-500">
-                            <span className="w-3 h-3 rounded-full bg-red-500 inline-block flex-shrink-0" />
-                            Remedial Subjects (lower predicted MPS)
-                          </span>
-                        </div>
-
-                        <FactorPillList items={academicItems} />
-                        <p className="mt-3 text-xs text-blue-700 bg-blue-50 rounded-lg px-3 py-2">
-                          Subjects highlighted in green show strengths that can be further developed, while subjects
-                          in red indicate areas where students may need additional support and review.
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Demographic Factors Section - based on actual rawData */}
-                    {hasDemographic && (
-                      <div className="pt-2">
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-sm">👥</div>
-                          <div>
-                            <p className="text-sm font-semibold text-gray-900">Demographic factors (Contextual)</p>
-                            <p className="text-xs text-gray-400">Background characteristics that may need support</p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          {demographicFactors.map((factor, idx) => (
-                            <div key={idx} className="p-3 bg-gray-50 rounded-lg">
-                              <div className="flex items-start gap-2">
-                                <div className="flex-1">
-                                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                                    {factor.group}
-                                  </p>
-                                  <p className="text-sm font-medium text-gray-800 mt-1">{factor.label}</p>
-                                  <p className="text-xs text-gray-600 mt-1">{factor.description}</p>
-                                </div>
+                        {/* Demographics Grid */}
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                          {studentInfo?.age && (
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span className='material-icons-round text-blue-700'>access_time</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Age</p>
+                                <p className="text-sm font-semibold text-gray-800">{studentInfo.age}</p>
                               </div>
                             </div>
-                          ))}
+                          )}
+                          {studentInfo?.gender && (
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span className='material-icons-round text-blue-700 text-xs'>person</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Gender</p>
+                                <p className="text-sm font-semibold text-gray-800">
+                                  {studentInfo.gender === 'M' ? 'Male' : studentInfo.gender === 'F' ? 'Female' : studentInfo.gender}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          {studentInfo?.nutritionalStatus && (
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span className='material-icons-round text-blue-700'>balance</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Nutritional Status</p>
+                                <p className="text-sm font-semibold text-gray-800">{studentInfo.nutritionalStatus}</p>
+                              </div>
+                            </div>
+                          )}
+                          {studentInfo?.motherTongue && (
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span className='material-icons-round text-blue-700'>translate</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Mother Tongue</p>
+                                <p className="text-sm font-semibold text-gray-800">{studentInfo.motherTongue}</p>
+                              </div>
+                            </div>
+                          )}
                         </div>
 
-                        <p className="mt-4 mb-10 text-xs text-blue-700 bg-blue-50 rounded-lg px-3 py-2">
-                          This background is linked with lower predicted performance based on class patterns.
-                          <br />
-                          <b>Note:</b> Provide additional reading and comprehension support to help improve understanding.
-                        </p>
+                        {/* Subject Grades Cards */}
+                        {studentInfo?.subjectGrades && studentInfo.subjectGrades.length > 0 && (
+                          <div>
+                            <p className="text-xs font-semibold text-gray-600 mb-2">Subject Averages</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              {studentInfo.subjectGrades.map((subject, idx) => (
+                                <div key={idx} className={`p-2 rounded-lg ${subject.colorClass} border border-blue-100`}>
+                                  <p className="text-xs font-medium text-gray-600">{subject.name}</p>
+                                  <div className="flex items-baseline justify-between mt-1">
+                                    <p className="text-lg font-bold">{subject.average}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
 
-                    {/* Base Score */}
-                    <div className="pt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-500">
-                      <span className="font-medium">Base Score:</span>{' '}
-                      {explanation.base_value?.toFixed(1) ?? 'N/A'} (average prediction before considering specific factors)
+                      {/* Academic Factors Section */}
+                      {hasAcademic && (
+                        <div>
+                          <div className="mb-3">
+                            <h4 className='text-md font-semibold text-gray-900'>Factors Influencing this Student's Prediction</h4>
+                          </div>
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-sm">📚</div>
+                            <div>
+                              <p className="text-sm font-semibold text-gray-900">Academic Factors</p>
+                              <p className="text-xs text-gray-400">
+                                Based on this student's past subject grades
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-4 mb-4 pb-3 border-b border-gray-100">
+                            <span className="flex items-center gap-2 text-xs text-gray-500">
+                              <span className="w-3 h-3 rounded-full bg-green-500 inline-block flex-shrink-0" />
+                              Enrichment Subjects (raise predicted MPS)
+                            </span>
+                            <span className="flex items-center gap-2 text-xs text-gray-500">
+                              <span className="w-3 h-3 rounded-full bg-red-500 inline-block flex-shrink-0" />
+                              Remedial Subjects (lower predicted MPS)
+                            </span>
+                          </div>
+
+                          <FactorPillList items={academicItems} />
+                          <p className="mt-3 text-xs text-blue-700 bg-blue-50 rounded-lg px-3 py-2">
+                            Subjects highlighted in green show strengths that can be further developed, while subjects
+                            in red indicate areas where students may need additional support and review.
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Demographic Factors Section */}
+                      {hasDemographic && (
+                        <div className="pt-2">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-sm">👥</div>
+                            <div>
+                              <p className="text-sm font-semibold text-gray-900">Demographic factors (Contextual)</p>
+                              <p className="text-xs text-gray-400">Background characteristics that may need support</p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-3">
+                            {demographicFactors.map((factor, idx) => (
+                              <div key={idx} className="p-3 bg-gray-50 rounded-lg">
+                                <div className="flex items-start gap-2">
+                                  <div className="flex-1">
+                                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                      {factor.group}
+                                    </p>
+                                    <p className="text-sm font-medium text-gray-800 mt-1">{factor.label}</p>
+                                    <p className="text-xs text-gray-600 mt-1">{factor.description}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          <p className="mt-4 mb-10 text-xs text-blue-700 bg-blue-50 rounded-lg px-3 py-2">
+                            This background is linked with lower predicted performance based on class patterns.
+                            <br />
+                            <b>Note:</b> Provide additional reading and comprehension support to help improve understanding.
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Base Score */}
+                      <div className="pt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-500">
+                        <span className="font-medium">Base Score:</span>{' '}
+                        {explanation.base_value?.toFixed(1) ?? 'N/A'} (average prediction before considering specific factors)
+                      </div>
                     </div>
-                  </div>
-                );
-              })()}
+                  );
+                })()
+              )}
             </div>
           </div>
         </div>
@@ -1055,7 +1065,7 @@ export function Results() {
 }
 
 // ============================================================
-// SUB-COMPONENTS
+// SUB-COMPONENTS (keep existing)
 // ============================================================
 
 function SortableHeader<T>({

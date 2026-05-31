@@ -203,7 +203,8 @@ export function AppLayout() {
           transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        {/* Logo */}
+
+        {/* Logo + Close Button */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
@@ -218,6 +219,13 @@ export function AppLayout() {
           </div>
         </div>
 
+        {/* Close button — moved from top nav into sidebar */}
+        <div className='w-full'>
+          <div className='p-1.5 hover:bg-gray-100 transition text-gray-500 hover:text-gray-700 shrink-0 flex justify-center cursor-pointer border-b border-gray-200' onClick={() => (setSidebarOpen(false))}>
+            <span className='material-icons-round text-sm'>keyboard_arrow_left</span>
+            <span className='text-sm'>close </span>
+          </div>
+        </div>
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {menuItems.map((item) => {
@@ -312,20 +320,22 @@ export function AppLayout() {
             <header className="bg-white shadow-sm sticky top-0 z-40">
               <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center space-x-4">
-                  <button
-                    onClick={() => setSidebarOpen((o) => !o)}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition"
-                  >
-                    {sidebarOpen ? (
-                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    ) : (
-                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                      </svg>
-                    )}
-                  </button>
+                  {!sidebarOpen && (
+                    <button
+                      onClick={() => setSidebarOpen((o) => !o)}
+                      className="p-2 rounded-lg hover:bg-gray-100 transition"
+                    >
+                      {sidebarOpen ? (
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      ) : (
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                      )}
+                    </button>
+                  )}
 
                   {isResearcher ? (
                     <button

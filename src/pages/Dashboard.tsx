@@ -713,7 +713,7 @@ export function Dashboard() {
                 <p className="text-sm text-gray-500 mt-0.5">Showing first {Math.min(10, data.length)} of {data.length} rows</p>
               </div>
             </div>
-            <div className="min-w-0 w-400">
+            <div className="container">
               <div className="overflow-x-auto rounded-xl border border-gray-200">
                 <table className="w-max divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-50 sticky top-0 z-10">

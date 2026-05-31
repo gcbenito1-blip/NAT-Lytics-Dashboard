@@ -713,9 +713,9 @@ export function Dashboard() {
                 <p className="text-sm text-gray-500 mt-0.5">Showing first {Math.min(10, data.length)} of {data.length} rows</p>
               </div>
             </div>
-            <div className="container">
+            <div className='min-w-0 container'>
               <div className="overflow-x-auto rounded-xl border border-gray-200">
-                <table className="w-max divide-y divide-gray-200 text-sm">
+                <table className="divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-50 sticky top-0 z-10">
                     <tr>
                       {analysisResult.columns.map((col) => (
@@ -867,99 +867,102 @@ export function Dashboard() {
           </div>
 
           {/* Run Predictions */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-start justify-between gap-6">
-              <div className="flex-1">
+          <div className="bg-white rounded-2xl shadow-lg p-6 w-full">
+            <div className="flex flex-col gap-4">
+              {/* Header */}
+              <div>
                 <h2 className="text-lg font-semibold text-gray-900">Run Predictions</h2>
-                <p className="text-sm text-gray-500 mt-1">Generate predictions for all {data.length} records. Results will be saved as a session.</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Generate predictions for all {data.length} records. Results will be saved as a session.
+                </p>
+              </div>
 
-                {criticalAnomalies.length > 0 && (
-                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-sm text-red-600 font-medium mb-2">⚠️ Cannot run predictions — please fix these required columns:</p>
-                    <ul className="text-xs text-red-500 space-y-1">
-                      {criticalAnomalies.map((a, i) => (
+              {/* Alerts */}
+              {criticalAnomalies.length > 0 && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-600 font-medium mb-2">⚠️ Cannot run predictions — please fix these required columns:</p>
+                  <ul className="text-xs text-red-500 space-y-1">
+                    {criticalAnomalies.map((a, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <svg className="h-3 w-3 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span className="font-medium">{a.column}:</span> {a.message}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-xs text-red-600 mt-2 pt-2 border-t border-red-200">
+                    Please ensure these required columns have no missing values before running predictions.
+                  </p>
+                </div>
+              )}
+
+              {warningAnomalies.length > 0 && criticalAnomalies.length === 0 && (
+                <div className="space-y-2">
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="flex items-start gap-2 mb-2">
+                      <svg className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-yellow-800">⚠️ Heads up — Missing Values Detected</p>
+                        <p className="text-xs text-yellow-700 mt-0.5">The following non-required columns have missing values:</p>
+                      </div>
+                    </div>
+                    <ul className="text-xs text-yellow-700 space-y-1 ml-7">
+                      {warningAnomalies.filter(a => a.type === 'missing').map((a, i) => (
                         <li key={i} className="flex items-center gap-2">
-                          <svg className="h-3 w-3 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                          </svg>
+                          <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full flex-shrink-0"></span>
+                          <span className="font-medium">{a.column}:</span> {a.message}
+                        </li>
+                      ))}
+                      {warningAnomalies.filter(a => a.type === 'wrong_dtype').map((a, i) => (
+                        <li key={i} className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full flex-shrink-0"></span>
                           <span className="font-medium">{a.column}:</span> {a.message}
                         </li>
                       ))}
                     </ul>
-                    <p className="text-xs text-red-600 mt-2 pt-2 border-t border-red-200">
-                      Please ensure these required columns have no missing values before running predictions.
-                    </p>
                   </div>
-                )}
 
-                {warningAnomalies.length > 0 && criticalAnomalies.length === 0 && (
-                  <div className="mt-3 space-y-2">
-                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                      <div className="flex items-start gap-2 mb-2">
-                        <svg className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <div className="flex-1">
-                          <p className="text-sm font-semibold text-yellow-800">⚠️ Heads up — Missing Values Detected</p>
-                          <p className="text-xs text-yellow-700 mt-0.5">The following non-required columns have missing values:</p>
-                        </div>
-                      </div>
-
-                      <ul className="text-xs text-yellow-700 space-y-1 ml-7">
-                        {warningAnomalies.filter(a => a.type === 'missing').map((a, i) => (
-                          <li key={i} className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
-                            <span className="font-medium">{a.column}:</span> {a.message}
-                          </li>
-                        ))}
-                        {warningAnomalies.filter(a => a.type === 'wrong_dtype').map((a, i) => (
-                          <li key={i} className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
-                            <span className="font-medium">{a.column}:</span> {a.message}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <div className="flex items-start gap-2">
-                        <svg className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <div className="flex-1">
-                          <p className="text-sm font-semibold text-blue-800">How missing values will be handled:</p>
-                          <ul className="text-xs text-blue-700 mt-1 space-y-1 ml-5 list-disc">
-                            {/* <li><span className="font-medium">Text/Categorical columns:</span> Empty values will be filled with Most Occuring value</li> */}
-                            <li><span className="font-medium">Numeric columns:</span> Empty values will be filled with the column's median value</li>
-                            <li className="mt-1 text-blue-600 font-medium">Predictions will still run successfully with these automatic fixes</li>
-                          </ul>
-                        </div>
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-blue-800">How missing values will be handled:</p>
+                        <ul className="text-xs text-blue-700 mt-1 space-y-1 ml-5 list-disc">
+                          <li><span className="font-medium">Numeric columns:</span> Empty values will be filled with the column's median value</li>
+                          <li className="text-blue-600 font-medium">Predictions will still run successfully with these automatic fixes</li>
+                        </ul>
                       </div>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
 
-                {criticalAnomalies.length === 0 && warningAnomalies.length === 0 && data.length > 0 && (
-                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <span className='material-icons-round text-green-600'>check</span>
-                      <p className="text-sm font-medium text-green-700">All checks passed — your dataset is ready for predictions</p>
-                    </div>
+              {criticalAnomalies.length === 0 && warningAnomalies.length === 0 && data.length > 0 && (
+                <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="material-icons-round text-green-600">check</span>
+                    <p className="text-sm font-medium text-green-700">All checks passed — your dataset is ready for predictions</p>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
+              {/* Full-width Button */}
               <button
                 onClick={handleRunPredictions}
                 disabled={isPredicting || !canRunPredictions}
-                className={`px-6 py-3 rounded-lg font-medium transition flex items-center space-x-2 whitespace-nowrap ${isPredicting || !canRunPredictions
+                className={`w-full px-6 py-3 rounded-lg font-medium transition flex items-center justify-center gap-2 ${isPredicting || !canRunPredictions
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+                  : 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer'
                   }`}
               >
                 {isPredicting ? (
                   <>
-                    <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin h-5 w-5 text-white flex-shrink-0" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
@@ -967,7 +970,7 @@ export function Dashboard() {
                   </>
                 ) : (
                   <>
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span>Run Predictions</span>

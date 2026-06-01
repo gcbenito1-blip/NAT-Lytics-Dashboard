@@ -22,6 +22,7 @@ export const teacherMenuItems: MenuItem[] = [
   { name: 'Prediction Results', path: '/prediction-table', icon: icon('table_chart') },
   { name: 'Prediction History', path: '/overview', icon: icon('history'), alwaysAccessible: true },
   { name: 'Model Reliability', path: '/model-reliability', icon: icon('monitor_heart'), alwaysAccessible: true },
+  { name: 'Backup and Recovery', path: '/backup-recovery', icon: icon('backup'), alwaysAccessible: true },
   { name: 'Settings', path: '/settings', icon: icon('settings'), alwaysAccessible: true },
 ];
 
@@ -42,7 +43,7 @@ export const evaluationMenuItems: MenuItem[] = [
   { name: 'Student Table', path: '/evaluation/student-table', icon: icon('table_chart'), alwaysAccessible: true },
 ];
 
-export const researcherTeacherMenuItems: MenuItem[] = teacherMenuItems.filter(item => item.path !== '/settings' && item.path !== '/homepage');
+export const researcherTeacherMenuItems: MenuItem[] = teacherMenuItems.filter(item => item.path !== '/settings' && item.path !== '/homepage' && item.path !== '/backup-recovery');
 
 export const badgeConfig = {
   teacher: { label: 'TEACHER ACCOUNT', className: 'bg-green-100 text-green-700' },

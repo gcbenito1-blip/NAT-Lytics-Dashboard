@@ -19,6 +19,7 @@ import { SchoolComparison } from './pages/SchoolComparison';
 import { StudentTable } from './pages/StudentTable';
 import { ManageTeachers } from './pages/ManageTeachers';
 import { Settings } from './pages/Settings';
+import { BackupRecovery } from './pages/BackupRecovery';
 
 
 export const router = createBrowserRouter([
@@ -60,6 +61,7 @@ export const router = createBrowserRouter([
       { path: 'manage-teachers', element: <ManageTeachers /> },
       { path: 'results-list', element: <AdminOverview /> },
       { path: 'settings', element: <Settings /> },
+      { path: 'backup-recovery', element: <ProtectedRoute allowedRoles={['teacher']}><BackupRecovery /></ProtectedRoute> },
       // evaluation
       { path: 'evaluation/metrics', element: <ModelEvaluation /> },
       { path: 'evaluation/charts', element: <Charts /> },

@@ -439,18 +439,9 @@ export function TeacherOverview() {
 
   useEffect(() => {
     let cancelled = false;
-    let retried = false;
 
     async function run() {
-      await load();
-      if (cancelled) return;
-
-      if (!user || retried) return;
-      retried = true;
-
-      await new Promise((r) => setTimeout(r, 800));
-      if (cancelled) return;
-
+      if (!user) return;
       setLoading(true);
       try {
         const data = await getTeacherSessions(user.id);
@@ -462,8 +453,7 @@ export function TeacherOverview() {
 
     run();
     return () => { cancelled = true; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [load, user]);
+  }, [user]);
 
   const handleRename = async (session: PredictionSession, newName: string) => {
     if (!user || newName === session.sessionName) return;

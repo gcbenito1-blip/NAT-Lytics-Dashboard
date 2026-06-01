@@ -72,7 +72,14 @@ export function BackupRecovery() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `nat-lytics-sessions-${new Date().toISOString().split('T')[0]}.json`;
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[-:]/g, '')
+        .replace(/\.\d{3}Z$/, '');
+
+      const lastName = (user.lastName || 'user').replace(/[^a-zA-Z0-9_-]/g, '');
+
+      a.download = `natlytics-backup-${lastName}-${timestamp}.json`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success(`Exported ${sessions.length} session${sessions.length !== 1 ? 's' : ''} successfully.`);

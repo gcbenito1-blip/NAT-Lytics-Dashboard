@@ -172,7 +172,7 @@ export function BackupRecovery() {
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6 flex flex-col">
         {/* Export */}
-        <div>
+        <div className='w-full'>
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Export Sessions</h2>
           <p className="text-sm text-gray-500 mb-4">
             Backup all your saved prediction sessions as a JSON file to your computer.
@@ -192,7 +192,7 @@ export function BackupRecovery() {
         </div>
 
         {/* Import */}
-        <div className="border-t border-gray-100 pt-6">
+        <div className="border-t border-gray-100 pt-6 w-full">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Import Sessions</h2>
           <p className="text-sm text-gray-500 mb-4">
             Restore sessions from a previously exported JSON file.
